@@ -60,7 +60,7 @@ This example demonstrates how to login to the API and demonstrates sending a req
 
 ```python
 # import the client
-from td_api import TDClient
+from td-api.client import TDClient
 
 # create a new session
 TDSession = TDClient(account_number = 'ACCOUNT_NUMBER',
