@@ -1,5 +1,6 @@
 # credential logs
-TDCredentials.json
+td/TDAmeritradeState.json
+td/config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
