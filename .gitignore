@@ -3,7 +3,7 @@ td/TDAmeritradeState.json
 td/config.py
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+td/__pycache__/
 *.py[cod]
 *$py.class
 
