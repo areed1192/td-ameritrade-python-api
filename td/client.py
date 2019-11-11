@@ -343,16 +343,15 @@ class TDClient():
             self.logout()
             return False
 
-        # if there is one update the state with the access token
+        # save the access token and refresh token
         self.state['access_token'] = json_data['access_token']
+        self.state['refresh_token'] = json_data['refresh_token']
 
         # and the logged in status
         self.state['loggedin'] = True
 
-        # store when the token will expire
+        # store token expiration time
         self.state['access_token_expires_at'] = time.time() + int(json_data['expires_in'])
-
-        # store the refresh token
         self.state['refresh_token_expires_at'] = time.time() + int(json_data['refresh_token_expires_in'])
 
         return True
@@ -409,7 +408,7 @@ class TDClient():
         '''
 
         if self.token_seconds(token_type = 'access_token') < nseconds and self.config['refresh_enabled']:
-            self.token_refresh
+            self.token_refresh()
 
 
     '''
