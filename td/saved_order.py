@@ -1,6 +1,72 @@
 import json
 from enum import Enum
 
+
+class OrderLeg():
+
+    def __init__(self, **kwargs):
+
+        self.order_leg_arguments = {
+            'instruction':['BUY', 'SELL', 'BUY_TO_COVER', 'SELL_SHORT', 'BUY_TO_OPEN', 'BUY_TO_CLOSE', 'SELL_TO_OPEN', 'SELL_TO_CLOSE','EXCHANGE'],
+            'assetType':['EQUITY', 'OPTION', 'INDEX', 'MUTUAL_FUND', 'CASH_EQUIVALENT', 'FIXED_INCOME', 'CURRENCY'],
+            'quantityType': ['ALL_SHARES', 'DOLLARS', 'SHARES']
+            }
+
+        if 'template' in kwargs.keys():
+            self.template = kwargs['template']
+        else:
+            self.template = {}
+
+    def order_leg_instruction(self, instruction = None):
+
+        # for any Enum member
+        if isinstance(instruction, Enum):
+            instruction = instruction.name
+
+        if instruction in self.order_leg_arguments['instruction']:
+            self.template['instruction'] = instruction
+        else:
+            raise ValueError('Incorrect Value for the Instruction paramater')
+
+    def order_leg_asset(self, asset_type = None, symbol = None):
+
+        # for any Enum member
+        if isinstance(asset_type, Enum):
+            asset_type = asset_type.name
+
+        asset_dict = {'assetType':'','symbol':''}
+
+        if asset_type in self.order_leg_arguments['assetType']:
+            asset_dict['assetType'] = asset_type
+            asset_dict['symbol'] = symbol
+            self.template['instrument'] = asset_dict
+        else:
+            raise ValueError('Incorrect Value for the asset type paramater')
+
+    def order_leg_quantity(self, quantity = None):        
+        self.template['quantity'] = int(quantity)
+
+    def order_leg_price(self, price = None):
+        self.template['price'] = float(price)
+
+    def order_leg_quantity_type(self, quantity_type = None):
+
+        # for any Enum member
+        if isinstance(quantity_type, Enum):
+            quantity_type = quantity_type.name
+
+        if quantity_type in self.order_leg_arguments['quantityType']:
+            self.template['quantityType'] = quantity_type
+        else:
+            raise ValueError('Incorrect Value for the Quantity Type paramater')
+
+    def copy(self):
+
+        template_copy = self.template.copy()
+
+        return OrderLeg(template = template_copy)
+
+
 class SavedOrder():
 
     def __init__(self, **kwargs):
@@ -77,6 +143,8 @@ class SavedOrder():
         # defines the empty template for our order
         self.template = {}
 
+        self.order_legs_collection = []
+
     '''
         ALEX'S NOTE
 
@@ -135,6 +203,23 @@ class SavedOrder():
         else:
             raise ValueError('Incorrect Value for the complexOrderStrategyType paramater')
 
+    def order_strategy_type(self, order_strategy_type = None):
+        '''
+
+        '''
+
+        if order_strategy_type in self.saved_order_arguments['orderStrategyType']:
+            self.template['orderStrategyType'] = order_strategy_type
+        else:
+            raise ValueError('Incorrect Value for the orderStrategyType paramater')
+
+    def return_order(self):
+
+        self.template['orderLegCollection'] = self.order_legs_collection
+
+        return self.template
+
+
     def create_limit_order(self):
         pass
 
@@ -151,11 +236,8 @@ class SavedOrder():
         pass
 
 
-    def create_orders_collection(self):
-        pass
-
-    def add_to_orders_collection(self):
-        pass
+    def add_order_leg(self, order_leg = None):
+        self.order_legs_collection.append(order_leg.template)
     
     def delete_from_orders_collection(self):
         pass
