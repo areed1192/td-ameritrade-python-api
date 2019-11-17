@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 
 class SavedOrder():
 
@@ -18,7 +19,6 @@ class SavedOrder():
                                         'STRANGLE', 'COLLAR_SYNTHETIC', 'BUTTERFLY', 'CONDOR', 'IRON_CONDOR', 'VERTICAL_ROLL', 
                                         'COLLAR_WITH_STOCK', 'DOUBLE_DIAGONAL', 'UNBALANCED_BUTTERFLY', 'UNBALANCED_CONDOR', 
                                         'UNBALANCED_IRON_CONDOR', 'UNBALANCED_VERTICAL_ROLL', 'CUSTOM'],
-
 
             'stopPriceLinkBasis': ['MANUAL', 'BASE', 'TRIGGER', 'LAST', 'BID', 'ASK', 'ASK_BID', 'MARK', 'AVERAGE'],
             'stopPriceLinkType':['VALUE', 'PERCENT', 'TICK'],
@@ -74,17 +74,46 @@ class SavedOrder():
             'executionType':['FILL']
         }
 
-
+        # defines the empty template for our order
         self.template = {}
 
+    '''
+        ALEX'S NOTE
+
+        Every trade should need a session. The logic is that if no session is given, then how would we know when
+        to execute it?
+
+        Every trade should need a duration. Again, how do we know when to cancel it if at all? Do we just add a 
+        default value?
+
+        Every order doesn't need a complex order strategy type. For example, it could be just a simple limit order.
+        However, if you do give a complex order strategy type could we use this to determine other arguments that we
+        would need? 
+        
+    '''
 
     def saved_order_session(self, session = None):
+        '''
+            Define the session for the trade.
+        '''
+
+        # for any Enum member
+        if isinstance(session, Enum):
+            session = session.name
+
         if session in self.saved_order_arguments['session']:
             self.template['session'] = session
         else:
             raise ValueError('Incorrect Value for the Session paramater')
 
     def saved_order_duration(self, duration = None, cancel_time = None):
+        '''
+
+        '''
+
+        # for any Enum member
+        if isinstance(duration, Enum):
+            duration = duration.name
 
         if duration in self.saved_order_arguments['duration']:
             self.template['duration'] = duration
@@ -93,6 +122,18 @@ class SavedOrder():
 
         if cancel_time is not None:
             self.template['cancelTime'] = {'date':cancel_time, 'shortFormat':False}
+
+    def complex_order_type(self, complex_order_strategy_type = None):
+        '''
+
+        '''
+
+        if complex_order_strategy_type == None:
+            self.template['complexOrderStrategyType'] = 'NONE'
+        elif complex_order_strategy_type in self.saved_order_arguments['complexOrderStrategyType']:
+            self.template['complexOrderStrategyType'] = complex_order_strategy_type
+        else:
+            raise ValueError('Incorrect Value for the complexOrderStrategyType paramater')
 
     def create_limit_order(self):
         pass
