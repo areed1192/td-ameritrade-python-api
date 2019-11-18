@@ -66,7 +66,7 @@ class OrderLeg():
         return OrderLeg(template = template_copy)
 
 
-class SavedOrder():
+class Order():
 
     def __init__(self, **kwargs):
 
@@ -141,8 +141,8 @@ class SavedOrder():
 
         # defines the empty template for our order
         self.template = {}
-
         self.order_legs_collection = {}
+        self.child_order_strategies = {}
 
 
     '''
@@ -160,7 +160,7 @@ class SavedOrder():
         
     '''
 
-    def saved_order_session(self, session = None):
+    def order_session(self, session = None):
         '''
             Define the session for the trade.
         '''
@@ -174,7 +174,7 @@ class SavedOrder():
         else:
             raise ValueError('Incorrect Value for the Session paramater')
 
-    def saved_order_duration(self, duration = None, cancel_time = None):
+    def order_duration(self, duration = None, cancel_time = None):
         '''
 
         '''
@@ -215,9 +215,17 @@ class SavedOrder():
 
     def grab_order(self):
 
-        self.template['orderLegCollection'] = list(self.order_legs_collection.values())
+        data = OrderedDict(self.template.items())
+        
+        if len(list(self.order_legs_collection.values())) > 0:
+            self.template['orderLegCollection'] = list(self.order_legs_collection.values())
+            data['orderLegCollection'] = list(self.order_legs_collection.values())
 
-        return self.template
+        if len(list(self.child_order_strategies.values())) > 0:
+            self.template['childOrderStrategies'] = list(self.child_order_strategies.values())
+            data['childOrderStrategies'] = list(self.child_order_strategies.values())
+
+        return data
 
     def add_order_leg(self, order_leg = None):
         key_id = "order_leg_" + str(len(self.order_legs_collection) + 1)
@@ -236,6 +244,19 @@ class SavedOrder():
 
     def saved_order_to_json(self):        
         return json.dumps(self.grab_order())
-        
 
+    def create_child_order_strategy(self):
+        return Order()
 
+    def add_child_order_strategy(self, child_order_strategy = None):
+        key_id = "child_order_strategy_" + str(len(self.child_order_strategies) + 1)
+        self.child_order_strategies[key_id] = child_order_strategy.grab_order()
+
+    def delete_child_order_strategy(self, key = None, index = None):
+
+        if key is not None and key in self.child_order_strategies.keys():
+            del self.child_order_strategies[key]
+        elif index is not None:            
+            for index_key, key in enumerate(sorted(self.child_order_strategies.items(), key=lambda t: t[0]).keys()):
+                if index ==  index_key:
+                    del self.child_order_strategies[index.key]
