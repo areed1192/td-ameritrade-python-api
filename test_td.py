@@ -1,5 +1,5 @@
 from td.client import TDClient
-from td.saved_order import OrderLeg, SavedOrder
+from td.orders import OrderLeg, Order
 from td.enums import ORDER_SESSION, ORDER_TYPE
 
 # from config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, TRANSACTION_ID

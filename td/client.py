@@ -100,17 +100,24 @@ class TDClient():
         return str_representation
 
 
-    def headers(self):
+    def headers(self, mode = None):
         ''' 
             Returns a dictionary of default HTTP headers for calls to TD Ameritrade API,
             in the headers we defined the Authorization and access token.
 
-            RTYPE: Dictionary
+            NAME: mode            
+            DESC: Defines the content-type for the headers dictionary.
+            TYPE: String
         '''
 
-        # create your header
+        # grab the access token
         token = self.state['access_token']
+
+        # create the headers dictionary
         headers = {'Authorization' : f'Bearer {token}'}
+
+        if mode == 'application/json':
+            headers['Content-type'] = 'application/json'
 
         return headers
 
@@ -160,6 +167,7 @@ class TDClient():
         # This appeared to cause an issue, if I wasn't extremely explicit with the path it wouldn't update correctly.
         # Solution is to build full path. ACTUALLY IT'S A VISUAL STUDIO CODE ISSUE.
         dir_path = os.getcwd()
+        dir_path = os.path.realpath(__file__).split(r'\client.py')[0]
         filename = 'TDAmeritradeState.json'
         file_path = os.path.join(dir_path, filename)
 
@@ -249,14 +257,20 @@ class TDClient():
             token endpoint and obtain an access token.
         '''
 
-        # define the key so that we can parse the redirect URL that contains the code.
-        key_parsing = self.config['redirect_uri'].replace('http','https') + '?code'
+        # Parse the URL
+        url_dict = urllib.parse.parse_qs(self.state['redirect_code'])
+
+        # Convert the values to a list.
+        url_values = list(url_dict.values())
+
+        # Grab the Code, which is stored in a list.
+        url_code = url_values[0][0]
 
         # define the parameters of our access token post.
         data = {'grant_type':'authorization_code',
                 'client_id':self.config['consumer_id'],
                 'access_type':'offline',
-                'code':urllib.parse.parse_qs(self.state['redirect_code'])[key_parsing],
+                'code':url_code,
                 'redirect_uri':self.config['redirect_uri']}
 
         # post the data to the token endpoint and store the response.
@@ -565,7 +579,7 @@ class TDClient():
         return requests.get(url = url, headers = merged_headers, params=data, verify = True).json()
 
 
-    def get_price_history(self, symbol = None, periodType = None, startDate = None, endDate = None, 
+    def get_price_history(self, symbol = None, periodType = None, startDate = None, endDate = None, period = None,
                                 frequency = None, frequencyType = None, needExtendedHoursData = None):
 
         '''
@@ -580,6 +594,7 @@ class TDClient():
 
         # build the params dictionary
         data = {'apikey':self.config['consumer_id'],
+                'period':period,
                 'periodType':periodType,
                 'startDate':startDate,
                 'endDate':endDate,
@@ -1729,3 +1744,44 @@ class TDClient():
 
         # make the request
         return requests.delete(url = url, headers = merged_headers,  verify = True).json()
+
+    def place_order(self, account = None, order = None):
+        '''
+            Places an order for a specific account.
+
+            Documentation Link: https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
+            
+            NAME: account
+            DESC: The account number that you want to place the order for.
+            TYPE: String
+
+            NAME: order
+            DESC: Either a JSON string or a TDOrder object that contains the info needed for an order placement.
+            TYPE: String | Order
+
+            EXAMPLES:
+
+            SessionObject.place_order(account = 'MyAccountID', order = {'orderKey':'OrderValue'})
+            SessionObject.place_order(account = 'MyAccountID', order = <Order>)
+
+        '''
+
+        # first make sure that the token is still valid.
+        self.token_validation()
+
+        # grab the original headers we have stored.
+        merged_headers = self.headers(mode = 'application/json') 
+
+        # define the endpoint
+        endpoint = 'accounts/{}/orders'.format(account)
+
+        # build the url
+        url = self.api_endpoint(endpoint)
+
+        # make the request
+        response = requests.post(url = url, headers = merged_headers, data = json.dumps(order),  verify = True)
+
+        if response.status_code == 201:
+            return "Order was successfully placed."
+        else:
+            return response.json()

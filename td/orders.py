@@ -160,6 +160,24 @@ class Order():
         
     '''
 
+    def order_price(self, price = None):
+
+        self.template['price'] = price
+
+    def order_type(self, order_type = None):
+        '''
+            Define the session for the trade.
+        '''
+
+        # for any Enum member
+        if isinstance(order_type, Enum):
+            order_type = order_type.name
+
+        if order_type in self.saved_order_arguments['orderType']:
+            self.template['orderType'] = order_type
+        else:
+            raise ValueError('Incorrect Value for the OrderType paramater')
+
     def order_session(self, session = None):
         '''
             Define the session for the trade.
