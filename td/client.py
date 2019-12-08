@@ -253,7 +253,7 @@ class TDClient():
     def grab_access_token(self):        
         '''
             Access token handler for AuthCode Workflow. This takes the
-            authorization code parsed from the auth enpoint to call the
+            authorization code parsed from the auth endpoint to call the
             token endpoint and obtain an access token.
         '''
 
