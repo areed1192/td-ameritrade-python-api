@@ -164,10 +164,8 @@ class TDClient():
                              'token_scope': '', 
                              'loggedin': False}
 
-        # This appeared to cause an issue, if I wasn't extremely explicit with the path it wouldn't update correctly.
-        # Solution is to build full path. ACTUALLY IT'S A VISUAL STUDIO CODE ISSUE.
-        dir_path = os.getcwd()
-        dir_path = os.path.realpath(__file__).split(r'\client.py')[0]
+        # Grab the current directory of the client file, that way we can store the JSON file in the same folder.
+        dir_path = os.path.abspath(os.path.realpath(__file__)).split(r'\client.py')[0]
         filename = 'TDAmeritradeState.json'
         file_path = os.path.join(dir_path, filename)
 

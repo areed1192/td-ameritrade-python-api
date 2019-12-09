@@ -1,5 +1,6 @@
 # credential logs
-td/TDAmeritradeState.json
+TDAmeritradeState.json
+test_saved_orders.py
 td/config.py
 
 # Byte-compiled / optimized / DLL files
