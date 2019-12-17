@@ -165,7 +165,7 @@ class TDClient():
                              'loggedin': False}
 
         # Grab the current directory of the client file, that way we can store the JSON file in the same folder.
-        dir_path = os.path.abspath(os.path.realpath(__file__)).split(r'\client.py')[0]
+        dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = 'TDAmeritradeState.json'
         file_path = os.path.join(dir_path, filename)
 
