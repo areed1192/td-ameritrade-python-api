@@ -577,12 +577,109 @@ class TDClient():
         return requests.get(url = url, headers = merged_headers, params=data, verify = True).json()
 
 
-    def get_price_history(self, symbol = None, periodType = None, startDate = None, endDate = None, period = None,
-                                frequency = None, frequencyType = None, needExtendedHoursData = None):
+    def get_price_history(self, symbol = None, periodType = None, period = None, startDate = None, endDate = None, 
+                                frequencyType = None, frequency = None,  needExtendedHoursData = None):
 
         '''
             STILL BUILDING
+
+            NAME: symbol
+            DESC: The ticker symbol to request data for. 
+            TYPE: String
+
+            NAME: periodType
+            DESC: The type of period to show. Valid values are day, month, year, or ytd (year to date). Default is day.
+            TYPE: String
+ 
+            NAME: period
+            DESC: The number of periods to show.
+            TYPE: Integer
+
+            NAME: startDate
+            DESC: Start date as milliseconds since epoch.
+            TYPE: Integer
+
+            NAME: endDate
+            DESC: End date as milliseconds since epoch.
+            TYPE: Integer
+
+            NAME: frequencyType
+            DESC: The type of frequency with which a new candle is formed.
+            TYPE: String
+ 
+            NAME: frequency
+            DESC: The number of the frequencyType to be included in each candle.
+            TYPE: Integer
+
+            NAME: needExtendedHoursData
+            DESC: True to return extended hours data, false for regular market hours only. Default is true
+            TYPE: Boolean
+
         '''
+
+        # Validator function for get_price_history
+        def validate(data):
+
+            # Valid periods by periodType
+            valid_periods = {
+                'day': [1, 2, 3, 4, 5, 10],
+                'month': [1, 2, 3, 6],
+                'year': [1, 2, 3, 5, 10, 15, 20],
+                'ytd': [1],
+            }
+
+            # Valid frequencyType by period
+            valid_frequency_types = {
+                'day': ['minute'],
+                'month': ['daily', 'weekly'],
+                'year': ['daily', 'weekly', 'monthly'],
+                'ytd': ['daily', 'weekly'],
+            }
+
+            # Valid frequency by frequencyType
+            valid_frequencies = {
+                'minute': [1, 5, 10, 15, 30],
+                'daily': [1],
+                'weekly': [1],
+                'monthly': [1]
+            }
+
+            # check data to confirm that either period or date range is provided
+            if (data['startDate'] and data['endDate'] and not data['period']) or (not data['startDate'] and not data['endDate'] and data['period']):
+
+                # Validate periodType
+                if data['periodType'] not in valid_periods.keys():
+                    print('Period Type: {} is not valid. Valid values are {}'.format(data['periodType'], valid_periods.keys()))
+                    raise ValueError('Invalid Value')
+
+                # Validate period
+                if data['period'] and data['period'] not in valid_periods[data['periodType']]:
+                    print('Period: {} is not valid. Valid values are {}'.format(data['period'], valid_periods[data['periodType']]))
+                    raise ValueError('Invalid Value')
+
+                # Validate frequencyType by frenquency
+                if data['frequencyType'] not in valid_frequencies.keys():
+                    print('frequencyType: {} is not valid. Valid values are {}'.format(data['frequencyType'],  valid_frequencies.keys()))
+                    raise ValueError('Invalid Value')
+
+                # Validate frequencyType by periodType
+                if data['frequencyType'] not in valid_frequency_types[data['periodType']]:
+                    print('frequencyType: {} is not valid. Valid values for period: {} are {}'.format(data['frequencyType'], data['periodType'], valid_frequency_types[data['periodType']]))
+                    raise ValueError('Invalid Value')
+
+                # Validate periodType
+                if data['frequency'] not in valid_frequencies[data['frequencyType']]:
+                    print('frequency: {} is not valid. Valid values are {}'.format(data['frequency'], valid_frequencies[data['frequencyType']]))
+                    raise ValueError('Invalid Value')
+
+                # TODO Validate startDate and endDate
+
+                # Recompute payload dictionary and remove any None values
+                return({k: v for k, v in data.items() if v is not None})
+
+            else:
+                print('Either startDate/endDate or period must be provided exclusively.')
+                raise ValueError('Invalid Value')
 
         # first make sure that the token is still valid.
         self.token_validation()
@@ -602,6 +699,9 @@ class TDClient():
 
         # define the endpoint
         endpoint = '/marketdata/{}/pricehistory'.format(symbol)
+
+        # validate the data
+        data = validate(data)
 
         # build the url
         url = self.api_endpoint(endpoint)
