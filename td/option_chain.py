@@ -1,3 +1,6 @@
+import json
+from enum import Enum
+from collections import OrderedDict
 
 
 class OptionChain():
@@ -111,7 +114,7 @@ class OptionChain():
         return True
 
 
-    def get_query_parameters(self):
+    def _get_query_parameters(self):
         '''
             This will create a new dictionary, that only contains the items that have a value
             not equal to None in the query_parameters dictionary.
@@ -150,3 +153,10 @@ class OptionChain():
 
         # otherwise add the key and the value to the query parameter dictionary.
         self.query_parameters[key_name] = key_value
+
+
+    def add_chain_enum(self, item = None):
+
+        # for any Enum member
+        if isinstance(item, Enum):
+            item = item.name

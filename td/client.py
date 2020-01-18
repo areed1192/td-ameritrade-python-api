@@ -78,7 +78,7 @@ class TDClient():
         self.state_manager('init')
 
         # define a new attribute called 'authstate' and initalize it to '' (Blank). This will be used by our login function.
-        self.authstate = ''
+        self.authstate = False
  
 
     def __repr__(self):
@@ -95,7 +95,7 @@ class TDClient():
             logged_in_state = 'False'
 
         # define the string representation
-        str_representation = '<TDAmeritrade Client (logged_in = {}, client_id = {})>'.format(logged_in_state, self.config['consumer_id'])
+        str_representation = '<TDAmeritrade Client (logged_in = {}, authorized = {})>'.format(logged_in_state, self.authstate)
 
         return str_representation
 
@@ -206,6 +206,10 @@ class TDClient():
 
             # if it was successful, the user is authenticated.
             if self.silent_sso():
+
+                # update the authentication state
+                self.authstate = 'Authenticated'
+
                 return True
 
         # update the authentication state
@@ -325,6 +329,19 @@ class TDClient():
 
         # if there was an error go through the full authentication
         if response.status_code == 401:
+            print('The Credentials you passed through are invalid.')
+            return False
+        elif response.status_code == 400:
+            print('Validation was unsuccessful.')
+            return False
+        elif response.status_code == 500:
+            print('The TD Server is experiencing an error, please try again later.')
+            return False
+        elif response.status_code == 403:
+            print("You don't have access to this resource, cannot authenticate.")
+            return False
+        elif response.status_code == 503:
+            print("The TD Server can't respond, please try again later.")
             return False
         else:
             # save the token and the state, since we now have a new access token that has a new expiration date.
@@ -923,9 +940,11 @@ class TDClient():
         return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
 
 
-    def get_options_chain(self, option_chain = None):
+    def get_options_chain(self, option_chain = None, args_dictionary = None):
         '''
-            Get option chain for an optionable Symbol.
+            Get option chain for an optionable Symbol using one of two methods. Either,
+            use the OptionChain object which is a built-in object that allows for easy creation of the
+            POST request. Otherwise, can pass through a dictionary of all the arguments needed.
 
             Documentation Link: https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains
 
@@ -935,7 +954,7 @@ class TDClient():
 
             EXAMPLE:
 
-            from td_ameritrade_api import OptionChain
+            from td.option_chain import OptionChain
 
             option_chain_1 = OptionChain(args)
 
@@ -949,17 +968,25 @@ class TDClient():
         # grab the original headers we have stored.
         merged_headers = self.headers()
 
-        # this request requires an API key, so let's add that.
-        option_chain.add_chain_key(key_name = 'apikey', key_value = self.config['consumer_id'])
-
-        # take the JSON representation of the string
-        data = option_chain.get_query_parameters()
-
         # define the endpoint
         endpoint = '/marketdata/chains'
 
         # build the url
         url = self.api_endpoint(endpoint)
+
+        # Grab the items needed for the request.
+        if option_chain is not None:
+
+            # this request requires an API key, so let's add that.
+            option_chain.add_chain_key(key_name = 'apikey', key_value = self.config['consumer_id'])
+
+            # take the JSON representation of the string
+            data = option_chain._get_query_parameters()
+        
+        else:
+
+            # otherwise take the args dictionary.
+            data = args_dictionary
 
         # return the response of the get request.
         return requests.get(url = url, headers = merged_headers, params = data, verify = True).json()
