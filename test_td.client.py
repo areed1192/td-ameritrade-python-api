@@ -80,17 +80,17 @@ historical_1_minute = TDSession.get_price_history(symbol = hist_symbol, periodTy
                                                     frequency = hist_frequency, needExtendedHoursData = hist_needExtendedHoursData)
 
 
-# Define the dynamic arguments - I want 6 DAYS of historical 1-minute bars. - THIS WILL RAISE AN ERROR.
-hist_periodType = 'day'
-hist_period = 6
-hist_frequencyType = 'minute'
-hist_frequency = 1
+# # Define the dynamic arguments - I want 6 DAYS of historical 1-minute bars. - THIS WILL RAISE AN ERROR.
+# hist_periodType = 'day'
+# hist_period = 6
+# hist_frequencyType = 'minute'
+# hist_frequency = 1
 
-# make the request
-historical_6_minute = TDSession.get_price_history(symbol = hist_symbol, periodType = hist_periodType, 
-                                                    period = hist_period, frequencyType = hist_frequencyType, 
-                                                    frequency = hist_frequency, needExtendedHoursData = hist_needExtendedHoursData)
-pprint.pprint(historical_6_minute)
+# # make the request
+# historical_6_minute = TDSession.get_price_history(symbol = hist_symbol, periodType = hist_periodType, 
+#                                                     period = hist_period, frequencyType = hist_frequencyType, 
+#                                                     frequency = hist_frequency, needExtendedHoursData = hist_needExtendedHoursData)
+# pprint.pprint(historical_6_minute)
 
 
 # Define a list of all valid minute periods.

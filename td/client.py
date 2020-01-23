@@ -1,9 +1,12 @@
 import os
 import time
 import json
+import datetime
 import requests
 import urllib.parse
+import dateutil.parser
 
+from td.stream import TDStreamerClient
 
 class TDClient():
 
@@ -79,6 +82,9 @@ class TDClient():
 
         # define a new attribute called 'authstate' and initalize it to '' (Blank). This will be used by our login function.
         self.authstate = False
+
+        # Initalize the client with no streaming session.
+        self.streaming_session = None
  
 
     def __repr__(self):
@@ -1910,3 +1916,67 @@ class TDClient():
             return "Order was successfully placed."
         else:
             return response.json()
+
+    def _create_token_timestamp(self, token_timestamp = None):
+        '''
+            Takes the token timestamp and converts it to the proper format
+            needed for the streaming API.
+
+            NAME: token_timestamp
+            DESC: The timestamp returned from the get_user_principals endpoint.
+            TYPE: String.
+
+            RTYPE: TDStream Object
+        '''
+
+        # First parse the date.
+        token_timestamp = dateutil.parser.parse(token_timestamp, ignoretz = True)
+
+        # Grab the starting point, so time '0'
+        epoch = datetime.datetime.utcfromtimestamp(0)
+        
+        return int((token_timestamp - epoch).total_seconds() * 1000.0)
+
+
+
+    def create_streaming_session(self):
+        '''
+            Creates a new streaming session that can be used to stream different data sources.
+
+            RTYPE: TDStream Object
+        '''
+
+        # Grab the Subscription Key
+        sub_key = self.get_streamer_subscription_keys()['keys'][0]['key']
+
+        # Grab the Streamer Info.
+        userPrincipalsResponse = self.get_user_principals(fields = ['streamerConnectionInfo'])
+
+        # Grab the timestampe.
+        tokenTimeStamp = userPrincipalsResponse['streamerInfo']['tokenTimestamp']
+
+        # Grab socket 
+        socket_url = userPrincipalsResponse['streamerInfo']['streamerSocketUrl'] 
+
+        # Parse the token timestamp.
+        tokenTimeStampAsMs = self._create_token_timestamp(token_timestamp = tokenTimeStamp)
+
+        # Define our Credentials Dictionary used for authentication.
+        credentials = {"userid": userPrincipalsResponse['accounts'][0]['accountId'],
+                    "token": userPrincipalsResponse['streamerInfo']['token'],
+                    "company": userPrincipalsResponse['accounts'][0]['company'],
+                    "segment": userPrincipalsResponse['accounts'][0]['segment'],
+                    "cddomain": userPrincipalsResponse['accounts'][0]['accountCdDomainId'],
+                    "usergroup": userPrincipalsResponse['streamerInfo']['userGroup'],
+                    "accesslevel":userPrincipalsResponse['streamerInfo']['accessLevel'],
+                    "authorized": "Y",
+                    "timestamp": tokenTimeStampAsMs,
+                    "appid": userPrincipalsResponse['streamerInfo']['appId'],
+                    "acl": userPrincipalsResponse['streamerInfo']['acl']}
+
+        # Create the session
+        self.streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse)
+
+
+
+
