@@ -6,7 +6,7 @@ import urllib
 import dateutil.parser
 
 
-from streamer import TDStreamerClient
+from OldStreamer import TDStreamerClient
 from td.client import TDClient
 from td.config import (ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID,
                        REDIRECT_URI, TD_ACCOUNT)
