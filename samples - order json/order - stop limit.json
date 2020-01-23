@@ -1,0 +1,17 @@
+{"orderType": "STOP_LIMIT",
+ "session": "NORMAL",
+ "price": "20.00",
+ "stopPrice": "19.00",
+ "duration": "DAY",
+ "orderStrategyType": "SINGLE",
+ "orderLegCollection": 
+ [{"instruction": "BUY",
+   "quantity": 1,
+   "instrument": 
+   {
+   "symbol": "AA",
+   "assetType": "EQUITY"
+    }
+}
+]
+}
