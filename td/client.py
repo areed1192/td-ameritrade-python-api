@@ -5,7 +5,6 @@ import datetime
 import requests
 import urllib.parse
 import dateutil.parser
-
 from td.stream import TDStreamerClient
 
 class TDClient():
@@ -1975,7 +1974,9 @@ class TDClient():
                     "acl": userPrincipalsResponse['streamerInfo']['acl']}
 
         # Create the session
-        self.streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse)
+        self.streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse, credentials = credentials)
+
+        return self.streaming_session
 
 
 

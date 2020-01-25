@@ -278,3 +278,7 @@ class OPTION_CHAIN_OPTION_TYPE(Enum):
     S = 'S'
     NS = 'NS'
     ALL = 'ALL'
+
+
+class STREAM_ACTIVES(Enum):
+    pass
