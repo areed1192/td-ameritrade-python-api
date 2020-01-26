@@ -1936,6 +1936,28 @@ class TDClient():
         
         return int((token_timestamp - epoch).total_seconds() * 1000.0)
 
+    def message_key(self, account_id = None):
+
+         # first make sure that the token is still valid.
+        self.token_validation()
+
+        # grab the original headers we have stored.
+        merged_headers = self.headers() 
+
+        # define the endpoint
+        endpoint = 'MessageKey'
+
+        url = r'https://apis.tdameritrade.com/apps/100/MessageKey?source={}'.format()
+
+        # build the url
+        # url = self.api_endpoint(endpoint)
+
+
+        # print(url)
+
+        # make the request
+        response = requests.get(url = url, headers = merged_headers,  verify = True)
+        print(response.url)
 
 
     def create_streaming_session(self):
@@ -1974,9 +1996,9 @@ class TDClient():
                     "acl": userPrincipalsResponse['streamerInfo']['acl']}
 
         # Create the session
-        self.streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse, credentials = credentials)
+        streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse, credentials = credentials)
 
-        return self.streaming_session
+        return streaming_session
 
 
 

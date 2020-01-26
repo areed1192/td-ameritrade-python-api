@@ -1,0 +1,2 @@
+https://apis.tdameritrade.com/apps/100/QuoteNews?source=AMTDTest&symbol=MSFT&format=compact&submit=Submit
+https://apis.tdameritrade.com/apps/100/MarketOverview?source=AMTDTest&format=compact&submit=Submit

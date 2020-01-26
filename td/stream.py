@@ -3,9 +3,7 @@ import datetime
 import json
 import pprint
 import urllib
-
 import dateutil.parser
-
 import websockets
 import asyncio
 import pyodbc
@@ -61,6 +59,22 @@ class TDStreamerClient():
         # Keep Going.
         loop.run_until_complete(asyncio.wait(tasks))
 
+    def close_stream(self):
+
+        # Define a new request
+        request = self._new_request_template()
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'ADMIN'
+        request['command'] = 'LOGOUT'
+        request['parameters']['account'] = self.user_principal_data['accounts'][0]['accountId']
+
+        self.data_requests['requests'].append(request)
+
+        self.connection.close()
+
+
     async def _connect(self):
         '''
             Connecting to webSocket server
@@ -73,7 +87,8 @@ class TDStreamerClient():
 
         if self._check_connection():
             return self.connection
-    
+
+
     def _check_connection(self):
         '''
             There are multiple times we will need to check the connection of the
@@ -86,6 +101,7 @@ class TDStreamerClient():
         else:
             raise ConnectionError
 
+
     async def _send_message(self, message = None):
         '''
             Sending message to webSocket server
@@ -95,6 +111,7 @@ class TDStreamerClient():
             TYPE: String
         '''
         await self.connection.send(message)
+
 
     async def _receive_message(self, connection):
         '''
@@ -107,19 +124,26 @@ class TDStreamerClient():
             try:
 
                 # grab and decode the message
-                message = await connection.recv()                
-                message_decoded = json.loads(message)
-                
-                # check if the response contains a key called data if so then it contains the info we want to insert.
-                if 'data' in message_decoded.keys():
-                    data = message_decoded['data'][0]
+                message = await connection.recv()
+
+                try:         
+                    message_decoded = json.loads(message)
+
+                    # check if the response contains a key called data if so then it contains the info we want to insert.
+                    if 'data' in message_decoded.keys():
+                        data = message_decoded['data'][0]
+
+                except:
+
+                    message_decoded = message
 
                 print('-'*20)
-                print('Received message from server: ' + str(message))
+                print('Received message from server: ' + str(message_decoded))
                 
             except websockets.exceptions.ConnectionClosed:            
                 print('Connection with server closed')
                 break
+
 
     async def heartbeat(self, connection):
         '''
@@ -134,40 +158,206 @@ class TDStreamerClient():
                 print('Connection with server closed')
                 break
 
-    def chart_equity(self, symbols = None, fields = None):
 
-        chart_equity_dict = {'key':0,'open_price':1,'high_price':2,'low_price':3,'close_price':4,'volume':5,'sequence':6,'chart_time':7,'chart_day':8}
-        chart_field_nums = [str(chart_equity_dict[field]) for field in fields if field in chart_equity_dict]
+    def _new_request_template(self):
 
         # first get the current service request count
-        service_count = len(self.data_requests)
+        service_count = len(self.data_requests['requests']) + 1
+
+        request = {"service":None, "requestid":service_count, "command":None, 
+                   "account": self.user_principal_data['accounts'][0]['accountId'],
+                   "source": self.user_principal_data['streamerInfo']['appId'],
+                   "parameters": {"keys": None, "fields":None}}
+
+        return request
+
+
+    def quality_of_service(self, qos_level = None):
 
         # Build the request
-        chart_equity_request = self.request.copy()
-        chart_equity_request['service'] = 'CHART_EQUITY'
-        chart_equity_request['requestid'] = service_count
-        chart_equity_request['command'] = 'ADD'
-        chart_equity_request['parameters']['keys'] = ','.join(symbols)
-        chart_equity_request['parameters']['fields'] = ','.join(chart_field_nums)
+        request = self._new_request_template()
+        request['service'] = 'ADMIN'
+        request['command'] = 'QOS'
+        request['parameters']['qoslevel'] = qos_level
 
-        self.data_requests['requests'].append(chart_equity_request)
+        self.data_requests['requests'].append(request)
+
+
+    def chart(self, service = None, symbols = None, fields = None):
+
+        chart_dict = {'key':0,'open_price':1,'high_price':2,'low_price':3,'close_price':4,'volume':5,'sequence':6,'chart_time':7,'chart_day':8}
+        field_nums = [str(chart_dict[field]) for field in fields if field in chart_dict]
+
+        # Build the request
+        request = request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
 
 
     def actives(self, service = None, venue = None, duration = None):
-        
-        # first get the current service request count
-        service_count = len(self.data_requests)
 
         # Build the request
-        actives_request = self.request.copy()
-        actives_request['service'] = service
-        actives_request['requestid'] = service_count
-        actives_request['command'] = 'SUBS'
-        actives_request['parameters']['keys'] = venue + '-' + duration
-        actives_request['parameters']['fields'] = '1'
+        request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = venue + '-' + duration
+        request['parameters']['fields'] = '1'
 
-        self.data_requests['requests'].append(actives_request)
-
+        self.data_requests['requests'].append(request)
 
 
+    def account_activity(self):
 
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'ACCT_ACTIVITY'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ''
+        request['parameters']['fields'] = '0,1,2,3'
+
+        self.data_requests['requests'].append(request)
+
+
+    def chart_history(self, service = None, symbols = None, frequency = None, period = None):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'CHART_HISTORY_FUTURES'
+        request['command'] = 'GET'
+        request['parameters']['symbols'] = '/ES'
+        request['parameters']['frequency'] = 'm1'
+        request['parameters']['period'] = 'd1'
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_one_quotes(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'QUOTE'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_one_options(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'OPTION'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_one_futures(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LEVELONE_FUTURES'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_one_forex(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LEVELONE_FOREX'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_one_futures_options(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LEVELONE_FUTURES_OPTIONS'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def news_headline(self, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'NEWS_HEADLINE'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    def timesale(self, service = None, symbols = None, fields = None):
+
+        field_nums = [str(field) for field in fields]
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(field_nums)
+
+        self.data_requests['requests'].append(request)
+
+
+    '''
+        EXPERIMENTATION SECTION
+
+        NO GUARANTEE THESE WILL WORK.
+    '''
+
+
+    def level_two_quotes_nasdaq(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'TOTAL_VIEW'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'AAPL'
+        request['parameters']['fields'] = '0,1,2,3'
+
+        self.data_requests['requests'].append(request)
+
+    def level_two_quotes_nyse(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'NYSE_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'IBM'
+        request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
