@@ -212,6 +212,9 @@ class TDStreamerClient():
 
     def account_activity(self):
 
+        # NOTE: If ACCT_ACTIVITY is one of the streaming requests, then the request MUST BE
+        # on a SSL secure connection (HTTPS)
+
         # Build the request
         request = self._new_request_template()
         request['service'] = 'ACCT_ACTIVITY'
@@ -223,6 +226,9 @@ class TDStreamerClient():
 
 
     def chart_history(self, service = None, symbols = None, frequency = None, period = None):
+
+        # NOTE: snapshot History via the stream server should no longer be used. Please use
+        # PriceHistory instead
 
         # Build the request
         request = self._new_request_template()
@@ -339,15 +345,14 @@ class TDStreamerClient():
         NO GUARANTEE THESE WILL WORK.
     '''
 
-
-    def level_two_quotes_nasdaq(self):
+    def level_two_quotes(self):
 
         # Build the request
         request = self._new_request_template()
-        request['service'] = 'TOTAL_VIEW'
+        request['service'] = 'LISTED_BOOK'
         request['command'] = 'SUBS'
-        request['parameters']['keys'] = 'AAPL'
-        request['parameters']['fields'] = '0,1,2,3'
+        request['parameters']['keys'] = 'IBM'
+        request['parameters']['fields'] = '0,1,2'
 
         self.data_requests['requests'].append(request)
 
@@ -359,5 +364,78 @@ class TDStreamerClient():
         request['command'] = 'SUBS'
         request['parameters']['keys'] = 'IBM'
         request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
+
+
+    def level_two_options(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'OPTIONS_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'MSFT_013120C115'
+        request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
+
+    def level_two_nasdaq(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'NASDAQ_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'MSFT'
+        request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
+
+    def level_two_futures(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'FUTURES_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = '/ES'
+        request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
+
+    def level_two_forex(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'OPRA'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'EUR/USD'
+        request['parameters']['fields'] = '0,1,2'
+
+        self.data_requests['requests'].append(request)
+
+    '''
+        NOT WORKING
+    '''
+
+    def news_history(self):
+
+        # OFFICIALLY DEAD
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'NEWS'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'IBM'
+        request['parameters']['fields'] = 1576828800000
+
+        self.data_requests['requests'].append(request)
+
+    def level_two_quotes_nasdaq(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'TOTAL_VIEW'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = 'AAPL'
+        request['parameters']['fields'] = '0,1,2,3'
 
         self.data_requests['requests'].append(request)
