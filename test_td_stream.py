@@ -124,12 +124,12 @@ TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1
 # TDStreamingClient.level_two_quotes()
 
 # Level Two NASQDAQ
-# TDStreamingClient.level_two_nasdaq()
+TDStreamingClient.level_two_nasdaq()
 
 # Level Two Futures
 # TDStreamingClient.level_two_futures()
 
-TDStreamingClient.level_two_forex()
+# TDStreamingClient.level_two_forex()
 
 # Print the requests
 for request in TDStreamingClient.data_requests['requests']:
