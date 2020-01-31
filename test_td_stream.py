@@ -71,7 +71,7 @@ TDStreamingClient = TDSession.create_streaming_session()
 # TDStreamingClient.chart(service = 'CHART_EQUITY', symbols = ['MSFT'], fields = chart_fields)
 
 # # Quality of Service
-# TDStreamingClient.quality_of_service(qos_level = 1)
+TDStreamingClient.quality_of_service(qos_level = 1)
 
 # # Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
 # TDStreamingClient.chart_history(service = 'CHART_HISTORY_EQUITY',symbols = ['AAPL'],frequency='m1',period='d1')
@@ -138,18 +138,18 @@ TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1
 # Level Two Quotes
 # TDStreamingClient.level_two_quotes()
 
-# Level Two NASQDAQ
-TDStreamingClient.level_two_nasdaq()
+# # Level Two NASQDAQ
+# TDStreamingClient.level_two_nasdaq()
 
-# Level Two Futures
-# TDStreamingClient.level_two_futures()
+# # Level Two Futures
+# # TDStreamingClient.level_two_futures()
 
-# TDStreamingClient.level_two_forex()
+# # TDStreamingClient.level_two_forex()
 
-# Print the requests
-for request in TDStreamingClient.data_requests['requests']:
-    print(request)
-    print('-'*80)
+# # Print the requests
+# for request in TDStreamingClient.data_requests['requests']:
+#     print(request)
+#     print('-'*80)
 
 # Stream it.
 TDStreamingClient.stream()

@@ -6,6 +6,7 @@ import urllib
 import dateutil.parser
 import websockets
 import asyncio
+import signal
 import pyodbc
 import json
 from td.fields import STREAM_FIELD_IDS, STREAM_FIELD_KEYS
@@ -43,15 +44,21 @@ class TDStreamerClient():
         self.credentials = credentials
         self.user_principal_data = user_principal_data
         self.connection = None
+
+        # this will hold all of our requests
         self.data_requests = {"requests": []}
-        self.request = {"service":None, "requestid":None, "command":None, 
-                        "account": self.user_principal_data['accounts'][0]['accountId'],
-                        "source": self.user_principal_data['streamerInfo']['appId'],
-                        "parameters": {"keys": None, "fields":None}}
+
+        # this will house all of our field numebrs and keys so that way the user can use names to define the fields they want.
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_dictionary = STREAM_FIELD_KEYS
 
     def _build_login_request(self):
+        '''
+            Builds the login request dictionary that will be used as the first 
+            service request with the streaming API.
+
+            RTYPE: Dictionary.
+        '''
 
         # define a request
         login_request = {"requests": [{"service": "ADMIN",
@@ -66,6 +73,10 @@ class TDStreamerClient():
         return json.dumps(login_request)
 
     def stream(self):
+        '''
+            Initalizes the stream by building a login request, starting an event loop,
+            creating a connection, passing through the requests, and keeping the loop running.
+        '''
         
         # Grab the login info.
         login_request = self._build_login_request()
@@ -74,10 +85,14 @@ class TDStreamerClient():
         data_request = json.dumps(self.data_requests)
 
         # Start a loop.
-        loop = asyncio.get_event_loop()
+        self.loop = asyncio.get_event_loop()
 
         # Start connection and get client connection protocol
-        connection = loop.run_until_complete(self._connect())
+        connection = self.loop.run_until_complete(self._connect())
+
+        # stop = self.loop.create_future()
+        # self.loop.add_signal_handler(signal.SIGBREAK, stop.set_result, None)
+
 
         # Start listener and heartbeat 
         tasks = [asyncio.ensure_future(self._receive_message(connection)),
@@ -85,9 +100,12 @@ class TDStreamerClient():
                  asyncio.ensure_future(self._send_message(data_request))]
 
         # Keep Going.
-        loop.run_until_complete(asyncio.wait(tasks))
+        self.loop.run_until_complete(asyncio.wait(tasks))
 
     def close_stream(self):
+        '''
+            Closes the connection to the streaming service.
+        '''
 
         # Define a new request
         request = self._new_request_template()
@@ -98,31 +116,36 @@ class TDStreamerClient():
         request['command'] = 'LOGOUT'
         request['parameters']['account'] = self.user_principal_data['accounts'][0]['accountId']
 
-        self.data_requests['requests'].append(request)
+        # self.data_requests['requests'].append(request)
+
+        task = asyncio.ensure_future(self._send_message(request))        
+        self.loop_run_until_complete(asyncio.wait(task))
 
         self.connection.close()
 
 
     async def _connect(self):
         '''
-            Connecting to webSocket server
-            websockets.client.connect returns a WebSocketClientProtocol, 
-            which is used to send and receive messages
+            Connecting to webSocket server websockets.client.connect 
+            returns a WebSocketClientProtocol, which is used to send 
+            and receive messages
         '''
 
         # Create a connection.
         self.connection = await websockets.client.connect(self.websocket_url)
-
+        
+        # check it before sending it bacl.
         if self._check_connection():
             return self.connection
 
 
     def _check_connection(self):
         '''
-            There are multiple times we will need to check the connection of the
-            websocket, this function will help do that.
+            There are multiple times we will need to check the connection 
+            of the websocket, this function will help do that.
         '''
 
+        # if it's open we can stream.
         if self.connection.open:
             print('Connection established. Streaming will begin shortly.')
             return True
@@ -143,7 +166,11 @@ class TDStreamerClient():
 
     async def _receive_message(self, connection):
         '''
-            Receiving all server messages and handle them
+            Receiving all server messages and handle them.
+
+            NAME: connection
+            DESC: The WebSocket Connection Client.
+            TYPE: Object
         '''
 
         # Keep going until cancelled.
@@ -154,21 +181,20 @@ class TDStreamerClient():
                 # grab and decode the message
                 message = await connection.recv()
 
-                try:         
+                try:  
+                    # decode and print it.      
                     message_decoded = json.loads(message)
-
-                    # check if the response contains a key called data if so then it contains the info we want to insert.
                     if 'data' in message_decoded.keys():
                         data = message_decoded['data'][0]
-
                 except:
-
                     message_decoded = message
 
                 print('-'*20)
                 print('Received message from server: ' + str(message_decoded))
-                
-            except websockets.exceptions.ConnectionClosed:            
+            
+            except websockets.exceptions.ConnectionClosed:
+
+                # stop the connection if there is an error.      
                 print('Connection with server closed')
                 break
 
@@ -188,6 +214,10 @@ class TDStreamerClient():
 
 
     def _new_request_template(self):
+        '''
+            This takes the Request template and populates the service count
+            so that the requests are in order.
+        '''
 
         # first get the current service request count
         service_count = len(self.data_requests['requests']) + 1
@@ -201,9 +231,19 @@ class TDStreamerClient():
 
 
     def quality_of_service(self, qos_level = None):
+        '''
+            Allows the user to set the speed at which they recieve messages
+            from the TD Server.
 
-        if isintance(qos_level, int):
-        qos_level is not in self.fields_dictionary:
+            NAME: qos_level
+            DESC: The Quality of Service level that you wish to set. Ranges from 0
+                  to 5 where 0 is the fastest and 5 is the slowest.
+            TYPE: String
+        '''
+
+        if isinstance(qos_level, int):
+            if str(qos_level) in self.fields_ids_dictionary['qos_request']:
+                print(qos_level)
 
         # Build the request
         request = self._new_request_template()
