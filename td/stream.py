@@ -8,10 +8,36 @@ import websockets
 import asyncio
 import pyodbc
 import json
+from td.fields import STREAM_FIELD_IDS, STREAM_FIELD_KEYS
 
 class TDStreamerClient():
 
+    '''
+        TD Ameritrade Streaming API Client Class.
+
+        Implements a Websocket object that connects to the TD Streaming API, submits requests,
+        handles messages, and streams data back to the user.
+    '''
+
     def __init__(self, websocket_url = None, user_principal_data = None, credentials = None):
+        '''
+            Initalizes the Client Object and defines different components that will be needed to
+            make a connection with the TD Streaming API.
+
+            NAME: websocket_url
+            DESC: The websocket URL that is returned from a Get_User_Prinicpals Request.
+            TYPE: String
+
+            NAME: user_principal_data
+            DESC: The data that was returned from the "Get_User_Principals" request. Contains the
+                  info need for the account info.
+            TYPE: Dictionary
+
+            NAME: credentials
+            DESC: A credentials dictionary that is created from the "create_streaming_session" method.
+            TYPE: Dictionary
+            
+        '''
 
         self.websocket_url = "wss://{}/ws".format(websocket_url)
         self.credentials = credentials
@@ -22,6 +48,8 @@ class TDStreamerClient():
                         "account": self.user_principal_data['accounts'][0]['accountId'],
                         "source": self.user_principal_data['streamerInfo']['appId'],
                         "parameters": {"keys": None, "fields":None}}
+        self.fields_ids_dictionary = STREAM_FIELD_IDS
+        self.fields_keys_dictionary = STREAM_FIELD_KEYS
 
     def _build_login_request(self):
 
@@ -173,6 +201,9 @@ class TDStreamerClient():
 
 
     def quality_of_service(self, qos_level = None):
+
+        if isintance(qos_level, int):
+        qos_level is not in self.fields_dictionary:
 
         # Build the request
         request = self._new_request_template()

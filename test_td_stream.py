@@ -2,6 +2,21 @@ import requests
 from td.client import TDClient
 from td.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
 
+
+account_activity_fields = ['subscription-key','account-id','message-type','message-data']
+level_one_forex_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','digits','open-price','net-change','52-week-low','exchange-name','security-status','mark','tick','tick-amount','product','percent-change','trading-hours','is-tradable','market-maker','52-week-high']
+level_one_futures_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','last-id','open-price','net-change','security-status','mark','open-interest','future-percent-change','exhange-name','tick','tick-amount','product','future-price-format','future-trading-hours','future-is-tradable','future-multiplier','future-is-active','future-settlement-price','future-active-symbol','future-expiration-date']
+level_one_futures_options_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','last-id','open-price','net-change','security-status','mark','open-interest','future-percent-change','exhange-name','tick','tick-amount','product','future-price-format','future-trading-hours','future-is-tradable','future-multiplier','future-is-active','future-settlement-price','future-active-symbol','future-expiration-date']
+level_one_option_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','quote-day','trade-day','volatility','description','digits','open-price','net-change','security-status','mark','open-interest','money-intrinsic-value','expiration-year','multiplier','strike-price','contract-type','underlying','expiration-month','deliverables','time-value','expiration-day','days-to-expiration','delta','gamma','theta','vega','rho','theoretical-option-value','underlying-price','uv-expiration-type']
+level_one_quote_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','bid-tick','close-price','exchange-id','marginable','shortable','island-bid','island-ask','island-volume','quote-day','trade-day','volatility','description','last-id','digits','open-price','net-change','52 -week-high','52-week-low','pe-ratio','dividend-amount','dividend-yield','island-bid-size','island-ask-size','nav','fund-price','exchange-name','dividend-date','regular-market-quote','regular-market-trade','regular-market-last-price','regular-market-last-size','regular-market-trade-time','regular-market-trade-day','regular-market-net-change','security-status','mark','quote-time-in-long','trade-time-in-long','regular-market-trade-time-in-long']
+news_headline_fields = ['symbol','error-code','story-datetime','headline-id','status','headline','story-id','count-for-keyword','keyword-array','is-hot','story-source']
+qos_request_fields = ['express','real-time','fast','moderate','slow','delayed']
+timesale_fields = ['symbol','last-price','last-size','trade-time','last-sequence']
+
+
+
+
+
 '''
 
     WORKING
