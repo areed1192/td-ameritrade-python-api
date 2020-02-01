@@ -2,9 +2,11 @@
 TDAmeritradeState.json
 test_saved_orders.py
 td/config.py
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 td/__pycache__/
+__pycache__/
 *.py[cod]
 *$py.class
 

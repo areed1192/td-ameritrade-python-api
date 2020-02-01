@@ -2,14 +2,15 @@ import asyncio
 import datetime
 import json
 import pprint
+import signal
 import urllib
+
 import dateutil.parser
 import websockets
-import asyncio
-import signal
+
 import pyodbc
-import json
 from td.fields import STREAM_FIELD_IDS, STREAM_FIELD_KEYS
+
 
 class TDStreamerClient():
 
@@ -20,7 +21,7 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     '''
 
-    def __init__(self, websocket_url = None, user_principal_data = None, credentials = None):
+    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None):
         '''
             Initalizes the Client Object and defines different components that will be needed to
             make a connection with the TD Streaming API.
@@ -37,7 +38,7 @@ class TDStreamerClient():
             NAME: credentials
             DESC: A credentials dictionary that is created from the "create_streaming_session" method.
             TYPE: Dictionary
-            
+
         '''
 
         self.websocket_url = "wss://{}/ws".format(websocket_url)
@@ -62,14 +63,14 @@ class TDStreamerClient():
 
         # define a request
         login_request = {"requests": [{"service": "ADMIN",
-                                       "requestid": "0",  
+                                       "requestid": "0",
                                        "command": "LOGIN",
                                        "account": self.user_principal_data['accounts'][0]['accountId'],
                                        "source": self.user_principal_data['streamerInfo']['appId'],
                                        "parameters": {"credential": urllib.parse.urlencode(self.credentials),
                                                       "token": self.user_principal_data['streamerInfo']['token'],
                                                       "version": "1.0"}}]}
-        
+
         return json.dumps(login_request)
 
     def stream(self):
@@ -77,7 +78,7 @@ class TDStreamerClient():
             Initalizes the stream by building a login request, starting an event loop,
             creating a connection, passing through the requests, and keeping the loop running.
         '''
-        
+
         # Grab the login info.
         login_request = self._build_login_request()
 
@@ -93,8 +94,7 @@ class TDStreamerClient():
         # stop = self.loop.create_future()
         # self.loop.add_signal_handler(signal.SIGBREAK, stop.set_result, None)
 
-
-        # Start listener and heartbeat 
+        # Start listener and heartbeat
         tasks = [asyncio.ensure_future(self._receive_message(connection)),
                  asyncio.ensure_future(self._send_message(login_request)),
                  asyncio.ensure_future(self._send_message(data_request))]
@@ -118,11 +118,10 @@ class TDStreamerClient():
 
         # self.data_requests['requests'].append(request)
 
-        task = asyncio.ensure_future(self._send_message(request))        
-        self.loop_run_until_complete(asyncio.wait(task))
+        task = asyncio.ensure_future(self._send_message(request))
+        self.loop.run_until_complete(asyncio.wait(task))
 
         self.connection.close()
-
 
     async def _connect(self):
         '''
@@ -133,11 +132,10 @@ class TDStreamerClient():
 
         # Create a connection.
         self.connection = await websockets.client.connect(self.websocket_url)
-        
+
         # check it before sending it bacl.
         if self._check_connection():
             return self.connection
-
 
     def _check_connection(self):
         '''
@@ -152,8 +150,7 @@ class TDStreamerClient():
         else:
             raise ConnectionError
 
-
-    async def _send_message(self, message = None):
+    async def _send_message(self, message=None):
         '''
             Sending message to webSocket server
 
@@ -162,7 +159,6 @@ class TDStreamerClient():
             TYPE: String
         '''
         await self.connection.send(message)
-
 
     async def _receive_message(self, connection):
         '''
@@ -181,23 +177,23 @@ class TDStreamerClient():
                 # grab and decode the message
                 message = await connection.recv()
 
-                try:  
-                    # decode and print it.      
+                try:
+                    # decode and print it.
                     message_decoded = json.loads(message)
                     if 'data' in message_decoded.keys():
                         data = message_decoded['data'][0]
+                        print(data)
                 except:
                     message_decoded = message
 
                 print('-'*20)
                 print('Received message from server: ' + str(message_decoded))
-            
+
             except websockets.exceptions.ConnectionClosed:
 
-                # stop the connection if there is an error.      
+                # stop the connection if there is an error.
                 print('Connection with server closed')
                 break
-
 
     async def heartbeat(self, connection):
         '''
@@ -212,7 +208,6 @@ class TDStreamerClient():
                 print('Connection with server closed')
                 break
 
-
     def _new_request_template(self):
         '''
             This takes the Request template and populates the service count
@@ -222,15 +217,41 @@ class TDStreamerClient():
         # first get the current service request count
         service_count = len(self.data_requests['requests']) + 1
 
-        request = {"service":None, "requestid":service_count, "command":None, 
+        request = {"service": None, "requestid": service_count, "command": None,
                    "account": self.user_principal_data['accounts'][0]['accountId'],
                    "source": self.user_principal_data['streamerInfo']['appId'],
-                   "parameters": {"keys": None, "fields":None}}
+                   "parameters": {"keys": None, "fields": None}}
 
         return request
 
+    def _validate_argument(self, argument=None, endpoint=None):
+        '''
+            Validate arguments before submitting request.
 
-    def quality_of_service(self, qos_level = None):
+            NAME: argument
+            DESC: The argument that needs to be validated.
+            TYPE: String | Integer
+
+            NAME: endpoint
+            DESC: The endpoint which the argument will be fed to. For example, "level_one_quotes".
+            TYPE: String
+
+            RTYPE: Boolean
+        '''
+
+        # if it's an int, then check the IDs Dictionary.
+        if isinstance(argument, int) and str(argument) in self.fields_ids_dictionary[endpoint]:
+            argument = [str(key) for key in argument]
+            return argument
+        # if it's a string check the KEYs Dictionary.
+        elif isinstance(argument, str) and argument in self.fields_keys_dictionary[endpoint]:
+            argument = [self.fields_keys_dictionary[endpoint][key]
+                        for key in argument]
+            return argument
+        else:
+            return False
+
+    def quality_of_service(self, qos_level=None):
         '''
             Allows the user to set the speed at which they recieve messages
             from the TD Server.
@@ -241,45 +262,83 @@ class TDStreamerClient():
             TYPE: String
         '''
 
-        if isinstance(qos_level, int):
-            if str(qos_level) in self.fields_ids_dictionary['qos_request']:
-                print(qos_level)
+        if self._validate_argument(argument=qos_level, endpoint='qos_request'):
 
-        # Build the request
-        request = self._new_request_template()
-        request['service'] = 'ADMIN'
-        request['command'] = 'QOS'
-        request['parameters']['qoslevel'] = qos_level
+            # Build the request
+            request = self._new_request_template()
+            request['service'] = 'ADMIN'
+            request['command'] = 'QOS'
+            request['parameters']['qoslevel'] = qos_level
+            self.data_requests['requests'].append(request)
 
-        self.data_requests['requests'].append(request)
+        else:
+            raise ValueError('ERROR!')
 
+    def chart(self, service=None, symbols=None, fields=None):
+        '''
+            Represents the CHART_EQUITY endpoint that can be used to stream info
+            needed to recreate charts.
 
-    def chart(self, service = None, symbols = None, fields = None):
+            NAME: service
+            DESC: The type of Chart Service you wish to recieve. Can be either CHART_EQUITY, CHART_FUTURES
+                  or CHART_OPTIONS.
+            TYPE: String
 
-        chart_dict = {'key':0,'open_price':1,'high_price':2,'low_price':3,'close_price':4,'volume':5,'sequence':6,'chart_time':7,'chart_day':8}
-        field_nums = [str(chart_dict[field]) for field in fields if field in chart_dict]
+            NAME: symbols
+            DESC: The symbol you wish to get chart data for.
+            TYPE: String
 
-        # Build the request
-        request = request = self._new_request_template()
-        request['service'] = service
-        request['command'] = 'SUBS'
-        request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = ','.join(field_nums)
+            NAME: fields
+            DESC: The fields for the request. Can either be a list of keys ['key 1','key 2'] or a list
+                  of ints [1, 2, 3]
+            TYPE: List<int> | List<str>
+         '''
 
-        self.data_requests['requests'].append(request)
+        if self._validate_argument(argument=fields, endpoint='chart'):
 
+            # Build the request
+            request = request = self._new_request_template()
+            request['service'] = service
+            request['command'] = 'SUBS'
+            request['parameters']['keys'] = ','.join(symbols)
+            request['parameters']['fields'] = ','.join(fields)
+            self.data_requests['requests'].append(request)
 
-    def actives(self, service = None, venue = None, duration = None):
+        else:
+            raise ValueError('ERROR!')
 
-        # Build the request
-        request = self._new_request_template()
-        request['service'] = service
-        request['command'] = 'SUBS'
-        request['parameters']['keys'] = venue + '-' + duration
-        request['parameters']['fields'] = '1'
+    def actives(self, service=None, venue=None, duration=None):
+        '''
+            Represents the ACTIVES endpoint for the TD Streaming API where
+            you can get the most actively traded stocks for a specific exchange.
 
-        self.data_requests['requests'].append(request)
+            NAME: service
+            DESC: The type of Active Service you wish to recieve. Can be one of the following:
+                  [NASDAQ, NYSE, OTCBB, CALLS, OPTS, PUTS, CALLS-DESC, OPTS-DESC, PUTS-DESC}
+            TYPE: String
 
+            NAME: venue
+            DESC: The symbol you wish to get chart data for.
+            TYPE: String
+
+            NAME: duration
+            DESC: Specifies the look back period for collecting most actively traded instrument. Can be either
+                  ['ALL', '60', '300', '600', '1800', '3600'] where the integrers represent number of seconds.
+            TYPE: String
+        '''
+
+        if self._validate_argument(argument=venue, endpoint='actives'):
+
+            # Build the request
+            request = self._new_request_template()
+            request['service'] = service
+            request['command'] = 'SUBS'
+            request['parameters']['keys'] = venue + '-' + duration
+            request['parameters']['fields'] = '1'
+            self.data_requests['requests'].append(request)
+
+        else:
+            raise ValueError('ERROR!')
 
     def account_activity(self):
 
@@ -295,8 +354,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def chart_history(self, service = None, symbols = None, frequency = None, period = None):
+    def chart_history(self, service=None, symbols=None, frequency=None, period=None):
 
         # NOTE: snapshot History via the stream server should no longer be used. Please use
         # PriceHistory instead
@@ -311,8 +369,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def level_one_quotes(self, symbols = None, fields = None):
+    def level_one_quotes(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -325,8 +382,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def level_one_options(self, symbols = None, fields = None):
+    def level_one_options(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -339,8 +395,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def level_one_futures(self, symbols = None, fields = None):
+    def level_one_futures(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -353,8 +408,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def level_one_forex(self, symbols = None, fields = None):
+    def level_one_forex(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -367,8 +421,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def level_one_futures_options(self, symbols = None, fields = None):
+    def level_one_futures_options(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -381,8 +434,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def news_headline(self, symbols = None, fields = None):
+    def news_headline(self, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -395,8 +447,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-
-    def timesale(self, service = None, symbols = None, fields = None):
+    def timesale(self, service=None, symbols=None, fields=None):
 
         field_nums = [str(field) for field in fields]
 
@@ -408,7 +459,6 @@ class TDStreamerClient():
         request['parameters']['fields'] = ','.join(field_nums)
 
         self.data_requests['requests'].append(request)
-
 
     '''
         EXPERIMENTATION SECTION
@@ -437,7 +487,6 @@ class TDStreamerClient():
         request['parameters']['fields'] = '0,1,2'
 
         self.data_requests['requests'].append(request)
-
 
     def level_two_options(self):
 

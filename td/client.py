@@ -7,8 +7,8 @@ import urllib.parse
 import dateutil.parser
 from td.stream import TDStreamerClient
 
-class TDClient():
 
+class TDClient():
 
     '''
         TD Ameritrade API Client Class.
@@ -17,7 +17,6 @@ class TDClient():
         and state management, adds token for authenticated calls, and performs request 
         to the TD Ameritrade API.
     '''
-
 
     def __init__(self, **kwargs):
         '''
@@ -29,7 +28,7 @@ class TDClient():
             NAME: consumer_id
             DESC: The Consumer ID assigned to you during the App registration. This can
                   be found at the app registration portal.
-            
+
             NAME: account_number
             DESC: This is the account number for your main TD Ameritrade Account.
 
@@ -47,23 +46,23 @@ class TDClient():
                        'account_number': None,
                        'account_password': None,
                        'redirect_uri': None,
-                       'resource':'https://api.tdameritrade.com',
-                       'api_version':'/v1',
+                       'resource': 'https://api.tdameritrade.com',
+                       'api_version': '/v1',
                        'cache_state': True,
-                       'authenticaiton_url':'https://auth.tdameritrade.com',
-                       'auth_endpoint':'https://auth.tdameritrade.com' + '/auth?',
-                       'token_endpoint':'https://api.tdameritrade.com' + '/v1' + '/oauth2/token',
+                       'authenticaiton_url': 'https://auth.tdameritrade.com',
+                       'auth_endpoint': 'https://auth.tdameritrade.com' + '/auth?',
+                       'token_endpoint': 'https://api.tdameritrade.com' + '/v1' + '/oauth2/token',
                        'refresh_enabled': True}
 
         # This serves as a mechanism to validate input parameters for the different endpoint arguments.
         self.endpoint_arguments = {
-                                   'search_instruments':{'projection': ['symbol-search', 'symbol-regex', 'desc-search', 'desc-regex', 'fundamental']},
-                                   'get_market_hours':{'markets':['EQUITY', 'OPTION', 'FUTURE', 'BOND', 'FOREX']},
-                                   'get_movers':{'market':['$DJI', '$COMPX', '$SPX.X'],
-                                                 'direction':['up','down'],
-                                                 'change':['value','percent']},
-                                    'get_user_principals':{'fields':['streamerSubscriptionKeys', 'streamerConnectionInfo', 'preferences', 'surrogateIds']}
-                                  }
+            'search_instruments': {'projection': ['symbol-search', 'symbol-regex', 'desc-search', 'desc-regex', 'fundamental']},
+            'get_market_hours': {'markets': ['EQUITY', 'OPTION', 'FUTURE', 'BOND', 'FOREX']},
+            'get_movers': {'market': ['$DJI', '$COMPX', '$SPX.X'],
+                           'direction': ['up', 'down'],
+                           'change': ['value', 'percent']},
+            'get_user_principals': {'fields': ['streamerSubscriptionKeys', 'streamerConnectionInfo', 'preferences', 'surrogateIds']}
+        }
 
         # loop through the key word arguments.
         for key in kwargs:
@@ -84,7 +83,6 @@ class TDClient():
 
         # Initalize the client with no streaming session.
         self.streaming_session = None
- 
 
     def __repr__(self):
         '''
@@ -100,12 +98,12 @@ class TDClient():
             logged_in_state = 'False'
 
         # define the string representation
-        str_representation = '<TDAmeritrade Client (logged_in = {}, authorized = {})>'.format(logged_in_state, self.authstate)
+        str_representation = '<TDAmeritrade Client (logged_in = {}, authorized = {})>'.format(
+            logged_in_state, self.authstate)
 
         return str_representation
 
-
-    def headers(self, mode = None):
+    def headers(self, mode=None):
         ''' 
             Returns a dictionary of default HTTP headers for calls to TD Ameritrade API,
             in the headers we defined the Authorization and access token.
@@ -119,13 +117,12 @@ class TDClient():
         token = self.state['access_token']
 
         # create the headers dictionary
-        headers = {'Authorization' : f'Bearer {token}'}
+        headers = {'Authorization': f'Bearer {token}'}
 
         if mode == 'application/json':
             headers['Content-type'] = 'application/json'
 
         return headers
-
 
     def api_endpoint(self, url):
         '''
@@ -143,8 +140,7 @@ class TDClient():
             return url
 
         # otherwise build the URL
-        return urllib.parse.urljoin( self.config['resource'] + self.config['api_version'] + "/", url.lstrip('/'))
-
+        return urllib.parse.urljoin(self.config['resource'] + self.config['api_version'] + "/", url.lstrip('/'))
 
     def state_manager(self, action):
         '''
@@ -160,13 +156,13 @@ class TDClient():
         '''
 
         # define the initalized state, these are the default values.
-        initialized_state = {'access_token': None, 
+        initialized_state = {'access_token': None,
                              'refresh_token': None,
                              'access_token_expires_at': 0,
-                             'refresh_token_expires_at':0, 
+                             'refresh_token_expires_at': 0,
                              'authorization_url': None,
                              'redirect_code': None,
-                             'token_scope': '', 
+                             'token_scope': '',
                              'loggedin': False}
 
         # Grab the current directory of the client file, that way we can store the JSON file in the same folder.
@@ -175,14 +171,14 @@ class TDClient():
         file_path = os.path.join(dir_path, filename)
 
         # if the state is initalized
-        if action == 'init':            
+        if action == 'init':
             self.state = initialized_state
 
             # if they allowed for caching and the file exist, load the file.
             if self.config['cache_state'] and os.path.isfile(file_path):
                 with open(file_path, 'r') as fileHandle:
                     self.state.update(json.load(fileHandle))
-            
+
             # if they didnt allow for caching delete the file.
             elif not self.config['cache_state'] and os.path.isfile(os.path.join(dir_path, filename)):
                 os.remove(file_path)
@@ -192,9 +188,9 @@ class TDClient():
             with open(file_path, 'w') as fileHandle:
 
                 # build JSON string using dictionary comprehension.
-                json_string = {key:self.state[key] for key in initialized_state}
+                json_string = {key: self.state[key]
+                               for key in initialized_state}
                 json.dump(json_string, fileHandle)
-
 
     def login(self):
         '''
@@ -205,7 +201,7 @@ class TDClient():
             Once the user is authenticated the API key is valide for 90 days, so refresh tokens may be used
             from this point, up to the 90 days.
         '''
-        
+
         # if caching is enabled then attempt silent authentication.
         if self.config['cache_state']:
 
@@ -224,19 +220,20 @@ class TDClient():
         data = {'response_type': 'code',
                 'redirect_uri': self.config['redirect_uri'],
                 'client_id': self.config['consumer_id'] + '@AMER.OAUTHAP'}
-        
+
         # url encode the data.
         params = urllib.parse.urlencode(data)
 
         # build the full URL for the authentication endpoint.
-        url = self.config['auth_endpoint'] +  params
+        url = self.config['auth_endpoint'] + params
 
         # set the newly created 'authorization_url' key to the newly created url
         self.state['authorization_url'] = url
 
         # aks the user to go to the URL provided, they will be prompted to authenticate themsevles.
-        print('Please go to URL provided authorize your account: {}'.format(self.state['authorization_url']))
-        
+        print('Please go to URL provided authorize your account: {}'.format(
+            self.state['authorization_url']))
+
         # ask the user to take the final URL after authentication and paste here so we can parse.
         my_response = input('Paste the full URL redirect here: ')
 
@@ -245,7 +242,6 @@ class TDClient():
 
         # this will complete the final part of the authentication process.
         self.grab_access_token()
-
 
     def logout(self):
         '''
@@ -256,8 +252,7 @@ class TDClient():
         # new access token or refresh token next time they use the API
         self.state_manager('init')
 
-
-    def grab_access_token(self):        
+    def grab_access_token(self):
         '''
             Access token handler for AuthCode Workflow. This takes the
             authorization code parsed from the auth endpoint to call the
@@ -274,14 +269,15 @@ class TDClient():
         url_code = url_values[0][0]
 
         # define the parameters of our access token post.
-        data = {'grant_type':'authorization_code',
-                'client_id':self.config['consumer_id'],
-                'access_type':'offline',
-                'code':url_code,
-                'redirect_uri':self.config['redirect_uri']}
+        data = {'grant_type': 'authorization_code',
+                'client_id': self.config['consumer_id'],
+                'access_type': 'offline',
+                'code': url_code,
+                'redirect_uri': self.config['redirect_uri']}
 
         # post the data to the token endpoint and store the response.
-        token_response = requests.post(url = self.config['token_endpoint'], data = data, verify = True)
+        token_response = requests.post(
+            url=self.config['token_endpoint'], data=data, verify=True)
 
         # call the save_token method to save the access token.
         self.token_save(token_response)
@@ -289,7 +285,6 @@ class TDClient():
         # update the state if the request was successful.
         if token_response and token_response.ok:
             self.state_manager('save')
-
 
     def silent_sso(self):
         '''
@@ -301,20 +296,19 @@ class TDClient():
         '''
 
         # if the current access token is not expired then we are still authenticated.
-        if self.token_seconds(token_type = 'access_token') > 0:
+        if self.token_seconds(token_type='access_token') > 0:
             return True
 
         # if the refresh token is expired then you have to do a full login.
-        elif self.token_seconds(token_type = 'refresh_token') <= 0:
+        elif self.token_seconds(token_type='refresh_token') <= 0:
             return False
-        
+
         # if the current access token is expired then try and refresh access token.
         elif self.state['refresh_token'] and self.token_refresh():
             return True
-        
+
         # More than likely a first time login, so can't do silent authenticaiton.
         return False
-
 
     def token_refresh(self):
         '''
@@ -325,12 +319,13 @@ class TDClient():
 
         # build the parameters of our request
         data = {'client_id': self.config['consumer_id'] + '@AMER.OAUTHAP',
-                'grant_type':'refresh_token',
-                'access_type':'offline',
+                'grant_type': 'refresh_token',
+                'access_type': 'offline',
                 'refresh_token': self.state['refresh_token']}
 
         # make a post request to the token endpoint
-        response = requests.post(self.config['token_endpoint'], data=data, verify=True)
+        response = requests.post(
+            self.config['token_endpoint'], data=data, verify=True)
 
         # if there was an error go through the full authentication
         if response.status_code == 401:
@@ -353,7 +348,6 @@ class TDClient():
             self.token_save(response)
             self.state_manager('save')
             return True
-
 
     def token_save(self, response):
         '''
@@ -385,13 +379,14 @@ class TDClient():
         self.state['loggedin'] = True
 
         # store token expiration time
-        self.state['access_token_expires_at'] = time.time() + int(json_data['expires_in'])
-        self.state['refresh_token_expires_at'] = time.time() + int(json_data['refresh_token_expires_in'])
+        self.state['access_token_expires_at'] = time.time() + \
+            int(json_data['expires_in'])
+        self.state['refresh_token_expires_at'] = time.time(
+        ) + int(json_data['refresh_token_expires_in'])
 
         return True
 
-
-    def token_seconds(self, token_type = 'access_token'):
+    def token_seconds(self, token_type='access_token'):
         '''
             Return the number of seconds until the current access token or refresh token
             will expire. The default value is access token because this is the most commonly used
@@ -406,15 +401,16 @@ class TDClient():
             RTYPE: Boolean
         '''
 
-        # if needed check the access token.        
+        # if needed check the access token.
         if token_type == 'access_token':
 
             # if the time to expiration is less than or equal to 0, return 0.
             if not self.state['access_token'] or time.time() >= self.state['access_token_expires_at']:
                 return 0
-            
+
             # else return the number of seconds until expiration.
-            token_exp = int(self.state['access_token_expires_at'] - time.time())
+            token_exp = int(
+                self.state['access_token_expires_at'] - time.time())
 
         # if needed check the refresh token.
         elif token_type == 'refresh_token':
@@ -424,12 +420,12 @@ class TDClient():
                 return 0
 
             # else return the number of seconds until expiration.
-            token_exp = int(self.state['refresh_token_expires_at'] - time.time())
+            token_exp = int(
+                self.state['refresh_token_expires_at'] - time.time())
 
         return token_exp
 
-
-    def token_validation(self, nseconds = 5):
+    def token_validation(self, nseconds=5):
         '''
             Verify the current access token is valid for at least N seconds, and
             if not then attempt to refresh it. Can be used to assure a valid token
@@ -441,9 +437,8 @@ class TDClient():
                   attempting to get a refresh token.
         '''
 
-        if self.token_seconds(token_type = 'access_token') < nseconds and self.config['refresh_enabled']:
+        if self.token_seconds(token_type='access_token') < nseconds and self.config['refresh_enabled']:
             self.token_refresh()
-
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -455,8 +450,7 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def validate_arguments(self, endpoint = None, parameter_name = None, parameter_argument = None):
+    def validate_arguments(self, endpoint=None, parameter_name=None, parameter_argument=None):
         '''
             This will validate an argument for the specified endpoint and raise an error if the argument
             is not valid. Can take both a list of arguments or a single argument.
@@ -509,27 +503,29 @@ class TDClient():
 
         # if it's a list then see if it matches any of the possible values.
         if type(parameter_argument) is list:
-            
+
             # build the validation result list.
-            validation_result = [argument not in parameter_possible_arguments for argument in parameter_argument]
-            
+            validation_result = [
+                argument not in parameter_possible_arguments for argument in parameter_argument]
+
             # if any of the results are FALSE then raise an error.
             if any(validation_result):
-                print('\nThe value you passed through is not valid, please choose one of the following valid values: {} \n'.format(' ,'.join(parameter_possible_arguments)))
-                raise ValueError('Invalid Value.')            
+                print('\nThe value you passed through is not valid, please choose one of the following valid values: {} \n'.format(
+                    ' ,'.join(parameter_possible_arguments)))
+                raise ValueError('Invalid Value.')
             elif not any(validation_result):
                 return True
 
         # if the argument isn't in the list of possible values, raise an error.
         elif parameter_argument not in parameter_possible_arguments:
-            print('\nThe value you passed through is not valid, please choose one of the following valid values: {} \n'.upper().format(' ,'.join(parameter_possible_arguments)))
+            print('\nThe value you passed through is not valid, please choose one of the following valid values: {} \n'.upper(
+            ).format(' ,'.join(parameter_possible_arguments)))
             raise ValueError('Invalid Value.')
 
         elif parameter_argument in parameter_possible_arguments:
             return True
 
-
-    def prepare_arguments_list(self, parameter_list = None):
+    def prepare_arguments_list(self, parameter_list=None):
         '''
             Some endpoints can take multiple values for a parameter, this
             method takes that list and creates a valid string that can be 
@@ -549,14 +545,13 @@ class TDClient():
         # validate it's a list.
         if type(parameter_list) is list:
 
-            # specify the delimeter and join the list.            
+            # specify the delimeter and join the list.
             delimeter = ','
             parameter_list = delimeter.join(parameter_list)
 
         return parameter_list
 
-
-    def get_quotes(self, instruments = None):
+    def get_quotes(self, instruments=None):
         '''
 
             Serves as the mechanism to make a request to the Get Quote and Get Quotes Endpoint.
@@ -575,7 +570,7 @@ class TDClient():
             SessionObject.get_quotes(instruments = ['MSFT','SQ'])
 
         '''
-        
+
         # first make sure that the token is still valid.
         self.token_validation()
 
@@ -583,11 +578,11 @@ class TDClient():
         merged_headers = self.headers()
 
         # because we have a list argument, prep it for the request.
-        instruments = self.prepare_arguments_list(parameter_list = instruments)
+        instruments = self.prepare_arguments_list(parameter_list=instruments)
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'symbol':instruments}
+        data = {'apikey': self.config['consumer_id'],
+                'symbol': instruments}
 
         # define the endpoint
         endpoint = '/marketdata/quotes'
@@ -596,12 +591,10 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers = merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def get_price_history(self, symbol = None, periodType = None, period = None, startDate = None, endDate = None, 
-                                frequencyType = None, frequency = None,  needExtendedHoursData = None):
-
+    def get_price_history(self, symbol=None, periodType=None, period=None, startDate=None, endDate=None,
+                          frequencyType=None, frequency=None,  needExtendedHoursData=None):
         '''
             STILL BUILDING
 
@@ -612,7 +605,7 @@ class TDClient():
             NAME: periodType
             DESC: The type of period to show. Valid values are day, month, year, or ytd (year to date). Default is day.
             TYPE: String
- 
+
             NAME: period
             DESC: The number of periods to show.
             TYPE: Integer
@@ -628,7 +621,7 @@ class TDClient():
             NAME: frequencyType
             DESC: The type of frequency with which a new candle is formed.
             TYPE: String
- 
+
             NAME: frequency
             DESC: The number of the frequencyType to be included in each candle.
             TYPE: Integer
@@ -671,27 +664,32 @@ class TDClient():
 
                 # Validate periodType
                 if data['periodType'] not in valid_periods.keys():
-                    print('Period Type: {} is not valid. Valid values are {}'.format(data['periodType'], valid_periods.keys()))
+                    print('Period Type: {} is not valid. Valid values are {}'.format(
+                        data['periodType'], valid_periods.keys()))
                     raise ValueError('Invalid Value')
 
                 # Validate period
                 if data['period'] and data['period'] not in valid_periods[data['periodType']]:
-                    print('Period: {} is not valid. Valid values are {}'.format(data['period'], valid_periods[data['periodType']]))
+                    print('Period: {} is not valid. Valid values are {}'.format(
+                        data['period'], valid_periods[data['periodType']]))
                     raise ValueError('Invalid Value')
 
                 # Validate frequencyType by frenquency
                 if data['frequencyType'] not in valid_frequencies.keys():
-                    print('frequencyType: {} is not valid. Valid values are {}'.format(data['frequencyType'],  valid_frequencies.keys()))
+                    print('frequencyType: {} is not valid. Valid values are {}'.format(
+                        data['frequencyType'],  valid_frequencies.keys()))
                     raise ValueError('Invalid Value')
 
                 # Validate frequencyType by periodType
                 if data['frequencyType'] not in valid_frequency_types[data['periodType']]:
-                    print('frequencyType: {} is not valid. Valid values for period: {} are {}'.format(data['frequencyType'], data['periodType'], valid_frequency_types[data['periodType']]))
+                    print('frequencyType: {} is not valid. Valid values for period: {} are {}'.format(
+                        data['frequencyType'], data['periodType'], valid_frequency_types[data['periodType']]))
                     raise ValueError('Invalid Value')
 
                 # Validate periodType
                 if data['frequency'] not in valid_frequencies[data['frequencyType']]:
-                    print('frequency: {} is not valid. Valid values are {}'.format(data['frequency'], valid_frequencies[data['frequencyType']]))
+                    print('frequency: {} is not valid. Valid values are {}'.format(
+                        data['frequency'], valid_frequencies[data['frequencyType']]))
                     raise ValueError('Invalid Value')
 
                 # TODO Validate startDate and endDate
@@ -710,14 +708,14 @@ class TDClient():
         merged_headers = self.headers()
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'period':period,
-                'periodType':periodType,
-                'startDate':startDate,
-                'endDate':endDate,
-                'frequency':frequency,
-                'frequencyType':frequencyType,
-                'needExtendedHoursData':needExtendedHoursData}
+        data = {'apikey': self.config['consumer_id'],
+                'period': period,
+                'periodType': periodType,
+                'startDate': startDate,
+                'endDate': endDate,
+                'frequency': frequency,
+                'frequencyType': frequencyType,
+                'needExtendedHoursData': needExtendedHoursData}
 
         # define the endpoint
         endpoint = '/marketdata/{}/pricehistory'.format(symbol)
@@ -729,10 +727,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers = merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def search_instruments(self, symbol = None, projection = 'symbol-search'):
+    def search_instruments(self, symbol=None, projection='symbol-search'):
         '''
             Search or retrieve instrument data, including fundamental data.
 
@@ -747,7 +744,7 @@ class TDClient():
 
                   1. symbol-search
                      Retrieve instrument data of a specific symbol or cusip
-                
+
                   2. symbol-regex
                      Retrieve instrument data for all symbols matching regex. 
                      Example: symbol=XYZ.* will return all symbols beginning with XYZ
@@ -761,7 +758,7 @@ class TDClient():
                      Search description with full regex support. Example: symbol=XYZ.[A-C] 
                      returns all instruments whose descriptions contain a word beginning 
                      with XYZ followed by a character A through C
-                    
+
                   5. fundamental
                      Returns fundamental data for a single instrument specified by exact symbol.
 
@@ -781,15 +778,16 @@ class TDClient():
         self.token_validation()
 
         # validate argument
-        self.validate_arguments(endpoint = 'search_instruments', parameter_name = 'projection', parameter_argument = projection)
+        self.validate_arguments(endpoint='search_instruments',
+                                parameter_name='projection', parameter_argument=projection)
 
         # grab the original headers we have stored.
         merged_headers = self.headers()
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'symbol':symbol,
-                'projection':projection}
+        data = {'apikey': self.config['consumer_id'],
+                'symbol': symbol,
+                'projection': projection}
 
         # define the endpoint
         endpoint = '/instruments'
@@ -798,10 +796,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def get_instruments(self, cusip = None):
+    def get_instruments(self, cusip=None):
         '''
             Get an instrument by CUSIP (Committee on Uniform Securities Identification Procedures) code.
 
@@ -823,7 +820,7 @@ class TDClient():
         merged_headers = self.headers()
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id']}
+        data = {'apikey': self.config['consumer_id']}
 
         # define the endpoint
         endpoint = '/instruments'
@@ -832,10 +829,9 @@ class TDClient():
         url = self.api_endpoint(endpoint) + "/" + cusip
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-    
-    def get_market_hours(self, markets = None, date = None):
+    def get_market_hours(self, markets=None, date=None):
         '''
             Serves as the mechanism to make a request to the "Get Hours for Multiple Markets" and 
             "Get Hours for Single Markets" Endpoint. If one market is provided a "Get Hours for Single Markets" 
@@ -864,18 +860,19 @@ class TDClient():
         self.token_validation()
 
         # validate argument
-        self.validate_arguments(endpoint = 'get_market_hours', parameter_name = 'markets', parameter_argument = markets)
+        self.validate_arguments(endpoint='get_market_hours',
+                                parameter_name='markets', parameter_argument=markets)
 
         # because we have a list argument, prep it for the request.
-        markets = self.prepare_arguments_list(parameter_list = markets)
+        markets = self.prepare_arguments_list(parameter_list=markets)
 
         # grab the original headers we have stored.
         merged_headers = self.headers()
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'markets':markets,
-                'date':date}
+        data = {'apikey': self.config['consumer_id'],
+                'markets': markets,
+                'date': date}
 
         # define the endpoint
         endpoint = '/marketdata/hours'
@@ -884,10 +881,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def get_movers(self, market = None, direction = None, change = None):
+    def get_movers(self, market=None, direction=None, change=None):
         '''
             Top 10 (up or down) movers by value or percent for a particular market.
 
@@ -925,15 +921,16 @@ class TDClient():
 
         # validate arguments, before making request.
         for key, value in local_args.items():
-            self.validate_arguments(endpoint = 'get_movers', parameter_name = key, parameter_argument = value)
+            self.validate_arguments(
+                endpoint='get_movers', parameter_name=key, parameter_argument=value)
 
         # grab the original headers we have stored.
         merged_headers = self.headers()
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'direction':direction,
-                'change':change}
+        data = {'apikey': self.config['consumer_id'],
+                'direction': direction,
+                'change': change}
 
         # define the endpoint
         endpoint = '/marketdata/{}/movers'.format(market)
@@ -942,10 +939,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def get_options_chain(self, option_chain = None, args_dictionary = None):
+    def get_options_chain(self, option_chain=None, args_dictionary=None):
         '''
             Get option chain for an optionable Symbol using one of two methods. Either,
             use the OptionChain object which is a built-in object that allows for easy creation of the
@@ -983,19 +979,19 @@ class TDClient():
         if option_chain is not None:
 
             # this request requires an API key, so let's add that.
-            option_chain.add_chain_key(key_name = 'apikey', key_value = self.config['consumer_id'])
+            option_chain.add_chain_key(
+                key_name='apikey', key_value=self.config['consumer_id'])
 
             # take the JSON representation of the string
             data = option_chain._get_query_parameters()
-        
+
         else:
 
             # otherwise take the args dictionary.
             data = args_dictionary
 
         # return the response of the get request.
-        return requests.get(url = url, headers = merged_headers, params = data, verify = True).json()
-
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -1007,8 +1003,7 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def get_accounts(self, account = 'all', fields = None):
+    def get_accounts(self, account='all', fields=None):
         '''
             Serves as the mechanism to make a request to the "Get Accounts" and "Get Account" Endpoint. 
             If one account is provided a "Get Account" request will be made and if more than one account 
@@ -1040,25 +1035,23 @@ class TDClient():
         merged_headers = self.headers()
 
         # because we have a list argument, prep it for the request.
-        fields = self.prepare_arguments_list(parameter_list = fields)
+        fields = self.prepare_arguments_list(parameter_list=fields)
 
         # build the params dictionary
-        data = {'apikey':self.config['consumer_id'],
-                'fields':fields}
-            
+        data = {'apikey': self.config['consumer_id'],
+                'fields': fields}
+
         # if all use '/accounts' else pass through the account number.
         if account == 'all':
-            endpoint = '/accounts'        
+            endpoint = '/accounts'
         else:
             endpoint = '/accounts/{}'.format(account)
-
 
         # build the url
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
-
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -1070,9 +1063,8 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def get_transactions(self, account = None, transaction_type = None, symbol = None, 
-                         start_date = None, end_date = None, transaction_id = None):
+    def get_transactions(self, account=None, transaction_type=None, symbol=None,
+                         start_date=None, end_date=None, transaction_id=None):
         '''
             Serves as the mechanism to make a request to the "Get Transactions" and "Get Transaction" Endpoint. 
             If one `transaction_id` is provided a "Get Transaction" request will be made and if it is not provided
@@ -1109,7 +1101,7 @@ class TDClient():
             DESC: The transaction ID you wish to search. If this is specifed a "Get Transaction" request is
                   made. Should only be used if you wish to return one transaction.
             TYPE: String
-            
+
             EXAMPLES:
 
             SessionObject.get_transactions(account = 'MyAccountNumber', transaction_type = 'ALL', start_date = '2019-01-31', end_date = '2019-04-28')
@@ -1131,8 +1123,8 @@ class TDClient():
 
         # if the request type they made isn't valid print an error and return nothing.
         else:
-            
-            if transaction_type not in ['ALL', 'TRADE', 'BUY_ONLY', 'SELL_ONLY', 'CASH_IN_OR_CASH_OUT', 'CHECKING','DIVIDEND', 'INTEREST', 'OTHER', 'ADVISOR_FEES']:        
+
+            if transaction_type not in ['ALL', 'TRADE', 'BUY_ONLY', 'SELL_ONLY', 'CASH_IN_OR_CASH_OUT', 'CHECKING', 'DIVIDEND', 'INTEREST', 'OTHER', 'ADVISOR_FEES']:
                 print('The type of transaction type you specified is not valid.')
                 return False
 
@@ -1143,22 +1135,23 @@ class TDClient():
         if transaction_id:
 
             # define the endpoint
-            endpoint = '/accounts/{}/transactions/{}'.format(account, transaction_id)
+            endpoint = '/accounts/{}/transactions/{}'.format(
+                account, transaction_id)
 
             # build the url
             url = self.api_endpoint(endpoint)
 
             # return the response of the get request.
-            return requests.get(url = url, headers=merged_headers, verify = True).json()
+            return requests.get(url=url, headers=merged_headers, verify=True).json()
 
         # if it isn't then we need to make a request to the get_transactions endpoint.
         else:
 
             # build the params dictionary
-            data = {'type':transaction_type,
-                    'symbol':symbol,
-                    'startDate':start_date,
-                    'endDate':end_date}
+            data = {'type': transaction_type,
+                    'symbol': symbol,
+                    'startDate': start_date,
+                    'endDate': end_date}
 
             # define the endpoint
             endpoint = '/accounts/{}/transactions'.format(account)
@@ -1167,8 +1160,7 @@ class TDClient():
             url = self.api_endpoint(endpoint)
 
             # return the response of the get request.
-            return requests.get(url = url, headers=merged_headers, params=data, verify = True).json()
-
+            return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -1180,13 +1172,12 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def get_preferences(self, account = None):        
+    def get_preferences(self, account=None):
         '''
             Get's User Preferences for a specific account.
 
             Documentation Link: https://developer.tdameritrade.com/user-principal/apis/get/accounts/%7BaccountId%7D/preferences-0
-            
+
             NAME: account
             DESC: The account number you wish to recieve preference data for.
             TYPE: String
@@ -1209,10 +1200,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, verify=True).json()
 
-
-    def get_streamer_subscription_keys(self, accounts = None):
+    def get_streamer_subscription_keys(self, accounts=None):
         '''
             SubscriptionKey for provided accounts or default accounts.
 
@@ -1236,22 +1226,21 @@ class TDClient():
         merged_headers = self.headers()
 
         # because we have a list argument, prep it for the request.
-        accounts = self.prepare_arguments_list(parameter_list = accounts)
+        accounts = self.prepare_arguments_list(parameter_list=accounts)
 
         # define the endpoint
         endpoint = '/userprincipals/streamersubscriptionkeys'
 
         # build the params dictionary
-        data = {'accountIds':accounts}
+        data = {'accountIds': accounts}
 
         # build the url
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params = data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def get_user_principals(self, fields = None):
+    def get_user_principals(self, fields=None):
         '''
             Returns User Principal details.
 
@@ -1277,28 +1266,28 @@ class TDClient():
         self.token_validation()
 
         # validate arguments
-        self.validate_arguments(endpoint = 'get_user_principals', parameter_name = 'fields', parameter_argument = fields)
+        self.validate_arguments(endpoint='get_user_principals',
+                                parameter_name='fields', parameter_argument=fields)
 
         # grab the original headers we have stored.
         merged_headers = self.headers()
 
         # because we have a list argument, prep it for the request.
-        fields = self.prepare_arguments_list(parameter_list = fields)
+        fields = self.prepare_arguments_list(parameter_list=fields)
 
         # define the endpoint
         endpoint = '/userprincipals'
 
         # build the params dictionary
-        data = {'fields':fields}
+        data = {'fields': fields}
 
         # build the url
         url = self.api_endpoint(endpoint)
 
         # return the response of the get request.
-        return requests.get(url = url, headers=merged_headers, params = data, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data, verify=True).json()
 
-
-    def update_preferences(self, account = None, dataPayload = None):
+    def update_preferences(self, account=None, dataPayload=None):
         '''
             Update preferences for a specific account. Please note that the directOptionsRouting and 
             directEquityRouting values cannot be modified via this operation.
@@ -1348,13 +1337,13 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        response = requests.put(url = url, headers = merged_headers, data = json.dumps(dataPayload), verify = True)
+        response = requests.put(
+            url=url, headers=merged_headers, data=json.dumps(dataPayload), verify=True)
 
         if response.status_code == 204:
             return "Data successfully updated."
         else:
             return response.content
-
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -1366,8 +1355,7 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def create_watchlist(self, account = None, name = None, watchlistItems = None):
+    def create_watchlist(self, account=None, name=None, watchlistItems=None):
         '''
             Create watchlist for specific account. This method does not verify that the symbol or asset type are valid.
 
@@ -1413,15 +1401,15 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        response = requests.post(url = url, headers = merged_headers, data = json.dumps(payload) , verify = True)
+        response = requests.post(
+            url=url, headers=merged_headers, data=json.dumps(payload), verify=True)
 
         if response.status_code == 201:
             return "Watchlist {} was successfully created.".format(name)
         else:
             return response.content
 
-
-    def get_watchlist_accounts(self, account = 'all'):
+    def get_watchlist_accounts(self, account='all'):
         '''
             Serves as the mechanism to make a request to the "Get Watchlist for Single Account" and 
             "Get Watchlist for Multiple Accounts" Endpoint. If one account is provided a 
@@ -1457,10 +1445,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.get(url = url, headers = merged_headers, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, verify=True).json()
 
-
-    def get_watchlist(self, account = None, watchlist_id = None):
+    def get_watchlist(self, account=None, watchlist_id=None):
         '''
             Returns a specific watchlist for a specific account.
 
@@ -1493,10 +1480,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.get(url = url, headers = merged_headers, verify = True).json()
+        return requests.get(url=url, headers=merged_headers, verify=True).json()
 
-
-    def delete_watchlist(self, account = None, watchlist_id = None):
+    def delete_watchlist(self, account=None, watchlist_id=None):
         '''
 
             Deletes a specific watchlist for a specific account.
@@ -1530,10 +1516,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.delete(url = url, headers = merged_headers, verify = True).status_code
+        return requests.delete(url=url, headers=merged_headers, verify=True).status_code
 
-
-    def update_watchlist(self, account = None, watchlist_id = None, name = None, watchlistItems = None):
+    def update_watchlist(self, account=None, watchlist_id=None, name=None, watchlistItems=None):
         '''
 
             Partially update watchlist for a specific account: change watchlist name, add to the beginning/end of a 
@@ -1582,10 +1567,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.patch(url = url, headers = merged_headers, data = json.dumps(payload),  verify = True).status_code
+        return requests.patch(url=url, headers=merged_headers, data=json.dumps(payload),  verify=True).status_code
 
-
-    def replace_watchlist(self, account = None, watchlist_id_new = None, watchlist_id_old = None, name_new = None, watchlistItems_new = None):
+    def replace_watchlist(self, account=None, watchlist_id_new=None, watchlist_id_old=None, name_new=None, watchlistItems_new=None):
         '''
             STILL BUILDING
 
@@ -1634,17 +1618,18 @@ class TDClient():
         merged_headers['Content-Type'] = 'application/json'
 
         # define the payload
-        payload = {"name": name_new, "watchlistId": watchlist_id_new, "watchlistItems": watchlistItems_new}
+        payload = {"name": name_new, "watchlistId": watchlist_id_new,
+                   "watchlistItems": watchlistItems_new}
 
         # define the endpoint
-        endpoint = '/accounts/{}/watchlists/{}'.format(account, watchlist_id_old)
+        endpoint = '/accounts/{}/watchlists/{}'.format(
+            account, watchlist_id_old)
 
         # build the url
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.put(url = url, headers = merged_headers, data = json.dumps(payload),  verify = True).status_code
-
+        return requests.put(url=url, headers=merged_headers, data=json.dumps(payload),  verify=True).status_code
 
     '''
     ----------------------------------------------------------------------------------------------------------------------------
@@ -1656,8 +1641,7 @@ class TDClient():
     ----------------------------------------------------------------------------------------------------------------------------
     '''
 
-
-    def get_orders_path(self, account = None, max_results = None, from_entered_time = None, to_entered_time = None, status = None):
+    def get_orders_path(self, account=None, max_results=None, from_entered_time=None, to_entered_time=None, status=None):
         '''
             Returns the orders for a specific account.
 
@@ -1684,7 +1668,7 @@ class TDClient():
 
             NAME: status
             DESC: Specifies that only orders of this status should be returned. Possible Values are:
-                  
+
                   1. AWAITING_PARENT_ORDER
                   2. AWAITING_CONDITION
                   3. AWAITING_MANUAL_REVIEW
@@ -1717,7 +1701,8 @@ class TDClient():
         merged_headers = self.headers()
 
         # define the payload
-        data = {"maxResults": max_results, "fromEnteredTime": from_entered_time, "toEnteredTime": to_entered_time, "status": status}
+        data = {"maxResults": max_results, "fromEnteredTime": from_entered_time,
+                "toEnteredTime": to_entered_time, "status": status}
 
         # define the endpoint
         endpoint = '/accounts/{}/orders'.format(account)
@@ -1726,10 +1711,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.get(url = url, headers = merged_headers, params = data,  verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data,  verify=True).json()
 
-
-    def get_orders_query(self, account = None, max_results = None, from_entered_time = None, to_entered_time = None, status = None):
+    def get_orders_query(self, account=None, max_results=None, from_entered_time=None, to_entered_time=None, status=None):
         '''
             All orders for a specific account or, if account ID isn't specified, orders will be returned for all linked accounts
 
@@ -1756,7 +1740,7 @@ class TDClient():
 
             NAME: status
             DESC: Specifies that only orders of this status should be returned. Possible Values are:
-                  
+
                   1. AWAITING_PARENT_ORDER
                   2. AWAITING_CONDITION
                   3. AWAITING_MANUAL_REVIEW
@@ -1789,10 +1773,10 @@ class TDClient():
         merged_headers = self.headers()
 
         # define the payload
-        data = {"accountId": account, 
-                "maxResults": max_results, 
-                "fromEnteredTime": from_entered_time, 
-                "toEnteredTime": to_entered_time, 
+        data = {"accountId": account,
+                "maxResults": max_results,
+                "fromEnteredTime": from_entered_time,
+                "toEnteredTime": to_entered_time,
                 "status": status}
 
         # define the endpoint
@@ -1802,10 +1786,9 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.get(url = url, headers = merged_headers, params = data,  verify = True).json()
+        return requests.get(url=url, headers=merged_headers, params=data,  verify=True).json()
 
-
-    def get_order(self, account = None, order_id = None):
+    def get_order(self, account=None, order_id=None):
         '''
             All orders for a specific account or, if account ID isn't specified, orders will be returned for all linked accounts
 
@@ -1837,15 +1820,14 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.get(url = url, headers = merged_headers,  verify = True).json()
+        return requests.get(url=url, headers=merged_headers,  verify=True).json()
 
-
-    def cancel_order(self, account = None, order_id = None):
+    def cancel_order(self, account=None, order_id=None):
         '''
             Cancel a specific order for a specific account.
 
             Documentation Link: https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
-            
+
             NAME: account
             DESC: The account number that you want to query the order for.
             TYPE: String
@@ -1873,14 +1855,14 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        return requests.delete(url = url, headers = merged_headers,  verify = True).json()
+        return requests.delete(url=url, headers=merged_headers,  verify=True).json()
 
-    def place_order(self, account = None, order = None):
+    def place_order(self, account=None, order=None):
         '''
             Places an order for a specific account.
 
             Documentation Link: https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
-            
+
             NAME: account
             DESC: The account number that you want to place the order for.
             TYPE: String
@@ -1900,7 +1882,7 @@ class TDClient():
         self.token_validation()
 
         # grab the original headers we have stored.
-        merged_headers = self.headers(mode = 'application/json') 
+        merged_headers = self.headers(mode='application/json')
 
         # define the endpoint
         endpoint = 'accounts/{}/orders'.format(account)
@@ -1909,14 +1891,15 @@ class TDClient():
         url = self.api_endpoint(endpoint)
 
         # make the request
-        response = requests.post(url = url, headers = merged_headers, data = json.dumps(order),  verify = True)
+        response = requests.post(
+            url=url, headers=merged_headers, data=json.dumps(order),  verify=True)
 
         if response.status_code == 201:
             return "Order was successfully placed."
         else:
             return response.json()
 
-    def _create_token_timestamp(self, token_timestamp = None):
+    def _create_token_timestamp(self, token_timestamp=None):
         '''
             Takes the token timestamp and converts it to the proper format
             needed for the streaming API.
@@ -1929,13 +1912,12 @@ class TDClient():
         '''
 
         # First parse the date.
-        token_timestamp = dateutil.parser.parse(token_timestamp, ignoretz = True)
+        token_timestamp = dateutil.parser.parse(token_timestamp, ignoretz=True)
 
         # Grab the starting point, so time '0'
         epoch = datetime.datetime.utcfromtimestamp(0)
-        
-        return int((token_timestamp - epoch).total_seconds() * 1000.0)
 
+        return int((token_timestamp - epoch).total_seconds() * 1000.0)
 
     def create_streaming_session(self):
         '''
@@ -1943,40 +1925,36 @@ class TDClient():
 
             RTYPE: TDStream Object
         '''
-
-        # Grab the Subscription Key
-        sub_key = self.get_streamer_subscription_keys()['keys'][0]['key']
-
+        
         # Grab the Streamer Info.
-        userPrincipalsResponse = self.get_user_principals(fields = ['streamerConnectionInfo'])
+        userPrincipalsResponse = self.get_user_principals(
+            fields=['streamerConnectionInfo'])
 
         # Grab the timestampe.
         tokenTimeStamp = userPrincipalsResponse['streamerInfo']['tokenTimestamp']
 
-        # Grab socket 
-        socket_url = userPrincipalsResponse['streamerInfo']['streamerSocketUrl'] 
+        # Grab socket
+        socket_url = userPrincipalsResponse['streamerInfo']['streamerSocketUrl']
 
         # Parse the token timestamp.
-        tokenTimeStampAsMs = self._create_token_timestamp(token_timestamp = tokenTimeStamp)
+        tokenTimeStampAsMs = self._create_token_timestamp(
+            token_timestamp=tokenTimeStamp)
 
         # Define our Credentials Dictionary used for authentication.
         credentials = {"userid": userPrincipalsResponse['accounts'][0]['accountId'],
-                    "token": userPrincipalsResponse['streamerInfo']['token'],
-                    "company": userPrincipalsResponse['accounts'][0]['company'],
-                    "segment": userPrincipalsResponse['accounts'][0]['segment'],
-                    "cddomain": userPrincipalsResponse['accounts'][0]['accountCdDomainId'],
-                    "usergroup": userPrincipalsResponse['streamerInfo']['userGroup'],
-                    "accesslevel":userPrincipalsResponse['streamerInfo']['accessLevel'],
-                    "authorized": "Y",
-                    "timestamp": tokenTimeStampAsMs,
-                    "appid": userPrincipalsResponse['streamerInfo']['appId'],
-                    "acl": userPrincipalsResponse['streamerInfo']['acl']}
+                       "token": userPrincipalsResponse['streamerInfo']['token'],
+                       "company": userPrincipalsResponse['accounts'][0]['company'],
+                       "segment": userPrincipalsResponse['accounts'][0]['segment'],
+                       "cddomain": userPrincipalsResponse['accounts'][0]['accountCdDomainId'],
+                       "usergroup": userPrincipalsResponse['streamerInfo']['userGroup'],
+                       "accesslevel": userPrincipalsResponse['streamerInfo']['accessLevel'],
+                       "authorized": "Y",
+                       "timestamp": tokenTimeStampAsMs,
+                       "appid": userPrincipalsResponse['streamerInfo']['appId'],
+                       "acl": userPrincipalsResponse['streamerInfo']['acl']}
 
         # Create the session
-        streaming_session = TDStreamerClient(websocket_url = socket_url, user_principal_data = userPrincipalsResponse, credentials = credentials)
+        streaming_session = TDStreamerClient(
+            websocket_url=socket_url, user_principal_data=userPrincipalsResponse, credentials=credentials)
 
         return streaming_session
-
-
-
-

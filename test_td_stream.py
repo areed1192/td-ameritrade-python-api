@@ -3,18 +3,24 @@ from td.client import TDClient
 from td.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
 
 
-account_activity_fields = ['subscription-key','account-id','message-type','message-data']
-level_one_forex_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','digits','open-price','net-change','52-week-low','exchange-name','security-status','mark','tick','tick-amount','product','percent-change','trading-hours','is-tradable','market-maker','52-week-high']
-level_one_futures_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','last-id','open-price','net-change','security-status','mark','open-interest','future-percent-change','exhange-name','tick','tick-amount','product','future-price-format','future-trading-hours','future-is-tradable','future-multiplier','future-is-active','future-settlement-price','future-active-symbol','future-expiration-date']
-level_one_futures_options_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','exchange-id','description','last-id','open-price','net-change','security-status','mark','open-interest','future-percent-change','exhange-name','tick','tick-amount','product','future-price-format','future-trading-hours','future-is-tradable','future-multiplier','future-is-active','future-settlement-price','future-active-symbol','future-expiration-date']
-level_one_option_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','total-volume','last-size','trade-time','quote-time','high-price','low-price','close-price','quote-day','trade-day','volatility','description','digits','open-price','net-change','security-status','mark','open-interest','money-intrinsic-value','expiration-year','multiplier','strike-price','contract-type','underlying','expiration-month','deliverables','time-value','expiration-day','days-to-expiration','delta','gamma','theta','vega','rho','theoretical-option-value','underlying-price','uv-expiration-type']
-level_one_quote_fields = ['symbol','bid-price','ask-price','last-price','bid-size','ask-size','ask-id','bid-id','total-volume','last-size','trade-time','quote-time','high-price','low-price','bid-tick','close-price','exchange-id','marginable','shortable','island-bid','island-ask','island-volume','quote-day','trade-day','volatility','description','last-id','digits','open-price','net-change','52 -week-high','52-week-low','pe-ratio','dividend-amount','dividend-yield','island-bid-size','island-ask-size','nav','fund-price','exchange-name','dividend-date','regular-market-quote','regular-market-trade','regular-market-last-price','regular-market-last-size','regular-market-trade-time','regular-market-trade-day','regular-market-net-change','security-status','mark','quote-time-in-long','trade-time-in-long','regular-market-trade-time-in-long']
-news_headline_fields = ['symbol','error-code','story-datetime','headline-id','status','headline','story-id','count-for-keyword','keyword-array','is-hot','story-source']
-qos_request_fields = ['express','real-time','fast','moderate','slow','delayed']
-timesale_fields = ['symbol','last-price','last-size','trade-time','last-sequence']
-
-
-
+account_activity_fields = ['subscription-key',
+                           'account-id', 'message-type', 'message-data']
+level_one_forex_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'close-price', 'exchange-id', 'description',
+                          'digits', 'open-price', 'net-change', '52-week-low', 'exchange-name', 'security-status', 'mark', 'tick', 'tick-amount', 'product', 'percent-change', 'trading-hours', 'is-tradable', 'market-maker', '52-week-high']
+level_one_futures_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'ask-id', 'bid-id', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'close-price', 'exchange-id', 'description', 'last-id', 'open-price', 'net-change',
+                            'security-status', 'mark', 'open-interest', 'future-percent-change', 'exhange-name', 'tick', 'tick-amount', 'product', 'future-price-format', 'future-trading-hours', 'future-is-tradable', 'future-multiplier', 'future-is-active', 'future-settlement-price', 'future-active-symbol', 'future-expiration-date']
+level_one_futures_options_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'ask-id', 'bid-id', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'close-price', 'exchange-id', 'description', 'last-id', 'open-price', 'net-change',
+                                    'security-status', 'mark', 'open-interest', 'future-percent-change', 'exhange-name', 'tick', 'tick-amount', 'product', 'future-price-format', 'future-trading-hours', 'future-is-tradable', 'future-multiplier', 'future-is-active', 'future-settlement-price', 'future-active-symbol', 'future-expiration-date']
+level_one_option_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'close-price', 'quote-day', 'trade-day', 'volatility', 'description', 'digits', 'open-price', 'net-change', 'security-status', 'mark',
+                           'open-interest', 'money-intrinsic-value', 'expiration-year', 'multiplier', 'strike-price', 'contract-type', 'underlying', 'expiration-month', 'deliverables', 'time-value', 'expiration-day', 'days-to-expiration', 'delta', 'gamma', 'theta', 'vega', 'rho', 'theoretical-option-value', 'underlying-price', 'uv-expiration-type']
+level_one_quote_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'ask-id', 'bid-id', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'bid-tick', 'close-price', 'exchange-id', 'marginable', 'shortable', 'island-bid', 'island-ask', 'island-volume', 'quote-day', 'trade-day', 'volatility', 'description', 'last-id', 'digits', 'open-price', 'net-change', '52 -week-high', '52-week-low',
+                          'pe-ratio', 'dividend-amount', 'dividend-yield', 'island-bid-size', 'island-ask-size', 'nav', 'fund-price', 'exchange-name', 'dividend-date', 'regular-market-quote', 'regular-market-trade', 'regular-market-last-price', 'regular-market-last-size', 'regular-market-trade-time', 'regular-market-trade-day', 'regular-market-net-change', 'security-status', 'mark', 'quote-time-in-long', 'trade-time-in-long', 'regular-market-trade-time-in-long']
+news_headline_fields = ['symbol', 'error-code', 'story-datetime', 'headline-id', 'status',
+                        'headline', 'story-id', 'count-for-keyword', 'keyword-array', 'is-hot', 'story-source']
+qos_request_fields = ['express', 'real-time',
+                      'fast', 'moderate', 'slow', 'delayed']
+timesale_fields = ['symbol', 'last-price',
+                   'last-size', 'trade-time', 'last-sequence']
 
 
 '''
@@ -48,10 +54,10 @@ timesale_fields = ['symbol','last-price','last-size','trade-time','last-sequence
 '''
 
 # Create a new session
-TDSession = TDClient(account_number = ACCOUNT_NUMBER,
-                     account_password = ACCOUNT_PASSWORD,
-                     consumer_id = CONSUMER_ID,
-                     redirect_uri = REDIRECT_URI)
+TDSession = TDClient(account_number=ACCOUNT_NUMBER,
+                     account_password=ACCOUNT_PASSWORD,
+                     consumer_id=CONSUMER_ID,
+                     redirect_uri=REDIRECT_URI)
 
 # Login to the session
 TDSession.login()
@@ -63,36 +69,43 @@ TDStreamingClient = TDSession.create_streaming_session()
     REGULAR - WORKING
 '''
 
-# # Actives
-# TDStreamingClient.actives(service = 'ACTIVES_NASDAQ', venue = 'NASDAQ', duration = 'ALL')
+# Actives
+TDStreamingClient.actives(service='ACTIVES_NASDAQ',
+                          venue='NASDAQ', duration='ALL')
 
 # # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# chart_fields = ['key', 'open_price','high_price','low_price','close_price','volume','sequence','chart_time','chart_day']
-# TDStreamingClient.chart(service = 'CHART_EQUITY', symbols = ['MSFT'], fields = chart_fields)
+chart_fields = ['key', 'open_price', 'high_price', 'low_price',
+                'close_price', 'volume', 'sequence', 'chart_time', 'chart_day']
+TDStreamingClient.chart(service='CHART_EQUITY', symbols=[
+                        'MSFT'], fields=chart_fields)
 
 # # Quality of Service
-TDStreamingClient.quality_of_service(qos_level = 1)
+TDStreamingClient.quality_of_service(qos_level=1)
 
-# # Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
-# TDStreamingClient.chart_history(service = 'CHART_HISTORY_EQUITY',symbols = ['AAPL'],frequency='m1',period='d1')
+# Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
+TDStreamingClient.chart_history(service='CHART_HISTORY_EQUITY', symbols=[
+                                'AAPL'], frequency='m1', period='d1')
 
-# # Level One Quote
-# TDStreamingClient.level_one_quote(symbols = ['MSFT'], fields = [0,1,2,3])
+# Level One Quote
+TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
 
 # # Level One Option
-TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1,2,3])
+TDStreamingClient.level_one_options(
+    symbols=['MSFT_013120C115'], fields=[0, 1, 2, 3])
 
 # Level One Futures
-# TDStreamingClient.level_one_futures(symbols = ['/ES'], fields = [0,1,2,3,4])
+TDStreamingClient.level_one_futures(symbols=['/ES'], fields=[0, 1, 2, 3, 4])
 
-# # Level One Forex
-# TDStreamingClient.level_one_forex(symbols = ['EUR/USD'], fields = [0,1,2,3,4])
+# Level One Forex
+TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=[0, 1, 2, 3, 4])
 
-# # Level One Futures Options - GET A SYMBOL TO VERIFY
-# TDStreamingClient.level_one_futures_options(symbols = ['/ESZ3P990'], fields = [0,1,2,3,4])
+# Level One Futures Options - GET A SYMBOL TO VERIFY
+TDStreamingClient.level_one_futures_options(
+    symbols=['/ESZ3P990'], fields=[0, 1, 2, 3, 4])
 
-# # Timesale
-# TDStreamingClient.timesale(service = 'TIMESALE_EQUITY', symbols = ['AAPL'], fields = [0,1,2,3,4])
+# Timesale
+TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
+                           'AAPL'], fields=[0, 1, 2, 3, 4])
 
 '''
     WORKING BUT WITH NOTES.
@@ -109,7 +122,8 @@ TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1
     I only had it on for one of my accounts and not the other, so you may need to turn it on for the account that is the main one you use.
 '''
 # News Headline
-# TDStreamingClient.news_headline(symbols = ['AAPL'], fields = [0,1,2,3,4,5,6,7,8,9,10])
+TDStreamingClient.news_headline(symbols=['AAPL'], fields=[
+                                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
 '''
     The Documentation makes this one confusing.
@@ -125,7 +139,7 @@ TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1
     2.Use the Subscription Key from that request as the "Keys" argument for the request.
 '''
 # Account Activity
-# TDStreamingClient.account_activity()
+TDStreamingClient.account_activity()
 
 
 '''
@@ -133,23 +147,19 @@ TDStreamingClient.level_one_options(symbols = ['MSFT_013120C115'], fields = [0,1
 '''
 
 # Level Two Options
-# TDStreamingClient.level_two_options()
+TDStreamingClient.level_two_options()
 
 # Level Two Quotes
-# TDStreamingClient.level_two_quotes()
+TDStreamingClient.level_two_quotes()
 
-# # Level Two NASQDAQ
-# TDStreamingClient.level_two_nasdaq()
+# Level Two NASQDAQ
+TDStreamingClient.level_two_nasdaq()
 
-# # Level Two Futures
-# # TDStreamingClient.level_two_futures()
+# Level Two Futures
+TDStreamingClient.level_two_futures()
 
-# # TDStreamingClient.level_two_forex()
-
-# # Print the requests
-# for request in TDStreamingClient.data_requests['requests']:
-#     print(request)
-#     print('-'*80)
+# Level Two Forex
+TDStreamingClient.level_two_forex()
 
 # Stream it.
 TDStreamingClient.stream()
