@@ -507,6 +507,8 @@ class TDStreamerClient():
 
     def level_two_quotes(self):
 
+        # {'key': 'IBM', '1': 1580518806638, '2': [], '3': []}]
+
         # Build the request
         request = self._new_request_template()
         request['service'] = 'LISTED_BOOK'

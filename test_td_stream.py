@@ -69,9 +69,9 @@ TDStreamingClient = TDSession.create_streaming_session()
     REGULAR - WORKING
 '''
 
-# Actives
-TDStreamingClient.actives(service='ACTIVES_NASDAQ',
-                          venue='NASDAQ', duration='ALL')
+# # Actives
+# TDStreamingClient.actives(service='ACTIVES_NASDAQ',
+#                           venue='NASDAQ', duration='ALL')
 
 # # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
 # TDStreamingClient.chart(service='CHART_EQUITY', symbols=[
@@ -147,8 +147,8 @@ TDStreamingClient.quality_of_service(qos_level='express')
 # # Level Two Options
 # TDStreamingClient.level_two_options()
 
-# # Level Two Quotes
-# TDStreamingClient.level_two_quotes()
+# Level Two Quotes
+TDStreamingClient.level_two_quotes()
 
 # # Level Two NASQDAQ
 # TDStreamingClient.level_two_nasdaq()
