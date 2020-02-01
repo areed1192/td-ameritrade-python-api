@@ -2,7 +2,6 @@ import requests
 from td.client import TDClient
 from td.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
 
-
 account_activity_fields = ['subscription-key',
                            'account-id', 'message-type', 'message-data']
 level_one_forex_fields = ['symbol', 'bid-price', 'ask-price', 'last-price', 'bid-size', 'ask-size', 'total-volume', 'last-size', 'trade-time', 'quote-time', 'high-price', 'low-price', 'close-price', 'exchange-id', 'description',
@@ -21,7 +20,8 @@ qos_request_fields = ['express', 'real-time',
                       'fast', 'moderate', 'slow', 'delayed']
 timesale_fields = ['symbol', 'last-price',
                    'last-size', 'trade-time', 'last-sequence']
-
+chart_fields = ['key', 'open-price', 'high-price', 'low-price',
+                'close-price', 'volume', 'sequence', 'chart-time', 'chart-day']
 
 '''
 
@@ -74,38 +74,36 @@ TDStreamingClient.actives(service='ACTIVES_NASDAQ',
                           venue='NASDAQ', duration='ALL')
 
 # # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-chart_fields = ['key', 'open_price', 'high_price', 'low_price',
-                'close_price', 'volume', 'sequence', 'chart_time', 'chart_day']
-TDStreamingClient.chart(service='CHART_EQUITY', symbols=[
-                        'MSFT'], fields=chart_fields)
+# TDStreamingClient.chart(service='CHART_EQUITY', symbols=[
+#                         'MSFT'], fields=chart_fields)
 
-# # Quality of Service
-TDStreamingClient.quality_of_service(qos_level=1)
+# Quality of Service
+TDStreamingClient.quality_of_service(qos_level='express')
 
-# Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
-TDStreamingClient.chart_history(service='CHART_HISTORY_EQUITY', symbols=[
-                                'AAPL'], frequency='m1', period='d1')
+# # Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
+# TDStreamingClient.chart_history(service='CHART_HISTORY_EQUITY', symbols=[
+#                                 'AAPL'], frequency='m1', period='d1')
 
-# Level One Quote
-TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
+# # Level One Quote
+# TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
 
-# # Level One Option
-TDStreamingClient.level_one_options(
-    symbols=['MSFT_013120C115'], fields=[0, 1, 2, 3])
+# # # Level One Option
+# TDStreamingClient.level_one_options(
+#     symbols=['MSFT_013120C115'], fields=[0, 1, 2, 3])
 
-# Level One Futures
-TDStreamingClient.level_one_futures(symbols=['/ES'], fields=[0, 1, 2, 3, 4])
+# # Level One Futures
+# TDStreamingClient.level_one_futures(symbols=['/ES'], fields=[0, 1, 2, 3, 4])
 
-# Level One Forex
-TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=[0, 1, 2, 3, 4])
+# # Level One Forex
+# TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=[0, 1, 2, 3, 4])
 
-# Level One Futures Options - GET A SYMBOL TO VERIFY
-TDStreamingClient.level_one_futures_options(
-    symbols=['/ESZ3P990'], fields=[0, 1, 2, 3, 4])
+# # Level One Futures Options - GET A SYMBOL TO VERIFY
+# TDStreamingClient.level_one_futures_options(
+#     symbols=['/ESZ3P990'], fields=[0, 1, 2, 3, 4])
 
-# Timesale
-TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
-                           'AAPL'], fields=[0, 1, 2, 3, 4])
+# # Timesale
+# TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
+#                            'AAPL'], fields=[0, 1, 2, 3, 4])
 
 '''
     WORKING BUT WITH NOTES.
@@ -121,9 +119,9 @@ TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
     It's possible that step one fixed the issue, but there is a delay before you start seeing anything? Maybe a 15 minute delay? Additionally,
     I only had it on for one of my accounts and not the other, so you may need to turn it on for the account that is the main one you use.
 '''
-# News Headline
-TDStreamingClient.news_headline(symbols=['AAPL'], fields=[
-                                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+# # News Headline
+# TDStreamingClient.news_headline(symbols=['AAPL'], fields=[
+#                                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
 '''
     The Documentation makes this one confusing.
@@ -138,28 +136,28 @@ TDStreamingClient.news_headline(symbols=['AAPL'], fields=[
       key from that one.
     2.Use the Subscription Key from that request as the "Keys" argument for the request.
 '''
-# Account Activity
-TDStreamingClient.account_activity()
+# # Account Activity
+# TDStreamingClient.account_activity()
 
 
 '''
     EXPERIMENTAL SECTION
 '''
 
-# Level Two Options
-TDStreamingClient.level_two_options()
+# # Level Two Options
+# TDStreamingClient.level_two_options()
 
-# Level Two Quotes
-TDStreamingClient.level_two_quotes()
+# # Level Two Quotes
+# TDStreamingClient.level_two_quotes()
 
-# Level Two NASQDAQ
-TDStreamingClient.level_two_nasdaq()
+# # Level Two NASQDAQ
+# TDStreamingClient.level_two_nasdaq()
 
-# Level Two Futures
-TDStreamingClient.level_two_futures()
+# # Level Two Futures
+# TDStreamingClient.level_two_futures()
 
-# Level Two Forex
-TDStreamingClient.level_two_forex()
+# # Level Two Forex
+# TDStreamingClient.level_two_forex()
 
 # Stream it.
 TDStreamingClient.stream()

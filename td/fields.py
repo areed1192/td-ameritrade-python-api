@@ -239,6 +239,39 @@ STREAM_FIELD_KEYS = {
         "last-size": 3,
         "trade-time": 1,
         "last-sequence": 4
+    },
+    "chart_equity": {
+        "key": 0,
+        "open-price": 1,
+        "high-price": 2,
+        "low-price": 3,
+        "close_price": 4,
+        "volume": 5,
+        "sequence": 6,
+        "chart_time": 7,
+        "chart_day": 8
+    },
+    "chart_futures": {
+        "key": 0,
+        "open-price": 1,
+        "high-price": 2,
+        "low-price": 3,
+        "close_price": 4,
+        "volume": 5,
+        "sequence": 6,
+        "chart_time": 7,
+        "chart_day": 8
+    },
+    "chart_options": {
+        "key": 0,
+        "open-price": 1,
+        "high-price": 2,
+        "low-price": 3,
+        "close_price": 4,
+        "volume": 5,
+        "sequence": 6,
+        "chart_time": 7,
+        "chart_day": 8
     }
 }
 
@@ -483,5 +516,38 @@ STREAM_FIELD_IDS = {
         "2": "last-price",
         "3": "last-size",
         "4": "last-sequence"
+    },
+    "chart_equity": {
+        "0": "key",
+        "1": "open-price",
+        "2": "high-price",
+        "3": "low-price",
+        "4": "close_price",
+        "5": "volume",
+        "6": "sequence",
+        "7": "chart_time",
+        "8": "chart_day"
+    },
+    "chart_options": {
+        "0": "key",
+        "1": "open-price",
+        "2": "high-price",
+        "3": "low-price",
+        "4": "close_price",
+        "5": "volume",
+        "6": "sequence",
+        "7": "chart_time",
+        "8": "chart_day"
+    },
+    "chart_futures": {
+        "0": "key",
+        "1": "open-price",
+        "2": "high-price",
+        "3": "low-price",
+        "4": "close_price",
+        "5": "volume",
+        "6": "sequence",
+        "7": "chart_time",
+        "8": "chart_day"
     }
 }

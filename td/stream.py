@@ -239,17 +239,34 @@ class TDStreamerClient():
             RTYPE: Boolean
         '''
 
-        # if it's an int, then check the IDs Dictionary.
-        if isinstance(argument, int) and str(argument) in self.fields_ids_dictionary[endpoint]:
-            argument = [str(key) for key in argument]
-            return argument
-        # if it's a string check the KEYs Dictionary.
-        elif isinstance(argument, str) and argument in self.fields_keys_dictionary[endpoint]:
-            argument = [self.fields_keys_dictionary[endpoint][key]
-                        for key in argument]
-            return argument
+        # see if the argument is a list or not.
+        if isinstance(argument, list):
+
+            # initalize a new list.
+            arg_list = []
+
+            for arg in argument:
+                # if it's an int, then check the IDs Dictionary.
+                if isinstance(arg, int) and str(arg) in self.fields_ids_dictionary[endpoint]:
+                    arg_list.append(str(arg))
+                # if it's a string check the KEYs Dictionary.
+                elif isinstance(arg, str) and arg in self.fields_keys_dictionary[endpoint]:
+                    arg_list.append(
+                        str(self.fields_keys_dictionary[endpoint][arg]))
+
+            return arg_list
+
         else:
-            return False
+            # if it's an int, then check the IDs Dictionary.
+            if isinstance(argument, int) and str(argument) in self.fields_ids_dictionary[endpoint]:
+                argument = str(argument)
+                return argument
+            # if it's a string check the KEYs Dictionary.
+            elif isinstance(argument, str) and argument in self.fields_keys_dictionary[endpoint]:
+                argument = self.fields_keys_dictionary[endpoint][argument]
+                return argument
+            else:
+                return None
 
     def quality_of_service(self, qos_level=None):
         '''
@@ -262,7 +279,11 @@ class TDStreamerClient():
             TYPE: String
         '''
 
-        if self._validate_argument(argument=qos_level, endpoint='qos_request'):
+        # valdiate argument.
+        qos_level = self._validate_argument(
+            argument=qos_level, endpoint='qos_request')
+
+        if qos_level is not None:
 
             # Build the request
             request = self._new_request_template()
@@ -294,7 +315,15 @@ class TDStreamerClient():
             TYPE: List<int> | List<str>
          '''
 
-        if self._validate_argument(argument=fields, endpoint='chart'):
+        # check to make sure it's a valid Chart Service.
+        service_flag = service in ['CHART_EQUITY',
+                                   'CHART_FUTURES', 'CHART_OPTIONS']
+
+        # valdiate argument.
+        fields = self._validate_argument(
+            argument=fields, endpoint=service.lower())
+
+        if service_flag and fields is not None:
 
             # Build the request
             request = request = self._new_request_template()
@@ -314,7 +343,7 @@ class TDStreamerClient():
 
             NAME: service
             DESC: The type of Active Service you wish to recieve. Can be one of the following:
-                  [NASDAQ, NYSE, OTCBB, CALLS, OPTS, PUTS, CALLS-DESC, OPTS-DESC, PUTS-DESC}
+                  [NASDAQ, NYSE, OTCBB, CALLS, OPTS, PUTS, CALLS-DESC, OPTS-DESC, PUTS-DESC]
             TYPE: String
 
             NAME: venue
@@ -327,7 +356,17 @@ class TDStreamerClient():
             TYPE: String
         '''
 
-        if self._validate_argument(argument=venue, endpoint='actives'):
+        # check to make sure it's a valid active service.
+        service_flag = service in ['ACTIVES_NASDAQ','ACTIVES_NYSE','ACTIVES_OPTIONS','ACTIVES_OTCBB']
+
+        # check to make sure it's a valid active service venue.
+        venue_flag = venue in ['NASDAQ', 'NYSE', 'OTCBB', 'CALLS', 'OPTS', 'PUTS', 'CALLS-DESC', 'OPTS-DESC', 'PUTS-DESC']
+
+        # check to make sure it's a valid duration
+        duration_flag = duration in ['ALL', '60', '300', '600', '1800', '3600']
+
+
+        if service_flag and venue_flag and duration_flag:
 
             # Build the request
             request = self._new_request_template()
