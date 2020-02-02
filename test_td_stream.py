@@ -81,25 +81,25 @@ TDStreamingClient = TDSession.create_streaming_session()
 TDStreamingClient.quality_of_service(qos_level='express')
 
 # # Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
-# TDStreamingClient.chart_history(service='CHART_HISTORY_EQUITY', symbols=[
+# TDStreamingClient.chart_history_futures(symbols=[
 #                                 'AAPL'], frequency='m1', period='d1')
 
 # # Level One Quote
 # TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
 
-# # # Level One Option
-# TDStreamingClient.level_one_options(
-#     symbols=['MSFT_013120C115'], fields=[0, 1, 2, 3])
+# # Level One Option
+TDStreamingClient.level_one_options(
+    symbols=['ESH20_022120C20'], fields=list(range(0,42)))
 
-# # Level One Futures
-# TDStreamingClient.level_one_futures(symbols=['/ES'], fields=[0, 1, 2, 3, 4])
+# Level One Futures
+TDStreamingClient.level_one_futures(symbols=['/ESH20'], fields=list(range(0,29)))
 
 # # Level One Forex
 # TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=[0, 1, 2, 3, 4])
 
-# # Level One Futures Options - GET A SYMBOL TO VERIFY
-# TDStreamingClient.level_one_futures_options(
-#     symbols=['/ESZ3P990'], fields=[0, 1, 2, 3, 4])
+# Level One Futures Options - GET A SYMBOL TO VERIFY
+TDStreamingClient.level_one_futures_options(
+    symbols=['/ESH20'], fields=list(range(0,36)))
 
 # # Timesale
 # TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
@@ -148,16 +148,21 @@ TDStreamingClient.quality_of_service(qos_level='express')
 # TDStreamingClient.level_two_options()
 
 # Level Two Quotes
-TDStreamingClient.level_two_quotes()
+# TDStreamingClient.level_two_quotes()
 
 # # Level Two NASQDAQ
 # TDStreamingClient.level_two_nasdaq()
+
+# # Level Two NYSE
+# TDStreamingClient.level_two_nyse()
 
 # # Level Two Futures
 # TDStreamingClient.level_two_futures()
 
 # # Level Two Forex
 # TDStreamingClient.level_two_forex()
+
+# TDStreamingClient.level_two_futures_options(symbols=['./ESZ3P990'])
 
 # Stream it.
 TDStreamingClient.stream()

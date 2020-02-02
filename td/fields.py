@@ -272,6 +272,36 @@ STREAM_FIELD_KEYS = {
         "sequence": 6,
         "chart_time": 7,
         "chart_day": 8
+    },
+    "level_two_quotes": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
+    },
+    "level_two_nyse": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
+    },
+    "level_two_options": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
+    },
+    "level_two_forex": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
+    },
+    "level_two_nasdaq": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
+    },
+    "level_two_futures": {
+        "key": "0",
+        "time": "1",
+        "data": "2"
     }
 }
 
@@ -549,5 +579,33 @@ STREAM_FIELD_IDS = {
         "6": "sequence",
         "7": "chart_time",
         "8": "chart_day"
+    },
+    "level_two_quotes": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
+    },
+    "level_two_nyse": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
+    },
+    "level_two_options": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
+    },
+    "level_two_forex": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
+    },    "level_two_nasdaq": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
+    },    "level_two_futures": {
+        "0": "key",
+        "1": "time",
+        "2": "data"
     }
 }
