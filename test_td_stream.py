@@ -85,7 +85,7 @@ TDStreamingClient = TDSession.create_streaming_session()
 #                                 'AAPL'], frequency='m1', period='d1')
 
 # # Level One Quote
-# TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
+TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
 
 # # Level One Option
 # TDStreamingClient.level_one_options(

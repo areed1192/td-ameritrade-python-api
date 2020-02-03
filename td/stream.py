@@ -91,38 +91,46 @@ class TDStreamerClient():
         # Start connection and get client connection protocol
         connection = self.loop.run_until_complete(self._connect())
 
-        # stop = self.loop.create_future()
-        # self.loop.add_signal_handler(signal.SIGBREAK, stop.set_result, None)
-
         # Start listener and heartbeat
-        tasks = [asyncio.ensure_future(self._receive_message(connection)),
-                 asyncio.ensure_future(self._send_message(login_request)),
-                 asyncio.ensure_future(self._send_message(data_request))]
+        # asyncio.ensure_future(self.close_stream())
+        asyncio.ensure_future(self._receive_message(connection))
+        asyncio.ensure_future(self._send_message(login_request))
+        asyncio.ensure_future(self._send_message(data_request))
 
         # Keep Going.
-        self.loop.run_until_complete(asyncio.wait(tasks))
+        self.loop.run_forever()
 
     async def close_stream(self):
         '''
             Closes the connection to the streaming service.
         '''
 
+        # Build the request
+        close_request = self._new_request_template()
+        close_request['service'] = 'ADMIN'
+        close_request['command'] = 'LOGOUT'
+        close_request['parameters'] = {}
+
+        x = 0
+        while True:
+            
+            if x < 10:
+                print("I Haven't closed yet.")
+                x += 1
+                await asyncio.sleep(1)
+            else:
+                break
+
+        await asyncio.gather(self._send_message(close_request))
         await self.connection.close()
 
-        # # Build the request
-        # close_request = self._new_request_template()
-        # close_request['service'] = 'ADMIN'
-        # close_request['command'] = 'LOGOUT'
-        # close_request['parameters'] = {}
+        # for task in asyncio.Task.all_tasks():
+        #     task.cancel()
 
-        # return close_request
-        # task = asyncio.run(self._receive_message(json.dumps(request)))
-        # self.loop.run_until_complete(asyncio.wait(task))
-
-        #
-
-        # self.loop.run_until_complete(asyncio.wait(task))
-        # self.connection.close()
+        try:
+            self.loop.call_soon_threadsafe(self.loop.stop())
+        except:
+            print('Server Closed')
 
     async def _connect(self):
         '''
@@ -196,12 +204,6 @@ class TDStreamerClient():
                 print('Connection with server closed')
                 break
 
-            except KeyboardInterrupt:
-                self.close_stream()
-                # stop the connection if there is an error.
-                print('Closing Connection')
-                break
-
     async def heartbeat(self, connection):
         '''
             Sending heartbeat to server every 5 seconds
@@ -210,7 +212,7 @@ class TDStreamerClient():
         while True:
             try:
                 await connection.send('ping')
-                await asyncio.sleep(5)
+                await asyncio.sleep(10)
             except websockets.exceptions.ConnectionClosed:
                 print('Connection with server closed')
                 break
