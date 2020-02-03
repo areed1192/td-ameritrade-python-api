@@ -829,7 +829,9 @@ class TDStreamerClient():
         request['service'] = 'FUTURES_BOOK'
         request['command'] = 'SUBS'
         request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = ','.join(fields)
+        request['parameters']['fields'] = '0,1,2'
+
+        print(request)
 
         self.data_requests['requests'].append(request)
 

@@ -78,7 +78,7 @@ TDStreamingClient = TDSession.create_streaming_session()
 #                         'MSFT'], fields=chart_fields)
 
 # Quality of Service
-TDStreamingClient.quality_of_service(qos_level='express')
+# TDStreamingClient.quality_of_service(qos_level='express')
 
 # # Chart History, THIS MIGHT BE RESTRICTED TO JUST FUTURES BECAUSE OF THE NEW PRICE HISTORY ENDPOINT
 # TDStreamingClient.chart_history_futures(symbols=[
@@ -88,18 +88,18 @@ TDStreamingClient.quality_of_service(qos_level='express')
 # TDStreamingClient.level_one_quotes(symbols=['MSFT'], fields=[0, 1, 2, 3])
 
 # # Level One Option
-TDStreamingClient.level_one_options(
-    symbols=['ESH20_022120C20'], fields=list(range(0,42)))
+# TDStreamingClient.level_one_options(
+#     symbols=['ESH20_022120C20'], fields=list(range(0,42)))
 
 # Level One Futures
-TDStreamingClient.level_one_futures(symbols=['/ESH20'], fields=list(range(0,29)))
+# TDStreamingClient.level_one_futures(symbols=['/ESH20'], fields=list(range(0,29)))
 
 # # Level One Forex
 # TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=[0, 1, 2, 3, 4])
 
-# Level One Futures Options - GET A SYMBOL TO VERIFY
-TDStreamingClient.level_one_futures_options(
-    symbols=['/ESH20'], fields=list(range(0,36)))
+# # Level One Futures Options - GET A SYMBOL TO VERIFY
+# TDStreamingClient.level_one_futures_options(
+#     symbols=['/ESH20'], fields=list(range(0,36)))
 
 # # Timesale
 # TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=[
@@ -144,29 +144,32 @@ TDStreamingClient.level_one_futures_options(
     EXPERIMENTAL SECTION
 '''
 
-# # Level Two Options
-# TDStreamingClient.level_two_options()
 
-# Level Two Quotes
-# TDStreamingClient.level_two_quotes()
+# # Level Two Options - Works
+# TDStreamingClient.level_two_options(symbols=['MSFT_020720C115'], fields=[0,1,2,3])
 
-# # Level Two NASQDAQ
-# TDStreamingClient.level_two_nasdaq()
+# Level Two Quotes - Works
+# TDStreamingClient.level_two_quotes(symbols = ['IBM'], fields=[0,1,2])
 
-# # Level Two NYSE
-# TDStreamingClient.level_two_nyse()
+# Level Two NASQDAQ - Works
+# TDStreamingClient.level_two_nasdaq(symbols = ['MSFT'], fields=[0,1,2,3,4])
 
-# # Level Two Futures
-# TDStreamingClient.level_two_futures()
 
-# # Level Two Forex
-# TDStreamingClient.level_two_forex()
+# Level Two Futures - I Believe this works but you must have Futures Trading on your account.
+# TDStreamingClient.level_two_futures(symbols = ['/ESH20'], fields=[0,1,2])
 
+# # Level Two Forex - I Believe this works but you must have Forex Trading on your account.
+# TDStreamingClient.level_two_forex(symbols=['EUR/USD'],fields=[0,1,2])
+
+# Level Two Futures Options - I Believe this works but you must have Futures Trading on your account.
 # TDStreamingClient.level_two_futures_options(symbols=['./ESZ3P990'])
+
 
 # Stream it.
 TDStreamingClient.stream()
 
+
+# NOT WORKING
 
 # Level Two Quotes - OLD
 # TDStreamingClient.level_two_quotes_nasdaq()
@@ -176,3 +179,6 @@ TDStreamingClient.stream()
 
 # Close the stream.
 # TDStreamingClient.close_stream()
+
+# Level Two NYSE
+# TDStreamingClient.level_two_nyse(symbols = ['AAL'], fields=[0,1,2])
