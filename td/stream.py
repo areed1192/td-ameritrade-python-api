@@ -119,12 +119,13 @@ class TDStreamerClient():
         connection = self.loop.run_until_complete(self._connect())
 
         # Start listener and heartbeat
-        tasks = [asyncio.ensure_future(self._receive_message(connection)),
-                 asyncio.ensure_future(self._send_message(login_request)),
-                 asyncio.ensure_future(self._send_message(data_request))]
+        # asyncio.ensure_future(self.close_stream())
+        asyncio.ensure_future(self._receive_message(connection))
+        asyncio.ensure_future(self._send_message(login_request))
+        asyncio.ensure_future(self._send_message(data_request))
 
         # Keep Going.
-        self.loop.run_until_complete(asyncio.wait(tasks))
+        self.loop.run_forever()
 
     def close_stream(self, loop):
         '''
@@ -138,15 +139,18 @@ class TDStreamerClient():
         # connection.close()
         # await connection.wait_closed()
 
-        # # Build the request
-        # close_request = self._new_request_template()
-        # close_request['service'] = 'ADMIN'
-        # close_request['command'] = 'LOGOUT'
-        # close_request['parameters'] = {}
+        x = 0
+        while True:
+            
+            if x < 10:
+                print("I Haven't closed yet.")
+                x += 1
+                await asyncio.sleep(1)
+            else:
+                break
 
-        # return close_request
-        # task = asyncio.run(self._receive_message(json.dumps(request)))
-        # self.loop.run_until_complete(asyncio.wait(task))
+        await asyncio.gather(self._send_message(close_request))
+        await self.connection.close()
 
         #
         # self.loop.run_until_complete(asyncio.wait(task))
@@ -248,7 +252,7 @@ class TDStreamerClient():
         while True:
             try:
                 await connection.send('ping')
-                await asyncio.sleep(5)
+                await asyncio.sleep(10)
             except websockets.exceptions.ConnectionClosed:
                 print('Connection with server closed')
                 break
@@ -860,7 +864,9 @@ class TDStreamerClient():
         request['service'] = 'FUTURES_BOOK'
         request['command'] = 'SUBS'
         request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = ','.join(fields)
+        request['parameters']['fields'] = '0,1,2'
+
+        print(request)
 
         self.data_requests['requests'].append(request)
 
