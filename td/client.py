@@ -1928,7 +1928,7 @@ class TDClient():
         
         # Grab the Streamer Info.
         userPrincipalsResponse = self.get_user_principals(
-            fields=['streamerConnectionInfo'])
+            fields=['streamerConnectionInfo','streamerSubscriptionKeys','preferences','surrogateIds'])
 
         # Grab the timestampe.
         tokenTimeStamp = userPrincipalsResponse['streamerInfo']['tokenTimestamp']

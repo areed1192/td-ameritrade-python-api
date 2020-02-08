@@ -1,6 +1,8 @@
+import csv
 import asyncio
 import datetime
 import json
+import signal
 import pprint
 import signal
 import urllib
@@ -8,7 +10,7 @@ import urllib
 import dateutil.parser
 import websockets
 
-import pyodbc
+from td.fields_write import CSV_FIELD_KEYS
 from td.fields import STREAM_FIELD_IDS, STREAM_FIELD_KEYS
 
 
@@ -21,7 +23,7 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     '''
 
-    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None):
+    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv'):
         '''
             Initalizes the Client Object and defines different components that will be needed to
             make a connection with the TD Streaming API.
@@ -39,6 +41,11 @@ class TDStreamerClient():
             DESC: A credentials dictionary that is created from the "create_streaming_session" method.
             TYPE: Dictionary
 
+            NAME: write
+            DESC: Defines where you want to write the streaming data to. Right now can only specify
+                  'csv'
+            TYPE: String
+
         '''
 
         self.websocket_url = "wss://{}/ws".format(websocket_url)
@@ -52,6 +59,26 @@ class TDStreamerClient():
         # this will house all of our field numebrs and keys so that way the user can use names to define the fields they want.
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_dictionary = STREAM_FIELD_KEYS
+
+    async def _write_to_csv(self, data = None):
+
+        data_service = data[0]['service']
+        data_timestamp = data[0]['timestamp']
+        data_command = data[0]['command']
+        data_content = data[0]['content']
+
+        with open('stream_data.csv', mode = 'w', newline='') as stream_file:           
+            stream_writer = csv.writer(stream_file)
+
+            for item in data_content: 
+                for field_key in item:
+
+                    old_key = field_key
+                    new_key = CSV_FIELD_KEYS['level-one-quote'][field_key]
+                    field_value = item[field_key]
+                    data = [data_service, data_timestamp, data_command, old_key, new_key, field_key, field_value]
+
+                    stream_writer.writerow(data)
 
     def _build_login_request(self):
         '''
@@ -91,9 +118,6 @@ class TDStreamerClient():
         # Start connection and get client connection protocol
         connection = self.loop.run_until_complete(self._connect())
 
-        # stop = self.loop.create_future()
-        # self.loop.add_signal_handler(signal.SIGBREAK, stop.set_result, None)
-
         # Start listener and heartbeat
         tasks = [asyncio.ensure_future(self._receive_message(connection)),
                  asyncio.ensure_future(self._send_message(login_request)),
@@ -102,12 +126,17 @@ class TDStreamerClient():
         # Keep Going.
         self.loop.run_until_complete(asyncio.wait(tasks))
 
-    async def close_stream(self):
+    def close_stream(self, loop):
         '''
             Closes the connection to the streaming service.
         '''
 
-        await self.connection.close()
+        for task in asyncio.Task.all_tasks():
+            task.cancel()
+        print("Sever Shut Down.")
+
+        # connection.close()
+        # await connection.wait_closed()
 
         # # Build the request
         # close_request = self._new_request_template()
@@ -120,7 +149,6 @@ class TDStreamerClient():
         # self.loop.run_until_complete(asyncio.wait(task))
 
         #
-
         # self.loop.run_until_complete(asyncio.wait(task))
         # self.connection.close()
 
@@ -170,6 +198,8 @@ class TDStreamerClient():
             TYPE: Object
         '''
 
+        approved_writes = ['QUOTE']
+
         # Keep going until cancelled.
         while True:
 
@@ -181,10 +211,15 @@ class TDStreamerClient():
                 try:
                     # decode and print it.
                     message_decoded = json.loads(message)
+
                     if 'data' in message_decoded.keys():
-                        data = message_decoded['data'][0]
-                        print(data)
+                        if message_decoded['data'][0]['service'] in approved_writes:
+
+                            # write to CSV File
+                            await self._write_to_csv(data = message_decoded['data'])
+
                 except:
+
                     message_decoded = message
 
                 print('-'*20)
@@ -196,11 +231,14 @@ class TDStreamerClient():
                 print('Connection with server closed')
                 break
 
-            except KeyboardInterrupt:
-                self.close_stream()
-                # stop the connection if there is an error.
-                print('Closing Connection')
-                break
+            # except KeyboardInterrupt:
+
+            #     # stop the connection if there is an error.
+            #     print('Closing Connection')
+
+            # finally:
+            #     # self.close_stream(connection=connection)
+            #     self.loop.call_soon_threadsafe(self.loop.stop)
 
     async def heartbeat(self, connection):
         '''
@@ -387,32 +425,25 @@ class TDStreamerClient():
         else:
             raise ValueError('ERROR!')
 
-    def account_activity(self, fields=None):
+    def account_activity(self):
         '''
             Represents the ACCOUNT_ACTIVITY endpoint of the TD Streaming API. This service is used to 
             request streaming updates for one or more accounts associated with the logged in User ID. 
             Common usage would involve issuing the OrderStatus API request to get all transactions 
-            for an account, and subscribing to ACCT_ACTIVITY to get any updates.
-
-            NAME: fields
-            DESC: The fields for the request. Can either be a list of keys ['key 1','key 2'] or a list
-                  of ints [1, 2, 3]
-            TYPE: List<int> | List<str>            
+            for an account, and subscribing to ACCT_ACTIVITY to get any updates.     
         '''
 
         # NOTE: If ACCT_ACTIVITY is one of the streaming requests, then the request MUST BE
         # on a SSL secure connection (HTTPS)
 
-        # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='account_activity')
+        print(self.user_principal_data)
 
         # Build the request
         request = self._new_request_template()
         request['service'] = 'ACCT_ACTIVITY'
         request['command'] = 'SUBS'
-        request['parameters']['keys'] = self.user_principal_data['streamerInfo']['token']
-        request['parameters']['fields'] = ','.join(fields)
+        request['parameters']['keys'] = self.user_principal_data['streamerSubscriptionKeys']['keys'][0]['key']
+        request['parameters']['fields'] = '0,1,2,3'
 
         self.data_requests['requests'].append(request)
 
@@ -447,7 +478,7 @@ class TDStreamerClient():
 
         # define the valid inputs.
         valid_frequencies = ['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']
-        valid_periods = ['d5', 'w4', 'n10', 'y1', 'y10']
+        valid_periods = ['d1', 'd5', 'w4', 'n10', 'y1', 'y10']
 
         # validate the frequency input.
         if frequency not in valid_frequencies:
@@ -463,7 +494,7 @@ class TDStreamerClient():
         request = self._new_request_template()
         request['service'] = 'CHART_HISTORY_FUTURES'
         request['command'] = 'GET'
-        request['parameters']['symbols'] = symbol
+        request['parameters']['symbols'] = symbol[0]
         request['parameters']['frequency'] = frequency
 
         # handle the case where we get a start time or end time. DO FURTHER VALIDATION.
@@ -585,6 +616,8 @@ class TDStreamerClient():
         request['parameters']['keys'] = ','.join(symbols)
         request['parameters']['fields'] = ','.join(fields)
 
+        print(request)
+
         self.data_requests['requests'].append(request)
 
     def level_one_futures_options(self, symbols=None, fields=None):
@@ -698,8 +731,6 @@ class TDStreamerClient():
         # valdiate argument.
         fields = self._validate_argument(
             argument=fields, endpoint='level_two_quotes')
-
-        # {'key': 'IBM', '1': 1580518806638, '2': [], '3': []}]
 
         # Build the request
         request = self._new_request_template()
@@ -833,6 +864,17 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
+    def level_two_total_view(self, symbols=None, fields=None):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'TOTAL_VIEW'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
+
+        self.data_requests['requests'].append(request)
+
     def level_two_forex(self, symbols=None, fields=None):
         '''
             EXPERIMENTAL: USE WITH CAUTION!
@@ -868,6 +910,16 @@ class TDStreamerClient():
         NOT WORKING
     '''
 
+    def streamer_server(self):
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'STREAMER_SERVER'
+        request['command'] = 'ADMIN'
+        request['parameters'] = {}
+
+        self.data_requests['requests'].append(request)
+
     def news_history(self):
 
         # OFFICIALLY DEAD
@@ -878,17 +930,6 @@ class TDStreamerClient():
         request['command'] = 'SUBS'
         request['parameters']['keys'] = 'IBM'
         request['parameters']['fields'] = 1576828800000
-
-        self.data_requests['requests'].append(request)
-
-    def level_two_quotes_total_view(self):
-
-        # Build the request
-        request = self._new_request_template()
-        request['service'] = 'TOTAL_VIEW'
-        request['command'] = 'SUBS'
-        request['parameters']['keys'] = 'AAPL'
-        request['parameters']['fields'] = '0,1,2,3'
 
         self.data_requests['requests'].append(request)
 
@@ -942,11 +983,11 @@ class TDStreamerClient():
 
         # Build the request
         request = self._new_request_template()
-        request['service'] = 'LEVELTWO_FUTURES'
+        request['service'] = 'FUTURES_OPTIONS_BOOK'
         request['command'] = 'SUBS'
-        request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = '0,1,2'
+        request['parameters']['keys'] = symbols
+        request['parameters']['fields'] = '0,1,2,3'
 
-        print(request)
+        print(repr(request))
 
         self.data_requests['requests'].append(request)

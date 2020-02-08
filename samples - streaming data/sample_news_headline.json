@@ -1,0 +1,21 @@
+{
+    "service": "NEWS_HEADLINE",
+    "timestamp": 1581176721733,
+    "command": "SUBS",
+    "content": [
+        {
+            "seq": 0,
+            "key": "AAPL",
+            "1": 1,
+            "2": 0,
+            "3": "N/A",
+            "4": "U",
+            "5": "N/A",
+            "6": "N/A",
+            "7": 0,
+            "8": "N/A",
+            "9": false,
+            "10": "N/A"
+        }
+    ]
+}

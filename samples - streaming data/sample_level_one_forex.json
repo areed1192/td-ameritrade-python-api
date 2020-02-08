@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "service": "LEVELONE_FOREX",
+            "timestamp": 1581175858142,
+            "command": "SUBS",
+            "content": [
+                {
+                    "key": "EUR/USD",
+                    "delayed": false,
+                    "assetMainType": "FOREX",
+                    "1": 1.0943,
+                    "2": 1.0947,
+                    "3": 1.0946,
+                    "7": 10000,
+                    "8": 1581112796223,
+                    "9": 1581112502000,
+                    "12": 1.0981,
+                    "13": "T",
+                    "14": "Euro/USDollar Spot",
+                    "16": -0.0035,
+                    "17": "?",
+                    "18": "GFT",
+                    "19": 2,
+                    "20": "Unknown"
+                }
+            ]
+        }
+    ]
+}
