@@ -127,7 +127,7 @@ class TDStreamerClient():
         # Keep Going.
         self.loop.run_forever()
 
-    def close_stream(self, loop):
+    async def close_stream(self, loop):
         '''
             Closes the connection to the streaming service.
         '''
