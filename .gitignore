@@ -2,6 +2,7 @@
 TDAmeritradeState.json
 test_saved_orders.py
 td/config.py
+td_testing/
 .vscode/
 
 # Byte-compiled / optimized / DLL files

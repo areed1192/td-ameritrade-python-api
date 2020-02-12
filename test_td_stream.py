@@ -80,7 +80,7 @@ TDStreamingClient = TDSession.create_streaming_session()
 '''
 
 # Level One Quote
-TDStreamingClient.level_one_quotes(symbols=['MSFT','AAPL','TSLA'],  fields=list(range(0,53)))
+TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,53)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))

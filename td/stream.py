@@ -127,35 +127,6 @@ class TDStreamerClient():
         # Keep Going.
         self.loop.run_forever()
 
-    def close_stream(self, loop):
-        '''
-            Closes the connection to the streaming service.
-        '''
-
-        for task in asyncio.Task.all_tasks():
-            task.cancel()
-        print("Sever Shut Down.")
-
-        # connection.close()
-        # await connection.wait_closed()
-
-        x = 0
-        while True:
-            
-            if x < 10:
-                print("I Haven't closed yet.")
-                x += 1
-                await asyncio.sleep(1)
-            else:
-                break
-
-        await asyncio.gather(self._send_message(close_request))
-        await self.connection.close()
-
-        #
-        # self.loop.run_until_complete(asyncio.wait(task))
-        # self.connection.close()
-
     async def _connect(self):
         '''
             Connecting to webSocket server websockets.client.connect 
