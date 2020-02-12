@@ -23,7 +23,7 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     '''
 
-    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv'):
+    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv', append_mode = True):
         '''
             Initalizes the Client Object and defines different components that will be needed to
             make a connection with the TD Streaming API.
@@ -46,6 +46,10 @@ class TDStreamerClient():
                   'csv'
             TYPE: String
 
+            NAME: append-mode
+            DESC: Defines whether the write mode should be append or new. If append-mode is True, then all
+                  CSV data will go to the existing file. Can either be `True` or `False`.
+
         '''
 
         self.websocket_url = "wss://{}/ws".format(websocket_url)
@@ -60,25 +64,62 @@ class TDStreamerClient():
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_dictionary = STREAM_FIELD_KEYS
 
-    async def _write_to_csv(self, data = None):
+        # Define Storage mode for CSV files.
+        if append_mode == True:
+            self.CSV_APPEND_MODE = True
+        elif append_mode == False:
+            self.CSV_APPEND_MODE = False
 
+    ############################################################################################################################################################
+
+    async def _write_to_csv(self, data = None):
+        '''
+            ONLY WORKS WITH LEVEL ONE QUOTES RIGHT NOW!
+
+            Takes the data from a stream and writes it to a CSV file for further manipulation.
+
+            NAME: data
+            DESC: The streaming data requested.
+            TYPE: Dictionary.
+        '''
+
+        # for level one quotes we have the following constants.
         data_service = data[0]['service']
         data_timestamp = data[0]['timestamp']
         data_command = data[0]['command']
         data_content = data[0]['content']
 
-        with open('stream_data.csv', mode = 'w', newline='') as stream_file:           
+        if self.CSV_APPEND_MODE == True:
+            csv_write_mode = 'a+'
+        else:
+            csv_write_mode = 'w'
+        
+        # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
+        with open('stream_data.csv', mode = csv_write_mode, newline='') as stream_file:           
+            
+            # create the writer.
             stream_writer = csv.writer(stream_file)
 
-            for item in data_content: 
-                for field_key in item:
+            # loop through each item in the content field.
+            for item in data_content:
 
+                # each content item has a collection of keys, loop through those.
+                for field_key in item:
+                    
+                    # This adds functionality by allowing us to dump the field names and not numbers.
                     old_key = field_key
                     new_key = CSV_FIELD_KEYS['level-one-quote'][field_key]
+
+                    # Grab the value.
                     field_value = item[field_key]
+
+                    # Create a list of all the data.
                     data = [data_service, data_timestamp, data_command, old_key, new_key, field_key, field_value]
 
+                    # write it a row.
                     stream_writer.writerow(data)
+
+    ############################################################################################################################################################
 
     def _build_login_request(self):
         '''

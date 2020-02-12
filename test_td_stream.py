@@ -51,6 +51,12 @@ chart_fields = ['key', 'open-price', 'high-price', 'low-price',
     2. LEVEL TWO OPTIONS
     3. LEVEL TWO NASDAQ
 
+    NOTES - THINGS I FOUND
+    ----------------------
+    Order seems to matter with the fields. For example in Level One Quotes if I request fields like this [3, 8, 20, 1, 6]
+    It will not work, but if I put all the fields in the correct sequential order [1, 2, 3, ... ,18 19, 20] There doesn't
+    seem to be an issue anymore.
+
 '''
 
 # Create a new session
@@ -64,6 +70,9 @@ TDSession.login()
 
 # Create a streaming sesion
 TDStreamingClient = TDSession.create_streaming_session()
+
+# Define the CSV Append Mode. Needs to be rewritten it's kind of awkward to call it like this.
+TDStreamingClient.CSV_APPEND_MODE = True
 
 '''
     REGULAR - WORKING
@@ -80,7 +89,7 @@ TDStreamingClient = TDSession.create_streaming_session()
 '''
 
 # Level One Quote
-TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,53)))
+TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
