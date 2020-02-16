@@ -1,4 +1,5 @@
 import csv
+import sys
 import asyncio
 import datetime
 import json
@@ -160,13 +161,69 @@ class TDStreamerClient():
         connection = self.loop.run_until_complete(self._connect())
 
         # Start listener and heartbeat
-        # asyncio.ensure_future(self.close_stream())
         asyncio.ensure_future(self._receive_message(connection))
         asyncio.ensure_future(self._send_message(login_request))
         asyncio.ensure_future(self._send_message(data_request))
-
+        asyncio.ensure_future(self.close_stream())
+        
         # Keep Going.
         self.loop.run_forever()
+
+    def close_logic(self, run_duration = None):
+        '''
+            Sets the logic to determine how long to keep the server open. If Not specified,
+            Server will remain open forever or until it encounters an error.
+            
+            NAME: run_duration
+            DESC: The time in seconds to run.
+            TYPE: int
+
+        '''
+
+        if run_duration is not None:
+            self.RUN_DURATION = run_duration
+        else:
+            self.RUN_DURATION = None
+
+
+    async def close_stream(self):
+        '''
+            Closes the connection to the streaming service.
+        '''
+
+        if self.RUN_DURATION is not None:
+            run_duration = self.RUN_DURATION
+        else:
+            run_duration = -1
+
+        increment = 0
+
+        while True:
+            if increment < run_duration:
+                await asyncio.sleep(1)
+                increment += 1
+            else:
+                break
+        
+        # close the connection.
+        await self.connection.close()
+
+        # Stop the loop.
+        self.loop.call_soon_threadsafe(self.loop.stop())
+
+        # cancel all the task.
+        for index, task in enumerate(asyncio.Task.all_tasks()):
+            
+            # let the user know which task is cancelled.
+            print("Cancelling Task: {}".format(index))
+
+            # cancel it.
+            task.cancel()
+
+            try:
+                await task
+            except asyncio.CancelledError:
+                print("main(): cancel_me is cancelled now")
 
     async def _connect(self):
         '''
@@ -248,12 +305,11 @@ class TDStreamerClient():
                 break
 
             # except KeyboardInterrupt:
-
             #     # stop the connection if there is an error.
             #     print('Closing Connection')
 
             # finally:
-            #     # self.close_stream(connection=connection)
+            #     self.close_stream(connection=connection)
             #     self.loop.call_soon_threadsafe(self.loop.stop)
 
     async def heartbeat(self, connection):
@@ -264,7 +320,7 @@ class TDStreamerClient():
         while True:
             try:
                 await connection.send('ping')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
             except websockets.exceptions.ConnectionClosed:
                 print('Connection with server closed')
                 break
