@@ -100,6 +100,7 @@ class TDStreamerClient():
             
             # create the writer.
             stream_writer = csv.writer(stream_file)
+            print('writing')
 
             # loop through each item in the content field.
             for item in data_content:
@@ -109,7 +110,7 @@ class TDStreamerClient():
                     
                     # This adds functionality by allowing us to dump the field names and not numbers.
                     old_key = field_key
-                    new_key = CSV_FIELD_KEYS['level-one-quote'][field_key]
+                    new_key = CSV_FIELD_KEYS[data_service][field_key]
 
                     # Grab the value.
                     field_value = item[field_key]
@@ -164,7 +165,7 @@ class TDStreamerClient():
         asyncio.ensure_future(self._receive_message(connection))
         asyncio.ensure_future(self._send_message(login_request))
         asyncio.ensure_future(self._send_message(data_request))
-        asyncio.ensure_future(self.close_stream())
+        # asyncio.ensure_future(self.close_stream())
         
         # Keep Going.
         self.loop.run_forever()
@@ -271,7 +272,7 @@ class TDStreamerClient():
             TYPE: Object
         '''
 
-        approved_writes = ['QUOTE']
+        approved_writes = ['QUOTE','OPTION','LEVELONE_FUTURES']
 
         # Keep going until cancelled.
         while True:
@@ -286,9 +287,11 @@ class TDStreamerClient():
                     message_decoded = json.loads(message)
 
                     if 'data' in message_decoded.keys():
+
                         if message_decoded['data'][0]['service'] in approved_writes:
 
                             # write to CSV File
+                            print('writing to CSV')
                             await self._write_to_csv(data = message_decoded['data'])
 
                 except:

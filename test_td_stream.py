@@ -94,8 +94,8 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
 
-# # Level One Futures
-# TDStreamingClient.level_one_futures(symbols=['/CL'], fields=list(range(0,36)))
+# Level One Futures
+TDStreamingClient.level_one_futures(symbols=['/CL'], fields=list(range(0,36)))
 
 # # Level One Forex - VALIDATE JSON RESPONSE
 # TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))

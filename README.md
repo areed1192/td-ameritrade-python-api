@@ -9,6 +9,7 @@
 - [Features](#features)
 - [Documentation & Resources](#documentation-and-resources)
 - [Support These Projects](#support-these-projects)
+- [Authentication Workflow](#authentication-workflow)
 
 ---
 
@@ -117,3 +118,45 @@ If you'd like to watch more of my content, feel free to visit my YouTube channel
 
 **Hire Me:**
 If you have a project, you think I can help you with feel free to reach out at coding.sigma@gmail.com
+
+## Authentication Workflow
+
+**Step 1 - Start the Script:**
+
+While in Visual Studio Code, right click anywhere in the code editor while in the `test_td_client.py` file. The following dropdown will appear:
+
+![alt text](/instructions/terminal_dropdown.jpg "Terminal Dropdown")
+
+From the dropdown, click `Run Python file in Terminal`, this will start the python script.
+
+**Step 2 - Go to Redirect URL:**
+
+The TD Library will automatically generate the redirect URL that will navigate you to the TD website for for you authentication. You can either copy the link and paste it into a browser manually or if you're using Visual Studio Code you can press `CTRL + Click` to have Visual Studio Code navigate you to the URL immeditately.
+
+![alt text](/instructions/redirect_uri.jpg "Redirect URI")
+
+**Step 3 - Login to the TD API:**
+
+Once you've arrived at the login screen, you'll need to provide your credentials to authenticate the session. Please provide your Account Username and Account Password in the userform and then press enter. As a reminder these, are the same username/password combination you use to login to your regular TD Account.
+
+![alt text](/instructions/td_login.jpg "TD Login")
+
+**Step 4 - Accept the Terms:**
+
+Accept the Terms of the API by clicking `Allow`, this will redirect you.
+
+![alt text](/instructions/td_terms.jpg "TD Terms")
+
+**Step 5 - Copy the Authorization Code:**
+
+After accepting the terms, you'll be taken to the URL that you provided as your `redirect URI`. However, at the end of that URL will be `authorization code`. To complete the authentication workflow, copy the URL as it appears below. Don't worry if the numbers don't match, as you will have a different code.
+
+![alt text](/instructions/auth_code.jpg "TD Terms")
+
+**Step 6 - Paste the Authorization Code in the Terminal:**
+
+Take the URL and copy it into the Terminal, after you have pasted it, press `Enter`. The authentication workflow will complete and the script will start running. At this stage, we are exchanging your authorization code for an access token. That access token is valid only for 30 minutes. However, a refresh token is also stored that will refresh your access token when it expires.
+
+![alt text](/instructions/paste_url.jpg "TD Terms")
+
+After, that the script should run. Additionally, inside the `td` folder you'll notice a new JSON file called `TdAmeritradeState.json`. This file contains all the info used during a session. Please DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.
