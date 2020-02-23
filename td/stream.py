@@ -1,16 +1,8 @@
 import csv
-import sys
 import asyncio
-import datetime
 import json
-import signal
-import pprint
-import signal
 import urllib
-
-import dateutil.parser
 import websockets
-
 from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS
 
 
