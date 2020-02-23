@@ -4,7 +4,6 @@ import json
 import datetime
 import requests
 import urllib.parse
-import dateutil.parser
 from td.orders import Order, OrderLeg
 from td.stream import TDStreamerClient
 
@@ -1917,13 +1916,10 @@ class TDClient():
             RTYPE: TDStream Object
         '''
 
-        # First parse the date.
-        token_timestamp = dateutil.parser.parse(token_timestamp, ignoretz=True)
+        token_timestamp = datetime.datetime.strptime(token_timestamp, "%Y-%m-%dT%H:%M:%S%z")
+        token_timestamp = int(token_timestamp.timestamp()) * 1000
 
-        # Grab the starting point, so time '0'
-        epoch = datetime.datetime.utcfromtimestamp(0)
-
-        return int((token_timestamp - epoch).total_seconds() * 1000.0)
+        return token_timestamp
 
     def create_streaming_session(self):
         '''
