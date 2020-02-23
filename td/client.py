@@ -5,6 +5,7 @@ import datetime
 import requests
 import urllib.parse
 import dateutil.parser
+from td.orders import Order, OrderLeg
 from td.stream import TDStreamerClient
 
 
@@ -1890,9 +1891,14 @@ class TDClient():
         # build the url
         url = self.api_endpoint(endpoint)
 
+        # check to see if it's an order object.
+        if isinstance(order, Order):
+            order = order._saved_order_to_json()
+        else:
+            order = order
+
         # make the request
-        response = requests.post(
-            url=url, headers=merged_headers, data=json.dumps(order),  verify=True)
+        response = requests.post(url=url, headers=merged_headers, data=json.dumps(order), verify=True)
 
         if response.status_code == 201:
             return "Order was successfully placed."
@@ -1958,3 +1964,7 @@ class TDClient():
             websocket_url=socket_url, user_principal_data=userPrincipalsResponse, credentials=credentials)
 
         return streaming_session
+
+
+if __name__ == "__main__":
+    pass
