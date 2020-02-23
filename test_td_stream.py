@@ -89,13 +89,13 @@ TDStreamingClient.CSV_APPEND_MODE = True
 '''
 
 # Level One Quote
-TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
+# TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
 
 # Level One Futures
-TDStreamingClient.level_one_futures(symbols=['/CL'], fields=list(range(0,36)))
+TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3", "4"])
 
 # # Level One Forex - VALIDATE JSON RESPONSE
 # TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))

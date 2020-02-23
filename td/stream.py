@@ -11,8 +11,7 @@ import urllib
 import dateutil.parser
 import websockets
 
-from td.fields_write import CSV_FIELD_KEYS
-from td.fields import STREAM_FIELD_IDS, STREAM_FIELD_KEYS
+from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS
 
 
 class TDStreamerClient():
@@ -63,7 +62,7 @@ class TDStreamerClient():
 
         # this will house all of our field numebrs and keys so that way the user can use names to define the fields they want.
         self.fields_ids_dictionary = STREAM_FIELD_IDS
-        self.fields_keys_dictionary = STREAM_FIELD_KEYS
+        self.fields_keys_write = CSV_FIELD_KEYS
 
         # Define Storage mode for CSV files.
         if append_mode == True:
@@ -110,7 +109,7 @@ class TDStreamerClient():
                     
                     # This adds functionality by allowing us to dump the field names and not numbers.
                     old_key = field_key
-                    new_key = CSV_FIELD_KEYS[data_service][field_key]
+                    new_key = self.fields_keys_write[data_service][field_key]
 
                     # Grab the value.
                     field_value = item[field_key]
@@ -272,48 +271,29 @@ class TDStreamerClient():
             TYPE: Object
         '''
 
-        approved_writes = ['QUOTE','OPTION','LEVELONE_FUTURES']
+        approved_writes = list(self.fields_keys_write.keys())
 
         # Keep going until cancelled.
         while True:
 
             try:
 
-                # grab and decode the message
+                # recieve and decode the message.
                 message = await connection.recv()
+                message_decoded = json.loads(message)
 
-                try:
-                    # decode and print it.
-                    message_decoded = json.loads(message)
-
-                    if 'data' in message_decoded.keys():
-
-                        if message_decoded['data'][0]['service'] in approved_writes:
-
-                            # write to CSV File
-                            print('writing to CSV')
-                            await self._write_to_csv(data = message_decoded['data'])
-
-                except:
-
-                    message_decoded = message
+                if 'data' in message_decoded.keys():
+                    if message_decoded['data'][0]['service'] in approved_writes:                            
+                        await self._write_to_csv(data = message_decoded['data'])
 
                 print('-'*20)
-                print('Received message from server: ' + str(message_decoded))
+                print('Received message from server: {}'.format(str(message_decoded)))
 
             except websockets.exceptions.ConnectionClosed:
 
                 # stop the connection if there is an error.
                 print('Connection with server closed')
                 break
-
-            # except KeyboardInterrupt:
-            #     # stop the connection if there is an error.
-            #     print('Closing Connection')
-
-            # finally:
-            #     self.close_stream(connection=connection)
-            #     self.loop.call_soon_threadsafe(self.loop.stop)
 
     async def heartbeat(self, connection):
         '''
@@ -366,27 +346,31 @@ class TDStreamerClient():
             arg_list = []
 
             for arg in argument:
-                # if it's an int, then check the IDs Dictionary.
-                if isinstance(arg, int) and str(arg) in self.fields_ids_dictionary[endpoint]:
-                    arg_list.append(str(arg))
-                # if it's a string check the KEYs Dictionary.
-                elif isinstance(arg, str) and arg in self.fields_keys_dictionary[endpoint]:
-                    arg_list.append(
-                        str(self.fields_keys_dictionary[endpoint][arg]))
+
+                arg_str = str(arg)
+                key_list = list(self.fields_ids_dictionary[endpoint].keys())
+                val_list = list(self.fields_ids_dictionary[endpoint].values())
+
+                if arg_str in key_list:
+                    arg_list.append(arg_str)
+                elif arg_str in val_list:
+                    key_value = key_list[val_list.index(arg_str)]
+                    arg_list.append(key_value)                  
 
             return arg_list
 
         else:
-            # if it's an int, then check the IDs Dictionary.
-            if isinstance(argument, int) and str(argument) in self.fields_ids_dictionary[endpoint]:
-                argument = str(argument)
-                return argument
-            # if it's a string check the KEYs Dictionary.
-            elif isinstance(argument, str) and argument in self.fields_keys_dictionary[endpoint]:
-                argument = self.fields_keys_dictionary[endpoint][argument]
-                return argument
-            else:
-                return None
+
+            arg_str = str(argument)
+            key_list = list(self.fields_ids_dictionary[endpoint].keys())
+            val_list = list(self.fields_ids_dictionary[endpoint].values())
+
+            if arg_str in key_list:
+                arg_list.append(arg_str)
+            elif arg_str in val_list:
+                key_value = key_list[val_list.index(arg_str)]
+                arg_list.append(key_value)
+                
 
     def quality_of_service(self, qos_level=None):
         '''
@@ -400,8 +384,7 @@ class TDStreamerClient():
         '''
 
         # valdiate argument.
-        qos_level = self._validate_argument(
-            argument=qos_level, endpoint='qos_request')
+        qos_level = self._validate_argument(argument=qos_level, endpoint='qos_request')
 
         if qos_level is not None:
 
