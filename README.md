@@ -54,7 +54,9 @@ Additionally, to authenticate yourself using this library, you will need to prov
 
 ## Installation
 
-PLACE HOLDER FOR PIP INSTALLATION
+```bash
+pip install td-ameritrade-python-api
+```
 
 ## Usage
 
