@@ -1,4 +1,5 @@
 from distutils.core import setup
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -6,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
 
       # this will be my Library name.
-      name='TD Ameritrade Unofficial API',
+      name='td-ameritrade-python-api',
 
       # Want to make sure people know who made it.
       author='Alex Reed',
@@ -35,7 +36,7 @@ setup(
       ],
 
       # here are the packages I want "build."
-      packages=['td'],
+      packages=find_packages(),
 
       # additional classifiers that give some characteristics about the package.
       classifiers=[
