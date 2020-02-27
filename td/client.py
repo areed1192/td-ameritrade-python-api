@@ -1835,6 +1835,8 @@ class TDClient():
             NAME: order_id
             DESC: The order id.
             TYPE: integer
+            
+            RTYPE: Integer
 
             EXAMPLES:
 
@@ -1854,8 +1856,17 @@ class TDClient():
         # build the url
         url = self.api_endpoint(endpoint)
 
-        # make the request
-        return requests.delete(url=url, headers=merged_headers,  verify=True).json()
+        # delete the request
+        delete_response = requests.delete(url=url, headers=merged_headers, verify=True)
+        delete_status = delete_response.status_code
+        
+        if delete_status == 200:
+            print('ORDER DELETE REQUEST FOR ORDER ID {} RETURNED STATUS CODE {}'.format(order_id, delete_status))
+            return delete_status
+        else:
+            print('ORDER DELETE REQUEST FOR ORDER ID {} RETURNED STATUS CODE {} AND WAS NOT DELETED'(order_id, delete_status))
+            return order_id
+
 
     def place_order(self, account=None, order=None):
         '''

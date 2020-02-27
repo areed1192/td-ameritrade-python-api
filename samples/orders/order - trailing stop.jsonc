@@ -1,0 +1,44 @@
+[
+  {
+    // REPRESENTS A TRAILING STOP WHERE I WILL BUY THE POSITION BUT THE PRICE IS MOVING UP. ASSUMES I ALREADY OWN THE INSTRUMENT
+    "orderType": "TRAILING_STOP",
+    "stopPriceOffset": 0.1,
+    "stopPriceLinkType": "VALUE",
+    "stopPriceLinkBasis": "ASK",
+    "stopType": "STANDARD",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    // REPRESENTS A TRAILING STOP WHERE I WILL SELL THE POSITION BUT THE PRICE IS MOVING UP. ASSUMES I ALREADY OWN THE INSTRUMENT
+    "orderType": "TRAILING_STOP",
+    "stopPriceOffset": 2, // this is from 1 to 99 in terms of percent.
+    "stopPriceLinkType": "PERCENT",
+    "stopPriceLinkBasis": "BID",
+    "stopType": "STANDARD",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  }
+]

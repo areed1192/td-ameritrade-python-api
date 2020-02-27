@@ -3,8 +3,6 @@ from datetime import datetime, timedelta
 from td.client import TDClient
 from td.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
 
-
-
 # Create a new session
 TDSession = TDClient(account_number=ACCOUNT_NUMBER,
                      account_password=ACCOUNT_PASSWORD,
