@@ -35,8 +35,12 @@ setup(
             'requests==2.22.0'
       ],
 
+      keywords = 'finance, td ameritrade, api',
+
       # here are the packages I want "build."
-      packages=['td'],
+      packages=find_packages(include = ['td']),
+      
+      include_package_data=True,
 
       # additional classifiers that give some characteristics about the package.
       classifiers=[
