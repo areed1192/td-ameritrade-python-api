@@ -36,7 +36,7 @@ setup(
       ],
 
       # here are the packages I want "build."
-      packages=find_packages(),
+      packages=['td'],
 
       # additional classifiers that give some characteristics about the package.
       classifiers=[
