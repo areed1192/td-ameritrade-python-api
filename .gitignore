@@ -12,6 +12,7 @@ __pycache__/
 *$py.class
 samples/instructions/photos
 config.py
+.pypirc
 
 # C extensions
 *.so
