@@ -127,7 +127,7 @@ If you have a project, you think I can help you with feel free to reach out at c
 
 While in Visual Studio Code, right click anywhere in the code editor while in the `test_td_client.py` file. The following dropdown will appear:
 
-![Terminal Dropdown](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/terminal_dropdown.jpg "Terminal Dropdown")
+![Terminal Dropdown](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/terminal_dropdown.jpg "Terminal Dropdown")
 
 From the dropdown, click `Run Python file in Terminal`, this will start the python script.
 
@@ -135,30 +135,30 @@ From the dropdown, click `Run Python file in Terminal`, this will start the pyth
 
 The TD Library will automatically generate the redirect URL that will navigate you to the TD website for for you authentication. You can either copy the link and paste it into a browser manually or if you're using Visual Studio Code you can press `CTRL + Click` to have Visual Studio Code navigate you to the URL immeditately.
 
-![Redirect URI](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/redirect_uri.jpg "Redirect URI")
+![Redirect URI](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/redirect_uri.jpg "Redirect URI")
 
 **Step 3 - Login to the TD API:**
 
 Once you've arrived at the login screen, you'll need to provide your credentials to authenticate the session. Please provide your Account Username and Account Password in the userform and then press enter. As a reminder these, are the same username/password combination you use to login to your regular TD Account.
 
-!["TD Login](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/td_login.jpg "TD Login")
+!["TD Login](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/td_login.jpg "TD Login")
 
 **Step 4 - Accept the Terms:**
 
 Accept the Terms of the API by clicking `Allow`, this will redirect you.
 
-![TD Terms](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/td_terms.jpg "TD Terms")
+![TD Terms](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/td_terms.jpg "TD Terms")
 
 **Step 5 - Copy the Authorization Code:**
 
 After accepting the terms, you'll be taken to the URL that you provided as your `redirect URI`. However, at the end of that URL will be `authorization code`. To complete the authentication workflow, copy the URL as it appears below. Don't worry if the numbers don't match, as you will have a different code.
 
-![Auth Code](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/auth_code.jpg "Auth Code")
+![Auth Code](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/auth_code.jpg "Auth Code")
 
 **Step 6 - Paste the Authorization Code in the Terminal:**
 
 Take the URL and copy it into the Terminal, after you have pasted it, press `Enter`. The authentication workflow will complete and the script will start running. At this stage, we are exchanging your authorization code for an access token. That access token is valid only for 30 minutes. However, a refresh token is also stored that will refresh your access token when it expires.
 
-![Paste URL](https://github.com/areed1192/td-ameritrade-python-api/blob/master/samples/instructions/photos/paste_url.jpg "Paste URL")
+![Paste URL](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/paste_url.jpg "Paste URL")
 
 After, that the script should run. Additionally, inside the `td` folder you'll notice a new JSON file called `TdAmeritradeState.json`. This file contains all the info used during a session. Please DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.

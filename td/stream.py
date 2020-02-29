@@ -142,7 +142,7 @@ class TDStreamerClient():
                                 data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
                                 stream_writer.writerow(data)
 
-                elif service_name in approved_writes_level_2:
+                elif service_name in self.approved_writes_level_2:
 
                     # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
                     with open(self.CSV_PATH_STREAM, mode = self.CSV_APPEND_MODE, newline='') as stream_file:
