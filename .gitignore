@@ -1,7 +1,7 @@
 # credential logs
 TDAmeritradeState.json
 test_saved_orders.py
-td/config.py
+config.py
 td_testing/
 .vscode/
 

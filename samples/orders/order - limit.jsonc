@@ -1,0 +1,38 @@
+[
+  {
+    //REPRESENTS A LIMIT ORDER FOR SELLING A POSITION I OWN. LOWEST PRICE I'M WILLING TO SELL IT AT.
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "activationPrice": 9.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    //REPRESENTS A MARKET ORDER FOR BUYING A POSITION I DON'T OWN. HIGHEST PRICE I'M WILLING TO BUY IT AT.
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 20.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  }
+]

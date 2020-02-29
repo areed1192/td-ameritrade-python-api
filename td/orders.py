@@ -282,6 +282,88 @@ class Order():
         else:
             raise ValueError('Incorrect Value for the OrderType paramater')
 
+    def stop_price_offset(self, stop_price_offset= None):
+        '''
+            Defines the stop price of the order to be made.
+
+            NAME: stop_price
+            DESC: The stop price at which to execute the order.
+            TYPE: Float
+        '''
+
+        self.template['stopPriceOffset'] = stop_price_offset
+
+    def stop_type(self, stop_type = None):
+        '''
+            Defines the stop price of the order to be made.
+
+            NAME: stop_price
+            DESC: The stop price at which to execute the order.
+            TYPE: Float
+        '''
+
+        # Grab the value.
+        stop_type = self._grab_value(item = stop_type)
+
+        # Add to template.
+        if stop_type in self.saved_order_arguments['stopType']:
+            self.template['stopType'] = stop_type
+        else:
+            raise ValueError('Incorrect Value for the stopType paramater')
+        
+
+    def stop_price_link_type(self, stop_price_link_type = None):
+        '''
+            Defines the stop price of the order to be made.
+
+            NAME: stop_price
+            DESC: The stop price at which to execute the order.
+            TYPE: Float
+        '''
+
+        # Grab the value.
+        stop_price_link_type = self._grab_value(item = stop_price_link_type)
+
+        # Add to template.
+        if stop_price_link_type.upper() in self.saved_order_arguments['stopPriceLinkType']:
+            self.template['stopPriceLinkType'] = stop_price_link_type.upper()
+        else:
+            raise ValueError('Incorrect Value for the stopPriceLinktype paramater')
+
+
+    def stop_price_link_basis(self, stop_price_link_basis = None):
+        '''
+            Defines the stop price of the order to be made.
+
+            NAME: stop_price
+            DESC: The stop price at which to execute the order.
+            TYPE: Float
+        '''
+
+        # Grab the value.
+        stop_price_link_basis = self._grab_value(item = stop_price_link_basis)
+
+        # Add to template.
+        if stop_price_link_basis.upper() in self.saved_order_arguments['stopPriceLinkBasis']:
+            self.template['stopPriceLinkBasis'] = stop_price_link_basis.upper()
+        else:
+            raise ValueError('Incorrect Value for the stopPriceLinkBasis paramater')
+
+    def stop_price(self, stop_price = None):
+        '''
+            Defines the stop price of the order to be made.
+            
+            NAME: stop_price
+            DESC: The stop price at which to execute the order.
+            TYPE: Float
+        '''
+
+        # make sure it's a float before adding it.
+        if isinstance(stop_price, float):
+            self.template['stopPrice'] = stop_price
+        else:
+            raise ValueError('Stop Price must be the data type FLOAT.')
+
     def order_session(self, session=None):
         '''
             Define the session for the trade.
