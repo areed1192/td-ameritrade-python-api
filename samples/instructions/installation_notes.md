@@ -2,10 +2,12 @@
 
 Once we build our TD Ameritrade library we are probably going to want and distribute it so other people can use it. Now at this point I think it pays to define some terms before we continue. To start out, I will be referrring to my `td` client as a package. A `package`, is simply a collection of python modules. A `module` is simply a python script. Technically we have another level, a library. A `library` is a colleciton of various packages, however, conceptually there is no difference between a library and a package.
 
-**The Goal**
+## The Goal
+
 At the end of this process I want to be able to bundle all my python modules and any other resources together, package them using the `setuptools` module, and upload that pacakge to `pypi` so that other users can install it on their systems.
 
-**The Steps**
+## The Steps
+
 To reach our end goal, we need to do te following steps:
 
 1. Create `setup.py` file.
@@ -36,7 +38,7 @@ setup(
 
       # also an email they can use to reach out.
       author_email='coding.sigma@gmail.com',
-      
+
       # I'm in alpha development still, so a compliant version number is a1.
       # read this as MAJOR VERSION 0, MINOR VERSION 1, MAINTENANCE VERSION 0
       version='0.1.0',
@@ -52,7 +54,7 @@ setup(
 
       # here is the URL you can find the code, this is just the GitHub URL.
       url='https://github.com/areed1192/td-ameritrade-python-api',
-      
+
       # there are some dependencies to use the library, so let's list them out.
       install_reqs = [
             'websockets==8.0.2',
@@ -64,7 +66,7 @@ setup(
 
       # here are the packages I want "build."
       packages=find_packages(include = ['td']),
-      
+
       # I also have some package data, like photos and JSON files, so I want to include those too.
       include_package_data=True,
 
@@ -73,7 +75,7 @@ setup(
 
             # I want people to know it's still early stages.
            'Development Status :: 3 - Alpha',
-            
+
             # My Intended audience is mostly those who understand finance.
            'Intended Audience :: Financial and Insurance Industry',
 
@@ -136,7 +138,6 @@ pip install --upgrade setuptools wheel
 
 Twine is the primary tool developers use to upload packages to the Python Package Index or other Python package indexes. It is a command-line program that passes program files and metadata to a web API. Developers use it because it’s the official PyPI upload tool, it’s fast and secure, it’s maintained, and it reliably works. To install `twine`, run the following command:
 
-
 ```console
 pip install twine
 ```
@@ -155,7 +156,7 @@ Now that we have everything installed, we can build or distribution package. To 
 setup.py sdist bdist_wheel
 ```
 
-This will generate a distrubtion archives in the *dist* folder. In fact, if you look in your directory you should see a few new folders one called *dist* and one called *build*. These were generated when we ran the command.
+This will generate a distrubtion archives in the _dist_ folder. In fact, if you look in your directory you should see a few new folders one called _dist_ and one called _build_. These were generated when we ran the command.
 
 ### Step 6: Upload our Distribution Pacakge to PyPi test Index
 
@@ -166,7 +167,7 @@ To upload the distribution run the following command:
 ```console
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 ```
- 
+
 You will be prompted to enter your `username` and `password` once you've done that you should see similar output as seen below:
 
 ```console
@@ -191,7 +192,7 @@ Uploading example_pkg_YOUR_USERNAME_HERE-0.0.1.tar.gz
 100%|█████████████████████| 4.25k/4.25k [00:01<00:00, 3.05kB/s]
 ```
 
-Once uploaded your package should be viewable on TestPyPI, for example, https://test.pypi.org/project/example-pkg-YOUR-USERNAME-HERE
+Once uploaded your package should be viewable on TestPyPI, for example, <https://test.pypi.org/project/example-pkg-YOUR-USERNAME-HERE>
 
 ### Step 7: Install the newly uploaded package
 
@@ -219,25 +220,3 @@ python
 
 >>> import example_pkg
 ```
-
-
-## Step 2: Run `pip install` in Development Mode
-
-```bash
-pip install -e "C:\Users\Alex\OneDrive\Desktop\Sigma\Repo - TD API Client\td-ameritrade-python-api"
-```
-
-## Versioning Notes
-
-```python
-1.2.0.dev1  # Development release
-1.2.0a1     # Alpha Release
-1.2.0b1     # Beta Release
-1.2.0rc1    # Release Candidate
-1.2.0       # Final Release
-1.2.0.post1 # Post Release
-15.10       # Date based release
-23          # Serial release
-```
-
-pipreqs "C:\Users\Alex\OneDrive\Desktop\Sigma\Repo - TD API Client\td-ameritrade-python-api\td"

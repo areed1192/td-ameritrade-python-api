@@ -551,3 +551,10 @@ CSV_FIELD_KEYS = {
                  "4": "last-sequence",
                  "key": "symbol",
                  "seq": "sequence"}}
+
+CSV_FIELD_KEYS_LEVEL_2 = {
+    "NASDAQ_BOOK": "nested",
+    "OPTIONS_BOOK": "nested",
+    "LISTED_BOOK": "nested",
+    "NYSE_BOOK": "nested"
+}

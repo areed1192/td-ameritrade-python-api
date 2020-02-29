@@ -1,10 +1,10 @@
 import csv
+import os
 import asyncio
 import json
 import urllib
 import websockets
-from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS
-
+from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS, CSV_FIELD_KEYS_LEVEL_2
 
 class TDStreamerClient():
 
@@ -15,7 +15,7 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     '''
 
-    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv', append_mode = True):
+    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv', data_dump_location = None, append_mode = True):
         '''
             Initalizes the Client Object and defines different components that will be needed to
             make a connection with the TD Streaming API.
@@ -38,6 +38,11 @@ class TDStreamerClient():
                   'csv'
             TYPE: String
 
+            NAME: data_dump_location
+            DESC: Specifies where you would like the CSV file to be written to. If nothing is provided then 
+                  current working directory is used.
+            TYPE: String
+
             NAME: append-mode
             DESC: Defines whether the write mode should be append or new. If append-mode is True, then all
                   CSV data will go to the existing file. Can either be `True` or `False`.
@@ -55,12 +60,47 @@ class TDStreamerClient():
         # this will house all of our field numebrs and keys so that way the user can use names to define the fields they want.
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_write = CSV_FIELD_KEYS
+        self.fields_keys_write_level_2 = CSV_FIELD_KEYS_LEVEL_2
+        self.approved_writes = list(self.fields_keys_write.keys())
+        self.approved_writes_level_2 = list(self.fields_keys_write_level_2.keys())
 
         # Define Storage mode for CSV files.
         if append_mode == True:
-            self.CSV_APPEND_MODE = True
+            self.CSV_APPEND_MODE = 'a+'
         elif append_mode == False:
-            self.CSV_APPEND_MODE = False
+            self.CSV_APPEND_MODE = 'w'
+
+        if data_dump_location is None:
+            self.CSV_PATH = os.getcwd() + ".csv"
+            self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_stream.csv")
+        else:
+            self.CSV_PATH = data_dump_location + ".csv"
+            self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_stream.csv")
+
+    async def _write_book_data(self, book_data = None, book_type = None, book_timestamp = None, book_content = None, file_object = None):
+
+        for index, activity_section in enumerate(book_data):                                
+            section_id = str(book_timestamp) + "_" + str(index)
+            price = activity_section['0']
+            total_size = activity_section['1']
+            total_count = activity_section['2']
+            book_data_collection = activity_section['3']
+
+            for book_data in book_data_collection:
+                mpid = book_data["0"]
+                size = book_data["1"]
+                _time = book_data["2"]
+                data = ["book_{}".format(book_type), section_id, 
+                        "book_{}_price".format(book_type), price, 
+                        "book_{}_size".format(book_type), total_size, 
+                        "book_{}_otal_count".format(book_type), total_count, 
+                        "book_{}_section_mpid".format(book_type), mpid, 
+                        "book_{}_section_size".format(book_type), size, 
+                        "book_{}_section_time".format(book_type), _time]
+
+                file_object.writerow(data)
+        pass
+        
 
     ############################################################################################################################################################
 
@@ -75,42 +115,49 @@ class TDStreamerClient():
             TYPE: Dictionary.
         '''
 
-        # for level one quotes we have the following constants.
-        data_service = data[0]['service']
-        data_timestamp = data[0]['timestamp']
-        data_command = data[0]['command']
-        data_content = data[0]['content']
+        # check if it's a list, this should always be the case.
+        if isinstance(data, list):            
+            for service_result in data:
 
-        if self.CSV_APPEND_MODE == True:
-            csv_write_mode = 'a+'
-        else:
-            csv_write_mode = 'w'
-        
-        # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
-        with open('stream_data.csv', mode = csv_write_mode, newline='') as stream_file:           
-            
-            # create the writer.
-            stream_writer = csv.writer(stream_file)
-            print('writing')
+                # A Service response should have the following keys.
+                service_name = service_result['service']
+                service_timestamp = service_result['timestamp']
+                service_command = service_result['command']
+                service_contents = service_result['content']
 
-            # loop through each item in the content field.
-            for item in data_content:
+                if service_name in self.approved_writes:
 
-                # each content item has a collection of keys, loop through those.
-                for field_key in item:
-                    
-                    # This adds functionality by allowing us to dump the field names and not numbers.
-                    old_key = field_key
-                    new_key = self.fields_keys_write[data_service][field_key]
+                    # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
+                    with open(self.CSV_PATH, mode = self.CSV_APPEND_MODE, newline='') as stream_file:
 
-                    # Grab the value.
-                    field_value = item[field_key]
+                        # create the writer.
+                        stream_writer = csv.writer(stream_file)
+                        for data_section in service_contents:
+                            for field_key in data_section:
 
-                    # Create a list of all the data.
-                    data = [data_service, data_timestamp, data_command, old_key, new_key, field_key, field_value]
+                                # This adds functionality by allowing us to dump the field names and not numbers.
+                                old_key = field_key
+                                new_key = self.fields_keys_write[service_name][old_key]
+                                field_value = data_section[old_key]
+                                data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
+                                stream_writer.writerow(data)
 
-                    # write it a row.
-                    stream_writer.writerow(data)
+                elif service_name in approved_writes_level_2:
+
+                    # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
+                    with open(self.CSV_PATH_STREAM, mode = self.CSV_APPEND_MODE, newline='') as stream_file:
+                        
+                        # create the writer.
+                        stream_writer = csv.writer(stream_file)
+                        for service_content in service_contents:
+
+                            symbol = service_content['key']
+                            book_timestamp = service_content['1']
+                            book_bid = service_content['2']
+                            book_ask = service_content['3']
+                            content_names = [symbol, service_name, service_timestamp, service_command]
+                            self._write_book_data(book_bid, book_type='bid', book_timestamp=book_timestamp, book_content=content_names, file_object=stream_writer)
+                            self._write_book_data(book_ask, book_type='ask', book_timestamp=book_timestamp, book_content=content_names, file_object=stream_writer)
 
     ############################################################################################################################################################
 
@@ -263,8 +310,6 @@ class TDStreamerClient():
             TYPE: Object
         '''
 
-        approved_writes = list(self.fields_keys_write.keys())
-
         # Keep going until cancelled.
         while True:
 
@@ -272,11 +317,14 @@ class TDStreamerClient():
 
                 # recieve and decode the message.
                 message = await connection.recv()
-                message_decoded = json.loads(message)
 
-                if 'data' in message_decoded.keys():
-                    if message_decoded['data'][0]['service'] in approved_writes:                            
-                        await self._write_to_csv(data = message_decoded['data'])
+                try:
+                    message_decoded = json.loads(message)
+                except:
+                    message_decoded = "No Data Returned"
+
+                if 'data' in message_decoded.keys():                     
+                    await self._write_to_csv(data = message_decoded['data'])
 
                 print('-'*20)
                 print('Received message from server: {}'.format(str(message_decoded)))
@@ -962,7 +1010,7 @@ class TDStreamerClient():
         NOT WORKING
     '''
 
-    def streamer_server(self):
+    def _streamer_server(self):
 
         # Build the request
         request = self._new_request_template()
@@ -972,7 +1020,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-    def news_history(self):
+    def _news_history(self):
 
         # OFFICIALLY DEAD
 
@@ -985,7 +1033,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-    def level_two_opra(self, symbols=None, fields=None):
+    def _level_two_opra(self, symbols=None, fields=None):
         '''
             EXPERIMENTAL: USE WITH CAUTION!
 
@@ -1012,7 +1060,7 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-    def level_two_futures_options(self, symbols=None, fields=None):
+    def _level_two_futures_options(self, symbols=None, fields=None):
         '''
             EXPERIMENTAL: USE WITH CAUTION!
 
