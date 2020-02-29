@@ -10,6 +10,8 @@ td/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
+samples/instructions/photos
+config.py
 
 # C extensions
 *.so

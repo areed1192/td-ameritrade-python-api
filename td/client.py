@@ -1899,8 +1899,21 @@ class TDClient():
         # make the request
         response = requests.post(url=url, headers=merged_headers, data=json.dumps(order), verify=True)
 
+        # print('')
+        # print('-'*80)
+        # print("REQUEST - STATUS CODE: {}".format(response.status_code))
+        # print('-'*80)        
+        # print("RESPONSE - URL: {}".format(response.url))
+        # print('-'*80)
+        # print("RESPONSE - HEADERS: {}".format(response.headers))
+        # print('-'*80)
+        # print("RESPONSE - TEXT: {}".format(response.text))
+        # print('-'*80)
+        # print('')
+
         if response.status_code == 201:
-            return "Order was successfully placed."
+            print("Order was successfully placed.")
+            return response
         else:
             return response.json()
 
