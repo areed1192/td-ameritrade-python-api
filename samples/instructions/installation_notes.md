@@ -1,5 +1,8 @@
 # TD Ameritrade Installation
 
+Current PyPi Test Version - 0.2.1
+Current PyPi Version - 0.3.0
+
 Once we build our TD Ameritrade library we are probably going to want and distribute it so other people can use it. Now at this point I think it pays to define some terms before we continue. To start out, I will be referrring to my `td` client as a package. A `package`, is simply a collection of python modules. A `module` is simply a python script. Technically we have another level, a library. A `library` is a colleciton of various packages, however, conceptually there is no difference between a library and a package.
 
 ## The Goal
