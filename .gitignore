@@ -12,7 +12,6 @@ __pycache__/
 *$py.class
 samples/instructions/photos
 config.py
-.pypirc
 
 # C extensions
 *.so
@@ -113,3 +112,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+pypirc

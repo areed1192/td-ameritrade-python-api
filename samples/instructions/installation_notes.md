@@ -169,11 +169,11 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 ```
 
 ```console
-twine upload --repository testpypi --config-file .pypirc dist/*
+twine upload --repository testpypi --config-file pypirc dist/*
 ```
 
 ```console
-twine upload --repository pypi --config-file .pypirc dist/*
+twine upload --repository pypi --config-file pypirc dist/*
 ```
 
 You will be prompted to enter your `username` and `password` once you've done that you should see similar output as seen below:

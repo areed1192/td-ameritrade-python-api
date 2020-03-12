@@ -12,3 +12,5 @@ recursive-include samples *
 
 
 global-exclude td/config.py
+
+global-exclude config.py
