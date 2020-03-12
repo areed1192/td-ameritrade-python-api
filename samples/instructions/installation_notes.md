@@ -222,6 +222,10 @@ Installing collected packages: example-pkg-YOUR-USERNAME-HERE
 Successfully installed example-pkg-YOUR-USERNAME-HERE-0.0.1
 ```
 
+```console
+pip show td_ameritrade_python_api
+```
+
 ### Step 8: Test that the package was installed correctly
 
 You can test that it was installed correctly by importing the package. Run the Python interpreter and from the interpreter shell import the package. Here is how it will look:
