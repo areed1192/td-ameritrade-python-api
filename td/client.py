@@ -49,6 +49,7 @@ class TDClient():
                        'resource': 'https://api.tdameritrade.com',
                        'api_version': '/v1',
                        'cache_state': True,
+                       'json_path': None,
                        'authenticaiton_url': 'https://auth.tdameritrade.com',
                        'auth_endpoint': 'https://auth.tdameritrade.com' + '/auth?',
                        'token_endpoint': 'https://api.tdameritrade.com' + '/v1' + '/oauth2/token',
@@ -166,9 +167,12 @@ class TDClient():
                              'loggedin': False}
 
         # Grab the current directory of the client file, that way we can store the JSON file in the same folder.
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        filename = 'TDAmeritradeState.json'
-        file_path = os.path.join(dir_path, filename)
+        if self.config['json_path'] is not None:
+            file_path = self.config['json_path']
+        else:
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            filename = 'TDAmeritradeState.json'
+            file_path = os.path.join(dir_path, filename)
 
         # if the state is initalized
         if action == 'init':
@@ -1905,23 +1909,12 @@ class TDClient():
         if isinstance(order, Order):
             order = order._saved_order_to_json()
         else:
-            order = order
+            order = json.dumps(order)
 
         # make the request
-        response = requests.post(url=url, headers=merged_headers, data=json.dumps(order), verify=True)
+        response = requests.post(url=url, headers=merged_headers, data=order, verify=True)
 
-        # print('')
-        # print('-'*80)
-        # print("REQUEST - STATUS CODE: {}".format(response.status_code))
-        # print('-'*80)        
-        # print("RESPONSE - URL: {}".format(response.url))
-        # print('-'*80)
-        # print("RESPONSE - HEADERS: {}".format(response.headers))
-        # print('-'*80)
-        # print("RESPONSE - TEXT: {}".format(response.text))
-        # print('-'*80)
-        # print('')
-
+        # Check if the order was successful.
         if response.status_code == 201:
             print("Order was successfully placed.")
             return response
