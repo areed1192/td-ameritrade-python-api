@@ -10,5 +10,5 @@ include td/watchlist_item.py
 
 recursive-include samples *
 
-
 global-exclude td/config.py
+global-exclude tests/config.py

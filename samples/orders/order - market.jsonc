@@ -34,5 +34,22 @@
         }
       }
     ]
+  },
+  {
+    "orderType": "MARKET",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "instrument": {
+          "assetType": "EQUITY",
+          "symbol": "GIS"
+        },
+        "quantityType": "SHARES",
+        "quantity": 1
+      }
+    ]
   }
 ]
