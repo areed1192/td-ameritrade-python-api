@@ -13,3 +13,5 @@ recursive-include samples *
 global-exclude td/config.py
 global-exclude tests/config.py
 global-exclude config.py
+
+# recursive-exclude **/samples
