@@ -1973,8 +1973,7 @@ class TDClient():
                        "acl": userPrincipalsResponse['streamerInfo']['acl']}
 
         # Create the session
-        streaming_session = TDStreamerClient(
-            websocket_url=socket_url, user_principal_data=userPrincipalsResponse, credentials=credentials)
+        streaming_session = TDStreamerClient(websocket_url=socket_url, user_principal_data=userPrincipalsResponse, credentials=credentials)
 
         return streaming_session
 

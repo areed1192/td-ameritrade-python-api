@@ -19,69 +19,46 @@ timesale_fields = ['symbol', 'last-price',
 chart_fields = ['key', 'open-price', 'high-price', 'low-price',
                 'close-price', 'volume', 'sequence', 'chart-time', 'chart-day']
 
-'''
-
-    WORKING
-    -------
-
-    1. ACTIVES
-    2. QUALITY OF SERVICE
-    3. CHART HISTORY FUTURES
-    4. CHART
-    5. LEVEL ONE QUOTES
-    6. LEVEL ONE FUTURES
-    7. LEVEL ONE OPTIONS
-    8. LEVEL ONE FUTURES OPTIONS
-    9. TIMESALES
-
-
-    WORKING - WITH NOTES
-    --------------------
-    10. NEWS_HEADLINE
-    11. ACCT_ACTIVITY
-
-
-    EXPERIMENTAL - WORKING
-    ----------------------
-    1. LEVEL TWO QUOTES
-    2. LEVEL TWO OPTIONS
-    3. LEVEL TWO NASDAQ
-
-    NOTES - THINGS I FOUND
-    ----------------------
-    Order seems to matter with the fields. For example in Level One Quotes if I request fields like this [3, 8, 20, 1, 6]
-    It will not work, but if I put all the fields in the correct sequential order [1, 2, 3, ... ,18 19, 20] There doesn't
-    seem to be an issue anymore.
-
-'''
-
-import requests
-from td.client import TDClient
-
-TESTING_FLAG = True
-
-if TESTING_FLAG:
-    from td.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
-else:
-    ACCOUNT_NUMBER = '<YOUR TD ACCOUNT USERNAME>'
+try:
+    from td.client import TDClient
+    from config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
+except ImportError:
+    ACCOUNT_USERNAME = '<YOUR TD ACCOUNT USERNAME>'
     ACCOUNT_PASSWORD = '<YOUR TD ACCOUNT PASSWORD>'
     CONSUMER_ID = '<YOUR TD DEVELOPER ACCOUNT CONSUMER ID>'
     REDIRECT_URI = '<YOUR TD DEVELOPER ACCOUNT REDIRECT URI>'
+    JSON_PATH = None
 
 # Create a new session
-TDSession = TDClient(account_number=ACCOUNT_NUMBER,
+TDSession = TDClient(account_number=ACCOUNT_USERNAME,
                      account_password=ACCOUNT_PASSWORD,
                      consumer_id=CONSUMER_ID,
-                     redirect_uri=REDIRECT_URI)
+                     redirect_uri=REDIRECT_URI,
+                     json_path =JSON_PATH)
 
 # Login to the session
 TDSession.login()
 
+
 # Create a streaming sesion
 TDStreamingClient = TDSession.create_streaming_session()
 
-# Define the CSV Append Mode. Needs to be rewritten it's kind of awkward to call it like this.
-TDStreamingClient.CSV_APPEND_MODE = True
+# Set the data dump location
+TDStreamingClient.set_csv_dump(file_path = "raw_data", append_mode = True)
+
+
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
+
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_EQUITY', symbols=['MSFT'], fields=[0,1,2,3,4,5,6,7])
+
+# Stream it.
+TDStreamingClient.stream()
+
 
 '''
     REGULAR - WORKING
@@ -98,7 +75,7 @@ TDStreamingClient.CSV_APPEND_MODE = True
 '''
 
 # Level One Quote
-TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
+# TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
@@ -111,12 +88,6 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 
 # # Level One Futures Options - VALIDATE JSON RESPONSE
 # TDStreamingClient.level_one_futures_options(symbols=['./E1AG20C3220'], fields=list(range(0,36)))
-
-# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
-
-# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_030620P140'], fields=[0,1,2,3,4,5,6])
 
 # # Chart History Futures
 # TDStreamingClient.chart_history_futures(symbol = ['/ES'], frequency='m5', period='d1')
@@ -186,9 +157,6 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 
 # News History - NOT WORKING
 # TDStreamingClient.news_history()
-
-# Stream it.
-TDStreamingClient.stream()
 
 
 '''

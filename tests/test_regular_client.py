@@ -2,20 +2,21 @@ import pprint
 from datetime import datetime, timedelta
 from td.client import TDClient
 
-TESTING_FLAG = True
-# if TESTING_FLAG:
-#     from tests.config import ACCOUNT_NUMBER, ACCOUNT_PASSWORD, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT
-# else:
-ACCOUNT_NUMBER = '<YOUR TD ACCOUNT USERNAME>'
-ACCOUNT_PASSWORD = '<YOUR TD ACCOUNT PASSWORD>'
-CONSUMER_ID = '<YOUR TD DEVELOPER ACCOUNT CONSUMER ID>'
-REDIRECT_URI = '<YOUR TD DEVELOPER ACCOUNT REDIRECT URI>'
+try:
+    from config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
+except ImportError:
+    ACCOUNT_NUMBER = '<YOUR TD ACCOUNT USERNAME>'
+    ACCOUNT_PASSWORD = '<YOUR TD ACCOUNT PASSWORD>'
+    CONSUMER_ID = '<YOUR TD DEVELOPER ACCOUNT CONSUMER ID>'
+    REDIRECT_URI = '<YOUR TD DEVELOPER ACCOUNT REDIRECT URI>'
+    JSON_PATH = None
 
 # Create a new session
 TDSession = TDClient(account_number=ACCOUNT_NUMBER,
                      account_password=ACCOUNT_PASSWORD,
                      consumer_id=CONSUMER_ID,
-                     redirect_uri=REDIRECT_URI)
+                     redirect_uri=REDIRECT_URI,
+                     json_path=JSON_PATH)
 
 # Login to the session
 TDSession.login()

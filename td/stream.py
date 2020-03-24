@@ -15,7 +15,7 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     '''
 
-    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None, write = 'csv', data_dump_location = None, append_mode = True):
+    def __init__(self, websocket_url=None, user_principal_data=None, credentials=None):
         '''
             Initalizes the Client Object and defines different components that will be needed to
             make a connection with the TD Streaming API.
@@ -32,20 +32,6 @@ class TDStreamerClient():
             NAME: credentials
             DESC: A credentials dictionary that is created from the "create_streaming_session" method.
             TYPE: Dictionary
-
-            NAME: write
-            DESC: Defines where you want to write the streaming data to. Right now can only specify
-                  'csv'
-            TYPE: String
-
-            NAME: data_dump_location
-            DESC: Specifies where you would like the CSV file to be written to. If nothing is provided then 
-                  current working directory is used.
-            TYPE: String
-
-            NAME: append-mode
-            DESC: Defines whether the write mode should be append or new. If append-mode is True, then all
-                  CSV data will go to the existing file. Can either be `True` or `False`.
 
         '''
 
@@ -64,18 +50,37 @@ class TDStreamerClient():
         self.approved_writes = list(self.fields_keys_write.keys())
         self.approved_writes_level_2 = list(self.fields_keys_write_level_2.keys())
 
-        # Define Storage mode for CSV files.
-        if append_mode == True:
-            self.CSV_APPEND_MODE = 'a+'
-        elif append_mode == False:
-            self.CSV_APPEND_MODE = 'w'
+    def write_behavior(self, write = 'csv', file_path = None, append_mode = True):
+        """
+            Sets the csv dump location and the append mode.
 
-        if data_dump_location is None:
-            self.CSV_PATH = os.getcwd() + ".csv"
+            NAME: write
+            DESC: Defines where you want to write the streaming data to. Right now can only specify
+                  'csv'
+            TYPE: String
+
+            NAME: file_path
+            DESC: Specifies where you would like the CSV file to be written to. If nothing is provided then 
+                  current working directory is used.
+            TYPE: String
+
+            NAME: append-mode
+            DESC: Defines whether the write mode should be append or new. If append-mode is True, then all
+                  CSV data will go to the existing file. Can either be `True` or `False`.
+            TYPE: Boolean
+
+        """
+
+        if write == 'csv':
+            self.CSV_PATH = file_path
             self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_stream.csv")
-        else:
-            self.CSV_PATH = data_dump_location + ".csv"
-            self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_stream.csv")
+
+            # Define Storage mode for CSV files.
+            if append_mode == True:
+                self.CSV_APPEND_MODE = 'a+'
+            elif append_mode == False:
+                self.CSV_APPEND_MODE = 'w'       
+
 
     async def _write_book_data(self, book_data = None, book_type = None, book_timestamp = None, book_content = None, file_object = None):
 
@@ -99,7 +104,6 @@ class TDStreamerClient():
                         "book_{}_section_time".format(book_type), _time]
 
                 file_object.writerow(data)
-        pass
         
 
     ############################################################################################################################################################
@@ -533,8 +537,6 @@ class TDStreamerClient():
 
         # NOTE: If ACCT_ACTIVITY is one of the streaming requests, then the request MUST BE
         # on a SSL secure connection (HTTPS)
-
-        print(self.user_principal_data)
 
         # Build the request
         request = self._new_request_template()
