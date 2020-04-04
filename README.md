@@ -98,6 +98,11 @@ For certain requests, in a limited fashion, it will help validate your request w
 
 Requests for saved orders, regular orders, watchlists, and option chains can be a challenging process that has multiple opportunities to make mistakes. This library has built-in objects that will allow you to quickly build your request and then validate certain portions of your request when possible.
 
+## Requirements
+
+- You must have a TD Ameritrade Account.
+- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources/td-developer-account) for instructions on how to create a Developer account.
+
 ## Documentation and Resources
 
 ### Official API Documentation
