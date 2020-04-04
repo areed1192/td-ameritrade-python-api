@@ -382,12 +382,11 @@ class TDStreamerClient():
 
             RTYPE: Boolean
         '''
+        # initalize a new list.
+        arg_list = []
 
         # see if the argument is a list or not.
         if isinstance(argument, list):
-
-            # initalize a new list.
-            arg_list = []
 
             for arg in argument:
 
@@ -410,10 +409,10 @@ class TDStreamerClient():
             val_list = list(self.fields_ids_dictionary[endpoint].values())
 
             if arg_str in key_list:
-                arg_list.append(arg_str)
+                return arg_str
             elif arg_str in val_list:
                 key_value = key_list[val_list.index(arg_str)]
-                arg_list.append(key_value)
+                return key_value
                 
 
     def quality_of_service(self, qos_level=None):

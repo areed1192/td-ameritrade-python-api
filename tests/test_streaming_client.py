@@ -19,6 +19,8 @@ timesale_fields = ['symbol', 'last-price',
 chart_fields = ['key', 'open-price', 'high-price', 'low-price',
                 'close-price', 'volume', 'sequence', 'chart-time', 'chart-day']
 
+import pprint
+
 try:
     from td.client import TDClient
     from config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
@@ -39,43 +41,37 @@ TDSession = TDClient(account_number=ACCOUNT_USERNAME,
 # Login to the session
 TDSession.login()
 
-
 # Create a streaming sesion
 TDStreamingClient = TDSession.create_streaming_session()
 
 # Set the data dump location
-TDStreamingClient.set_csv_dump(file_path = "raw_data", append_mode = True)
+TDStreamingClient.write_behavior(file_path = "raw_data.csv", append_mode = True)
 
+# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
 
-# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+# TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
 
-# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
-
-# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-TDStreamingClient.chart(service='CHART_EQUITY', symbols=['MSFT'], fields=[0,1,2,3,4,5,6,7])
-
-# Stream it.
-TDStreamingClient.stream()
-
+# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+# TDStreamingClient.chart(service='CHART_EQUITY', symbols=['MSFT'], fields=[0,1,2,3,4,5,6,7])
 
 '''
     REGULAR - WORKING
 '''
 
-# # Actives
-# TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
+# Actives
+TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
 
-# # Quality of Service
-# TDStreamingClient.quality_of_service(qos_level='express')
+# Quality of Service
+TDStreamingClient.quality_of_service(qos_level='express')
 
 '''
     LEVEL ONE DATA
 '''
 
 # Level One Quote
-# TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
+TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
@@ -158,6 +154,9 @@ TDStreamingClient.stream()
 # News History - NOT WORKING
 # TDStreamingClient.news_history()
 
+
+# Stream it.
+TDStreamingClient.stream()
 
 '''
     DEFINING CLOSE LOGIC

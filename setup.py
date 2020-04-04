@@ -32,7 +32,7 @@ setup(
       url='https://github.com/areed1192/td-ameritrade-python-api',
       
       # there are some dependencies to use the library, so let's list them out.
-      install_reqs = [
+      install_requires = [
             'websockets==8.0.2',
             'requests==2.22.0'
       ],
