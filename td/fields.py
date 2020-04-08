@@ -322,6 +322,26 @@ CSV_FIELD_KEYS = {
         "7": "chart-time",
         "8": "chart-day"
     },
+    "CHART_FUTURES": {
+        "seq": "chart-sequence",
+        "key": "symbol",
+        "1": "chart-time",
+        "2": "open-price",
+        "3": "high-price",
+        "4": "low-price",
+        "5": "close-price",
+        "6": "volume"
+    },
+    "CHART_OPTIONS": {
+        "seq": "chart-sequence",
+        "key": "symbol",
+        "1": "chart-time",
+        "2": "open-price",
+        "3": "high-price",
+        "4": "low-price",
+        "5": "close-price",
+        "6": "volume"
+    },
     "CHART_HISTORY": {
         "seq": "chart-sequence",
         "key": "symbol",
@@ -346,7 +366,7 @@ CSV_FIELD_KEYS = {
         "7": "chart-time",
         "8": "chart-day"
     },
-    "LEVEL_ONE_FOREX": {
+    "LEVELONE_FOREX": {
         "1": "bid-price",
         "10": "high-price",
         "11": "low-price",
@@ -377,9 +397,10 @@ CSV_FIELD_KEYS = {
         "8": "quote-time",
         "9": "trade-time",
         "delayed": "delayed",
+        "assetMainType": "asset-main-type",
         "key": "symbol"
     },
-    "LEVEL_ONE_FUTURES": {
+    "LEVELONE_FUTURES": {
         "1": "bid-price",
         "10": "quote-time",
         "11": "trade-time",
@@ -419,7 +440,7 @@ CSV_FIELD_KEYS = {
         "delayed": "delayed",
         "key": "symbol"
     },
-    "LEVEL_ONE_FUTURES_OPTIONS": {
+    "LEVELONE_FUTURES_OPTIONS": {
         "1": "bid-price",
         "10": "quote-time",
         "11": "trade-time",
@@ -458,7 +479,7 @@ CSV_FIELD_KEYS = {
         "delayed": "delayed",
         "key": "symbol"
     },
-    "LEVEL_ONE_OPTION": {
+    "OPTION": {
         "1": "description",
         "10": "volatility",
         "11": "quote-time",
@@ -505,63 +526,63 @@ CSV_FIELD_KEYS = {
         "delayed": "delayed",
         "key": "symbol",
     },
-    "LEVEL_ONE_QUOTE": {
-        "1": "symbol",
-        "10": "last-size",
-        "11": "trade-time",
-        "12": "quote-time",
-        "13": "high-price",
-        "14": "low-price",
-        "15": "bid-tick",
-        "16": "close-price",
-        "17": "exchange-id",
-        "18": "marginable",
-        "19": "shortable",
-        "2": "bid-price",
-        "20": "island-bid",
-        "21": "island-ask",
-        "22": "island-volume",
-        "23": "quote-day",
-        "24": "trade-day",
-        "25": "volatility",
-        "26": "description",
-        "27": "last-id",
-        "28": "digits",
-        "29": "open-price",
-        "3": "ask-price",
-        "30": "net-change",
-        "31": "52-week-high",
-        "32": "52-week-low",
-        "33": "pe-ratio",
-        "34": "dividend-amount",
-        "35": "dividend-yield",
-        "36": "island-bid-size",
-        "37": "island-ask-size",
-        "38": "nav",
-        "39": "fund-price",
-        "4": "last-price",
-        "40": "exchange-name",
-        "41": "dividend-date",
-        "42": "regular-market-quote",
-        "43": "regular-market-trade",
-        "44": "regular-market-last-price",
-        "45": "regular-market-last-size",
-        "46": "regular-market-trade-time",
-        "47": "regular-market-trade-day",
-        "48": "regular-market-net-change",
-        "49": "security-status",
-        "5": "bid-size",
-        "50": "mark",
-        "51": "quote-time-in-long",
-        "52": "trade-time-in-long",
-        "6": "ask-size",
-        "7": "ask-id",
-        "8": "bid-id",
-        "9": "total-volume",
-        "assetMainType": "delayed",
-        "cusip": "asset-main-type",
-        "delayed": "symbol",
-        "key": "regular-market-trade-time-in-long"
+    "QUOTE": {
+        "10": "trade-time",
+        "11": "quote-time",
+        "12": "high-price",
+        "13": "low-price",
+        "14": "bid-tick",
+        "15": "close-price",
+        "16": "exchange-id",
+        "17": "marginable",
+        "18": "shortable",
+        "1": "bid-price",
+        "19": "island-bid",
+        "20": "island-ask",
+        "21": "island-volume",
+        "22": "quote-day",
+        "23": "trade-day",
+        "24": "volatility",
+        "25": "description",
+        "26": "last-id",
+        "27": "digits",
+        "28": "open-price",
+        "2": "ask-price",
+        "29": "net-change",
+        "30": "52-week-high",
+        "31": "52-week-low",
+        "32": "pe-ratio",
+        "33": "dividend-amount",
+        "34": "dividend-yield",
+        "35": "island-bid-size",
+        "36": "island-ask-size",
+        "37": "nav",
+        "38": "fund-price",
+        "3": "last-price",
+        "39": "exchange-name",
+        "40": "dividend-date",
+        "41": "regular-market-quote",
+        "42": "regular-market-trade",
+        "43": "regular-market-last-price",
+        "44": "regular-market-last-size",
+        "45": "regular-market-trade-time",
+        "46": "regular-market-trade-day",
+        "47": "regular-market-net-change",
+        "48": "security-status",
+        "4": "bid-size",
+        "49": "mark",
+        "50": "quote-time-in-long",
+        "51": "trade-time-in-long",
+        "5": "ask-size",
+        "6": "ask-id",
+        "7": "bid-id",
+        "8": "total-volume",
+        "9": "last-size",
+        "assetMainType": "asset-main-type",
+        "assetSubType": "asset-sub-type",
+        "cusip": "cusip",
+        "delayed": "delayed",
+        "key": "symbol"
     },
     "NEWS_HEADLINE": {
         "1": "error-code",
@@ -577,19 +598,43 @@ CSV_FIELD_KEYS = {
         "key": "symbol",
         "seq": "sequence"
     },
-    "TIMESALE": {
+    "TIMESALE_EQUITY": {
         "1": "trade-time",
         "2": "last-price",
         "3": "last-size",
         "4": "last-sequence",
         "key": "symbol",
         "seq": "sequence"
-    }
+    },
+    "TIMESALE_FUTURES": {
+        "1": "trade-time",
+        "2": "last-price",
+        "3": "last-size",
+        "4": "last-sequence",
+        "key": "symbol",
+        "seq": "sequence"
+    },
+    "TIMESALE_FOREX": {
+        "1": "trade-time",
+        "2": "last-price",
+        "3": "last-size",
+        "4": "last-sequence",
+        "key": "symbol",
+        "seq": "sequence"
+    },
+    "TIMESALE_OPTIONS": {
+        "1": "trade-time",
+        "2": "last-price",
+        "3": "last-size",
+        "4": "last-sequence",
+        "key": "symbol",
+        "seq": "sequence"
+    },
 }
 
 CSV_FIELD_KEYS_LEVEL_2 = {
     "NASDAQ_BOOK": "nested",
     "OPTIONS_BOOK": "nested",
     "LISTED_BOOK": "nested",
-    "NYSE_BOOK": "nested"
+    "FUTURES_BOOK":"nested"
 }

@@ -1,21 +1,21 @@
 {
-    "service": "NEWS_HEADLINE",
-    "timestamp": 1581176721733,
-    "command": "SUBS",
-    "content": [
-        {
-            "seq": 0,
-            "key": "AAPL",
-            "1": 1,
-            "2": 0,
-            "3": "N/A",
-            "4": "U",
-            "5": "N/A",
-            "6": "N/A",
-            "7": 0,
-            "8": "N/A",
-            "9": false,
-            "10": "N/A"
-        }
-    ]
+  "service": "NEWS_HEADLINE",
+  "timestamp": 1586356436960,
+  "command": "SUBS",
+  "content": [
+    {
+      "seq": 0,
+      "key": "AAPL",
+      "1": 0,
+      "2": 1586348566000,
+      "3": "B15765890",
+      "4": "U",
+      "5": "10 Biggest Price Target Changes For Wednesday",
+      "6": "B15765890",
+      "7": 7,
+      "8": "DHI,AXP,GBX,LGND,Pre-Market Outlook,NUVA,USCR,PINS,Analyst Ratings,AZO,Price Target,CAKE,*ALL*,AAPL",
+      "9": false,
+      "10": "BENZINGA"
+    }
+  ]
 }

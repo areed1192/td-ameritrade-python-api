@@ -4,6 +4,7 @@ import asyncio
 import json
 import urllib
 import websockets
+import unicodedata
 from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS, CSV_FIELD_KEYS_LEVEL_2
 
 class TDStreamerClient():
@@ -73,41 +74,18 @@ class TDStreamerClient():
 
         if write == 'csv':
             self.CSV_PATH = file_path
-            self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_stream.csv")
+            self.CSV_PATH_STREAM = self.CSV_PATH.replace(".csv", "_level_2.csv")
 
             # Define Storage mode for CSV files.
             if append_mode == True:
                 self.CSV_APPEND_MODE = 'a+'
             elif append_mode == False:
-                self.CSV_APPEND_MODE = 'w'       
+                self.CSV_APPEND_MODE = 'w+'
 
+            self.file_stream = open(self.CSV_PATH, mode = self.CSV_APPEND_MODE, newline='')
+            self.file_stream_level_2 = open(self.CSV_PATH_STREAM, mode = self.CSV_APPEND_MODE, newline='')
 
-    async def _write_book_data(self, book_data = None, book_type = None, book_timestamp = None, book_content = None, file_object = None):
-
-        for index, activity_section in enumerate(book_data):                                
-            section_id = str(book_timestamp) + "_" + str(index)
-            price = activity_section['0']
-            total_size = activity_section['1']
-            total_count = activity_section['2']
-            book_data_collection = activity_section['3']
-
-            for book_data in book_data_collection:
-                mpid = book_data["0"]
-                size = book_data["1"]
-                _time = book_data["2"]
-                data = ["book_{}".format(book_type), section_id, 
-                        "book_{}_price".format(book_type), price, 
-                        "book_{}_size".format(book_type), total_size, 
-                        "book_{}_otal_count".format(book_type), total_count, 
-                        "book_{}_section_mpid".format(book_type), mpid, 
-                        "book_{}_section_size".format(book_type), size, 
-                        "book_{}_section_time".format(book_type), _time]
-
-                file_object.writerow(data)
         
-
-    ############################################################################################################################################################
-
     async def _write_to_csv(self, data = None):
         '''
             ONLY WORKS WITH LEVEL ONE QUOTES RIGHT NOW!
@@ -131,39 +109,60 @@ class TDStreamerClient():
 
                 if service_name in self.approved_writes:
 
-                    # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
-                    with open(self.CSV_PATH, mode = self.CSV_APPEND_MODE, newline='') as stream_file:
+                    # create the writer.
+                    stream_writer = csv.writer(self.file_stream)
+                    for data_section in service_contents:
+                        for field_key in data_section:
 
-                        # create the writer.
-                        stream_writer = csv.writer(stream_file)
-                        for data_section in service_contents:
-                            for field_key in data_section:
-
-                                # This adds functionality by allowing us to dump the field names and not numbers.
-                                old_key = field_key
-                                new_key = self.fields_keys_write[service_name][old_key]
-                                field_value = data_section[old_key]
-                                data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
-                                stream_writer.writerow(data)
+                            # This adds functionality by allowing us to dump the field names and not numbers.
+                            old_key = field_key
+                            new_key = self.fields_keys_write[service_name][old_key]
+                            field_value = data_section[old_key]
+                            data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
+                            stream_writer.writerow(data)
 
                 elif service_name in self.approved_writes_level_2:
-
-                    # open the new CSV file in write mode, `newline` makes sure we don't have extra blank rows.
-                    with open(self.CSV_PATH_STREAM, mode = self.CSV_APPEND_MODE, newline='') as stream_file:
                         
-                        # create the writer.
-                        stream_writer = csv.writer(stream_file)
-                        for service_content in service_contents:
+                    # create the writer.
+                    stream_writer_level_2 = csv.writer(self.file_stream_level_2)
 
-                            symbol = service_content['key']
-                            book_timestamp = service_content['1']
-                            book_bid = service_content['2']
-                            book_ask = service_content['3']
-                            content_names = [symbol, service_name, service_timestamp, service_command]
-                            self._write_book_data(book_bid, book_type='bid', book_timestamp=book_timestamp, book_content=content_names, file_object=stream_writer)
-                            self._write_book_data(book_ask, book_type='ask', book_timestamp=book_timestamp, book_content=content_names, file_object=stream_writer)
+                    for service_content in service_contents:
 
-    ############################################################################################################################################################
+                        symbol = service_content['key']
+                        book_timestamp = service_content['1']
+                        book_bid = service_content['2']
+                        book_ask = service_content['3']
+                        content_names = [symbol, service_name, service_timestamp, service_command]
+                        book_data_full = [{'book_type':'bid','book_data':book_bid}, {'book_type':'ask','book_data':book_ask}]
+
+                        for book_dict in book_data_full:
+                            book_data = book_dict['book_data']
+                            book_type = book_dict['book_type']
+
+                            for index, activity_section in enumerate(book_data):                                                                    
+                                section_id = str(book_timestamp) + "_" + str(index)
+                                price = activity_section['0']
+                                total_size = activity_section['1']
+                                total_count = activity_section['2']
+                                book_data_collection = activity_section['3']
+
+                                for book_data in book_data_collection:                                    
+                                    mpid = book_data["0"]
+                                    size = book_data["1"]
+                                    _time = book_data["2"]
+
+                                    data = [
+                                        "book_{}".format(book_type), section_id, 
+                                        "book_{}_price".format(book_type), price, 
+                                        "book_{}_size".format(book_type), total_size, 
+                                        "book_{}_total_count".format(book_type), total_count, 
+                                        "book_{}_section_mpid".format(book_type), mpid, 
+                                        "book_{}_section_size".format(book_type), size, 
+                                        "book_{}_section_time".format(book_type), _time
+                                    ]
+
+                                    stream_writer_level_2.writerow(content_names + data)
+
 
     def _build_login_request(self):
         '''
@@ -321,11 +320,12 @@ class TDStreamerClient():
 
                 # recieve and decode the message.
                 message = await connection.recv()
-
+            
                 try:
                     message_decoded = json.loads(message)
                 except:
-                    message_decoded = "No Data Returned"
+                    message = message.encode('utf-8').replace(b'\xef\xbf\xbd', bytes('"None"','utf-8')).decode('utf-8')
+                    message_decoded = json.loads(message)
 
                 if 'data' in message_decoded.keys():                     
                     await self._write_to_csv(data = message_decoded['data'])
@@ -361,10 +361,17 @@ class TDStreamerClient():
         # first get the current service request count
         service_count = len(self.data_requests['requests']) + 1
 
-        request = {"service": None, "requestid": service_count, "command": None,
-                   "account": self.user_principal_data['accounts'][0]['accountId'],
-                   "source": self.user_principal_data['streamerInfo']['appId'],
-                   "parameters": {"keys": None, "fields": None}}
+        request = {
+            "service": None, 
+            "requestid": service_count, 
+            "command": None,
+            "account": self.user_principal_data['accounts'][0]['accountId'],
+            "source": self.user_principal_data['streamerInfo']['appId'],
+            "parameters": {
+                "keys": None, 
+                "fields": None
+            }
+        }
 
         return request
 
@@ -585,7 +592,7 @@ class TDStreamerClient():
                 "The FREQUENCY you have chosen is not correct please choose a valid option:['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']")
 
         # validate the period input.
-        if period not in valid_periods:
+        if period not in valid_periods and start_time is None and end_time is None:
             raise ValueError(
                 "The PERIOD you have chosen is not correct please choose a valid option:['d5', 'w4', 'n10', 'y1', 'y10']")
 
@@ -599,7 +606,7 @@ class TDStreamerClient():
         # handle the case where we get a start time or end time. DO FURTHER VALIDATION.
         if start_time is not None or end_time is not None:
             request['parameters']['END_TIME'] = end_time
-            request['parameters']['START_TIME'] = end_time
+            request['parameters']['START_TIME'] = start_time
         else:
             request['parameters']['period'] = period
 
@@ -791,8 +798,7 @@ class TDStreamerClient():
         '''
 
         # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='timesale')
+        fields = self._validate_argument(argument=fields, endpoint='timesale')
 
         # Build the request
         request = self._new_request_template()
@@ -840,37 +846,6 @@ class TDStreamerClient():
 
         self.data_requests['requests'].append(request)
 
-    def level_two_nyse(self, symbols=None, fields=None):
-        '''
-            EXPERIMENTAL: USE WITH CAUTION!
-
-            Represents the LEVEL_TWO_QUOTES_NYSE endpoint for the streaming API. Documentation on this
-            service does not exist, but it appears that we can pass through 1 of 3 fields.
-
-            NAME: symbols
-            DESC: A List of symbols you wish to stream time level two quotes for.
-            TYPE: List<String>
-
-            NAME: fields
-            DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-                  or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
-
-        '''
-
-        # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='level_two_nyse')
-
-        # Build the request
-        request = self._new_request_template()
-        request['service'] = 'NYSE_BOOK'
-        request['command'] = 'SUBS'
-        request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = ','.join(fields)
-
-        self.data_requests['requests'].append(request)
-
     def level_two_options(self, symbols=None, fields=None):
         '''
             EXPERIMENTAL: USE WITH CAUTION!
@@ -890,8 +865,7 @@ class TDStreamerClient():
         '''
 
         # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='level_two_options')
+        fields = self._validate_argument(argument=fields, endpoint='level_two_options')
 
         # Build the request
         request = self._new_request_template()
@@ -920,8 +894,7 @@ class TDStreamerClient():
 
         '''
         # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='level_two_nasdaq')
+        fields = self._validate_argument(argument=fields, endpoint='level_two_nasdaq')
 
         # Build the request
         request = self._new_request_template()
@@ -951,17 +924,14 @@ class TDStreamerClient():
         '''
 
         # valdiate argument.
-        fields = self._validate_argument(
-            argument=fields, endpoint='level_two_futures')
+        fields = self._validate_argument(argument=fields, endpoint='level_two_futures')
 
         # Build the request
         request = self._new_request_template()
         request['service'] = 'FUTURES_BOOK'
         request['command'] = 'SUBS'
         request['parameters']['keys'] = ','.join(symbols)
-        request['parameters']['fields'] = '0,1,2'
-
-        print(request)
+        request['parameters']['fields'] = ','.join(fields)
 
         self.data_requests['requests'].append(request)
 

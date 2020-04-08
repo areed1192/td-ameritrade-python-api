@@ -23,7 +23,7 @@ import pprint
 
 try:
     from td.client import TDClient
-    from config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
+    from tests.config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
 except ImportError:
     ACCOUNT_USERNAME = '<YOUR TD ACCOUNT USERNAME>'
     ACCOUNT_PASSWORD = '<YOUR TD ACCOUNT PASSWORD>'
@@ -150,9 +150,6 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 
 # # Level Two Futures Options - MAY WORK IF YOU HAVE FUTURES TRADING ENABLED ON YOUR ACCOUNT.
 # TDStreamingClient.level_two_futures_options(symbols=['./E1AG20'])
-
-# News History - NOT WORKING
-# TDStreamingClient.news_history()
 
 
 # Stream it.
