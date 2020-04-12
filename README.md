@@ -132,7 +132,7 @@ If you have a project, you think I can help you with feel free to reach out at c
 
 **Step 1 - Start the Script:**
 
-While in Visual Studio Code, right click anywhere in the code editor while in the `test_td_client.py` file. The following dropdown will appear:
+While in Visual Studio Code, right click anywhere in the code editor while in the file that contains your code. The following dropdown will appear:
 
 ![Terminal Dropdown](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/terminal_dropdown.jpg "Terminal Dropdown")
 
