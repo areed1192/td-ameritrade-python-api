@@ -1881,7 +1881,7 @@ class TDClient():
             print('ORDER DELETE REQUEST FOR ORDER ID {} RETURNED STATUS CODE {}'.format(order_id, delete_status))
             return delete_status
         else:
-            print('ORDER DELETE REQUEST FOR ORDER ID {} RETURNED STATUS CODE {} AND WAS NOT DELETED'(order_id, delete_status))
+            print('ORDER DELETE REQUEST FOR ORDER ID {} RETURNED STATUS CODE {} AND WAS NOT DELETED'.format(order_id, delete_status))
             return order_id
 
 
