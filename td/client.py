@@ -4,8 +4,10 @@ import json
 import datetime
 import requests
 import urllib.parse
+import td.utils
 from td.orders import Order, OrderLeg
 from td.stream import TDStreamerClient
+
 
 
 class TDClient():
@@ -662,6 +664,17 @@ class TDClient():
                 'weekly': [1],
                 'monthly': [1]
             }
+
+            # check the startDate and endDate types
+            if isinstance(data['startDate'], datetime.datetime):
+                data['startDate'] = td.utils.milliseconds_since_epoch(data['startDate'])
+            elif not (isinstance(data['startDate'], int) and (data['startDate'] is not None)):
+                raise TypeError('startDate must be a datetime.datetime or an int')
+
+            if isinstance(data['endDate'], datetime.datetime):
+                data['endDate'] = td.utils.milliseconds_since_epoch(data['endDate'])
+            elif not (isinstance(data['endDate'], int) and (data['endDate'] is not None)):
+                raise TypeError('endDate must be a datetime.datetime or an int')
 
             # check data to confirm that either period or date range is provided
             if (data['startDate'] and data['endDate'] and not data['period']) or (not data['startDate'] and not data['endDate'] and data['period']):
