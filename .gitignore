@@ -111,3 +111,6 @@ venv.bak/
 .mypy_cache/
 pypirc
 .pypirc
+
+# don't track the json with state
+*State.json
