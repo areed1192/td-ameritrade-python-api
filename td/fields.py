@@ -1,3 +1,39 @@
+ENDPOINT_ARGUMENTS = {
+    'search_instruments': {
+        'projection': ['symbol-search', 'symbol-regex', 'desc-search', 'desc-regex', 'fundamental']
+    },
+    'get_market_hours': {
+        'markets': ['EQUITY', 'OPTION', 'FUTURE', 'BOND', 'FOREX']
+    },
+    'get_movers': {
+        'market': ['$DJI', '$COMPX', '$SPX.X'],
+        'direction': ['up', 'down'],
+        'change': ['value', 'percent']
+    },
+    'get_user_principals': {
+        'fields': ['streamerSubscriptionKeys', 'streamerConnectionInfo', 'preferences', 'surrogateIds']
+    }
+}
+
+VALID_CHART_VALUES = {
+    'minute':{
+        'day':[1, 2, 3, 4, 5, 10]
+    },
+    'daily':{
+        'month':[1, 2, 3, 6],
+        'year':[1, 2, 3, 5, 10, 15, 20],
+        'ytd':[1]
+    },
+    'weekly':{
+        'month':[1, 2, 3, 6],
+        'year':[1, 2, 3, 5, 10, 15, 20],
+        'ytd':[1]
+    },
+    'monthly':{
+        'year':[1, 2, 3, 5, 10, 15, 20]
+    }
+}
+
 STREAM_FIELD_IDS = {
     "account_activity": {
         "0": "subscription-key",
@@ -396,9 +432,11 @@ CSV_FIELD_KEYS = {
         "7": "last-size",
         "8": "quote-time",
         "9": "trade-time",
-        "delayed": "delayed",
         "assetMainType": "asset-main-type",
-        "key": "symbol"
+        "assetSubType": "asset-sub-type",
+        "cusip": "cusip",
+        "delayed": "delayed",
+        "key": "symbol",
     },
     "LEVELONE_FUTURES": {
         "1": "bid-price",
@@ -437,8 +475,10 @@ CSV_FIELD_KEYS = {
         "8": "total-volume",
         "9": "last-size",
         "assetMainType": "asset-main-type",
+        "assetSubType": "asset-sub-type",
+        "cusip": "cusip",
         "delayed": "delayed",
-        "key": "symbol"
+        "key": "symbol",
     },
     "LEVELONE_FUTURES_OPTIONS": {
         "1": "bid-price",
@@ -476,8 +516,11 @@ CSV_FIELD_KEYS = {
         "7": "bid-id",
         "8": "total-volume",
         "9": "last-size",
+        "assetMainType": "asset-main-type",
+        "assetSubType": "asset-sub-type",
+        "cusip": "cusip",
         "delayed": "delayed",
-        "key": "symbol"
+        "key": "symbol",
     },
     "OPTION": {
         "1": "description",
@@ -522,6 +565,7 @@ CSV_FIELD_KEYS = {
         "8": "total-volume",
         "9": "open-interest",
         "assetMainType": "asset-main-type",
+        "assetSubType": "asset-sub-type",
         "cusip": "cusip",
         "delayed": "delayed",
         "key": "symbol",

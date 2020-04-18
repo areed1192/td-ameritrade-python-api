@@ -1,2 +1,0 @@
-websockets==8.0.2
-requests==2.22.0

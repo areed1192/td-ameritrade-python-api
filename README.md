@@ -65,22 +65,24 @@ pip install td-ameritrade-python-api
 This example demonstrates how to login to the API and demonstrates sending a request using the `get_quotes` endpoint, using your API key.
 
 ```python
-# import the client
+# Import the client
 from td.client import TDClient
 
-# create a new session
-TDSession = TDClient(account_number = 'ACCOUNT_NUMBER',
-                     account_password = 'ACCOUNT_PASSWORD',
-                     consumer_id = 'CONSUMER_ID',
-                     redirect_uri = 'REDIRECT_URI')
+# Create a new session, credentials path is optional.
+TDSession = TDClient(
+    account_number='ACCOUNT_NUMBER',
+    consumer_id='CONSUMER_ID',
+    redirect_uri='REDIRECT_URI',
+    credentials_path='<PATH_TO_CREDENTIALS_FILE>'
+)
 
-# login to the session
+# Login to the session
 TDSession.login()
 
-# grab real-time quotes for 'MSFT' (Microsoft)
+# Grab real-time quotes for 'MSFT' (Microsoft)
 msft_quotes = TDSession.get_quotes(instruments='MSFT')
 
-# grab real-time quotes for 'AMZN' (Amazon) and 'SQ' (Square)
+# Grab real-time quotes for 'AMZN' (Amazon) and 'SQ' (Square)
 multiple_quotes = TDSession.get_quotes(instruments=['AMZN','SQ'])
 ```
 

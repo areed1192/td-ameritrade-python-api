@@ -20,23 +20,16 @@ chart_fields = ['key', 'open-price', 'high-price', 'low-price',
                 'close-price', 'volume', 'sequence', 'chart-time', 'chart-day']
 
 import pprint
+from td.client import TDClient
+import config.credentials as config
 
-try:
-    from td.client import TDClient
-    from tests.config import (ACCOUNT_PASSWORD, ACCOUNT_USERNAME, CONSUMER_ID, REDIRECT_URI, TD_ACCOUNT, JSON_PATH)
-except ImportError:
-    ACCOUNT_USERNAME = '<YOUR TD ACCOUNT USERNAME>'
-    ACCOUNT_PASSWORD = '<YOUR TD ACCOUNT PASSWORD>'
-    CONSUMER_ID = '<YOUR TD DEVELOPER ACCOUNT CONSUMER ID>'
-    REDIRECT_URI = '<YOUR TD DEVELOPER ACCOUNT REDIRECT URI>'
-    JSON_PATH = None
 
 # Create a new session
-TDSession = TDClient(account_number=ACCOUNT_USERNAME,
-                     account_password=ACCOUNT_PASSWORD,
-                     consumer_id=CONSUMER_ID,
-                     redirect_uri=REDIRECT_URI,
-                     json_path =JSON_PATH)
+TDSession = TDClient(
+    client_id=config.CLIENT_ID,
+    redirect_uri=config.REDIRECT_URI,
+    credentials_path=config.JSON_PATH
+)
 
 # Login to the session
 TDSession.login()
@@ -45,10 +38,13 @@ TDSession.login()
 TDStreamingClient = TDSession.create_streaming_session()
 
 # Set the data dump location
-TDStreamingClient.write_behavior(file_path = "raw_data.csv", append_mode = True)
+TDStreamingClient.write_behavior(
+    file_path = r"C:\Users\Alex\OneDrive\Desktop\Sigma\Repo - TD API Client\td-ameritrade-python-api\samples\raw_data.csv", 
+    append_mode = True
+)
 
-# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
 
 # # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
 # TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
@@ -61,10 +57,10 @@ TDStreamingClient.write_behavior(file_path = "raw_data.csv", append_mode = True)
 '''
 
 # Actives
-TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
+# TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
 
-# Quality of Service
-TDStreamingClient.quality_of_service(qos_level='express')
+# # Quality of Service
+# TDStreamingClient.quality_of_service(qos_level='express')
 
 '''
     LEVEL ONE DATA
@@ -85,8 +81,14 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 # # Level One Futures Options - VALIDATE JSON RESPONSE
 # TDStreamingClient.level_one_futures_options(symbols=['./E1AG20C3220'], fields=list(range(0,36)))
 
+# # Charts Futures
+# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/ES'], fields=[0,1,2,3,4,5,6,7])
+
+# # Charts Options - CANT GET TO WORK.
+# TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['/ESM20'], fields=[0,1,2,3,4,5,6,7])
+
 # # Chart History Futures
-# TDStreamingClient.chart_history_futures(symbol = ['/ES'], frequency='m5', period='d1')
+# TDStreamingClient.chart_history_futures(symbol = ['./E3CJ20C2825'], frequency='m1', period='d1')
 
 # # Timesale
 # TDStreamingClient.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[0, 1, 2, 3, 4])
@@ -146,14 +148,14 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 # TDStreamingClient.level_two_futures(symbols=['/ES'], fields= [0,1,2])
 
 # # Level Two Forex - NOT WORKING - MAY WORK IF YOU HAVE FOREX TRADING ENABLED ON YOUR ACCOUNT.
-# TDStreamingClient.level_two_forex(symbols = ['AUD/CAD'], fields = [0,1,2,3])
+# TDStreamingClient.level_two_forex(symbols = ['AUD/USD'], fields = [0,1,2])
 
 # # Level Two Futures Options - MAY WORK IF YOU HAVE FUTURES TRADING ENABLED ON YOUR ACCOUNT.
 # TDStreamingClient.level_two_futures_options(symbols=['./E1AG20'])
 
-
 # Stream it.
 TDStreamingClient.stream()
+
 
 '''
     DEFINING CLOSE LOGIC
