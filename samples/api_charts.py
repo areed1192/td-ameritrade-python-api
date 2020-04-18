@@ -1,16 +1,14 @@
 import pprint
-import config.credentials as config
-
 from datetime import datetime
 from datetime import timedelta
 from td.client import TDClient
 
 # Create a new session
 TDSession = TDClient(
-    account_number=config.ACCOUNT_NUMBER,
-    client_id=config.CLIENT_ID,
-    redirect_uri=config.REDIRECT_URI,
-    credentials_path=config.JSON_PATH
+    account_number='<ACCOUNT_NUMBER>',
+    client_id='<CLIENT_ID>',
+    redirect_uri='<REDIRECT_URI>',
+    credentials_path='<CREDENTIALS_PATH>'
 )
 
 # Login to the session

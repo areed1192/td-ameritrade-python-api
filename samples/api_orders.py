@@ -1,16 +1,13 @@
-import pprint
 from td.orders import Order, OrderLeg
 from td.enums import ORDER_SESSION, DURATION, ORDER_INSTRUCTIONS, ORDER_ASSET_TYPE
 
 # Initalize a new Order Object.
 new_order = Order()
 
-
 #
 #   MOST OF THE PARAMETERS OF YOUR ORDER CAN BE SPECIFIED EITHER WITH AN ENUM OBJECT
 #   OR A STRING VALUE.
 #
-
 
 # Define the SESSION of the Order - ENUM EXAMPLE.
 new_order.order_session(session=ORDER_SESSION.NORMAL)
@@ -62,7 +59,6 @@ new_order.add_order_leg(order_leg=new_order_leg)
 
 # Print it out so you can see it, normally this method is called by the TD API when using the td.client object.
 print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(new_order.order_legs_count))
-pprint.pprint(new_order._grab_order())
 print('-'*80)
 
 # We could also add a copied order to our order leg collection.
@@ -70,7 +66,6 @@ new_order.add_order_leg(order_leg=copied_order_leg)
 
 # Print it out so we can see both now.
 print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(new_order.order_legs_count))
-pprint.pprint(new_order._grab_order())
 print('-'*80)
 
 
@@ -129,13 +124,10 @@ child_order.add_order_leg(order_leg=child_order_leg)
 
 # Display the count.
 print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(child_order.order_legs_count))
-pprint.pprint(child_order._grab_order())
 print('-'*80)
-
 
 # Add the Child Order Strategy to the PARENT ORDER or in other words the order we created originally.
 new_order.add_child_order_strategy(child_order_strategy=child_order)
 
 # Print it so the user can see all the info at once.
 print("YOU HAVE {} CHILD ORDER STRATEGIES IN THE CHILD ORDER STRATEGIES COLLECTION.".format(new_order.child_order_count))
-pprint.pprint(new_order._grab_order())

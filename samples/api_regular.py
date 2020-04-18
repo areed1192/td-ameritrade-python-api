@@ -1,15 +1,13 @@
-import pprint
-import config.credentials as config
-
 from datetime import datetime
 from datetime import timedelta
 from td.client import TDClient
 
 # Create a new session
 TDSession = TDClient(
-    client_id=config.CLIENT_ID,
-    redirect_uri=config.REDIRECT_URI,
-    credentials_path=config.JSON_PATH
+    account_number='<ACCOUNT_NUMBER>',
+    client_id='<CLIENT_ID>',
+    redirect_uri='<REDIRECT_URI>',
+    credentials_path='<CREDENTIALS_PATH>'
 )
 
 # Login to the session
@@ -43,26 +41,25 @@ get_instrument_data = TDSession.get_instruments(cusip= '594918104')
 market_hours_multi = TDSession.get_market_hours(markets = ['EQUITY','FOREX'], date = datetime.today().isoformat())
 
 # `get_accounts` Endpoint with single values
-accounts_data_single = TDSession.get_accounts(account = config.ACCOUNT_NUMBER,  fields = ['orders'])
+accounts_data_single = TDSession.get_accounts(account = '<ACCOUNT_NUMBER>',  fields = ['orders'])
 
 # `get_accounts` Endpoint with single values
 accounts_data_multi = TDSession.get_accounts(account = 'all',  fields = ['orders'])
 
 # `get_transactions` Endpoint. Should not return an error
-transaction_data_multi = TDSession.get_transactions(account = config.ACCOUNT_NUMBER, transaction_type = 'ALL')
+transaction_data_multi = TDSession.get_transactions(account = '<ACCOUNT_NUMBER>', transaction_type = 'ALL')
 
 # `get_preferences` endpoint. Should not return an error
-preference_data = TDSession.get_preferences(account = config.ACCOUNT_NUMBER)
+preference_data = TDSession.get_preferences(account = '<ACCOUNT_NUMBER>')
 
 # `get_subscription_keys` endpoint. Should not return an error
-streamer_keys = TDSession.get_streamer_subscription_keys(accounts = [config.ACCOUNT_NUMBER])
+streamer_keys = TDSession.get_streamer_subscription_keys(accounts = ['<ACCOUNT_NUMBER>'])
 
 # `get_user_ principals` endpoint. Should not return an error.
 prinicpals_data = TDSession.get_user_principals(fields = ['preferences','surrogateIds'])
 
-# # `get_transactions` Endpoint with single values
-# transaction_data_single = TDSession.get_transactions(transaction_id= 'YOUR_TRANSACTION_ID')
-
+# `get_transactions` Endpoint with single values
+transaction_data_single = TDSession.get_transactions(transaction_id= 'YOUR_TRANSACTION_ID')
 
 # Option Chain Example
 opt_chain = {
@@ -80,4 +77,3 @@ opt_chain = {
 
 # Get Option Chains
 option_chains = TDSession.get_options_chain(option_chain=opt_chain)
-pprint.pprint(option_chains)
