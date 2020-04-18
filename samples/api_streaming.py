@@ -1,22 +1,33 @@
 import pprint
+import config.credentials as config
+
+from datetime import datetime
+from datetime import timedelta
 from td.client import TDClient
-from datetime import datetime, timedelta
-from samples.config import (CONSUMER_ID, REDIRECT_URI, TRADING_ACCOUNT, JSON_PATH)
 
 # Create a new session
-TDSession = TDClient(consumer_id=CONSUMER_ID, redirect_uri=REDIRECT_URI, json_path=JSON_PATH)
+TDSession = TDClient(
+    account_number=config.ACCOUNT_NUMBER,
+    client_id=config.CLIENT_ID,
+    redirect_uri=config.REDIRECT_URI,
+    credentials_path=config.JSON_PATH
+)
 
 # Login to the session
 TDSession.login()
 
-# Create a streaming sesion
+# Create a streaming session
 TDStreamingClient = TDSession.create_streaming_session()
 
 # Set the data dump location
-TDStreamingClient.write_behavior(file_path = r"C:\Users\Alex\OneDrive\Desktop\Sigma\Repo - TD API Client\td-ameritrade-python-api\samples\raw_data.csv", append_mode = False)
+TDStreamingClient.write_behavior(
+    write='csv',
+    file_path=r"../td-ameritrade-python-api/samples/raw_data.csv", 
+    append_mode=True
+)
 
-# # Actives
-# TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
+# Actives
+TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
 
 # # Quality of Service
 # TDStreamingClient.quality_of_service(qos_level='express')
@@ -36,8 +47,11 @@ TDStreamingClient.write_behavior(file_path = r"C:\Users\Alex\OneDrive\Desktop\Si
 # # Level One Futures Options
 # TDStreamingClient.level_one_futures_options(symbols=['./EW2J20C2675'], fields=list(range(0,36)))
 
-# # Charts Futures
-# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+# Charts Futures
+TDStreamingClient.chart(service='CHART_EQUITY', symbols=['AAPL','MSFT'], fields=[0,1,2,3,4,5,6,7])
+
+# Chart History Futures
+# TDStreamingClient.chart_history_futures(symbol = ['/ES'], frequency='m1', start_time='1586304000000', end_time='1586329200000')
 
 # # Timesale - Equity
 # TDStreamingClient.timesale(service='TIMESALE_EQUITY', symbols=['AAPL'], fields=[0, 1, 2, 3, 4])
@@ -82,15 +96,13 @@ TDStreamingClient.stream()
 # TDStreamingClient.close_logic(run_duration=keep_open_in_seconds)
 
 # # Start Streaming.
-# TDStreamingClient.stream()
+TDStreamingClient.stream()
 
 
 
 # # Charts Futures Options - CANT GET TO WORK.
 # TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['./EW2J20C2675'], fields=[0,1,2,3,4,5,6,7])
 
-# # Chart History Futures - WORKS FOR WRIITNG BUT ONLY ONE BAR SENT BACK.
-# TDStreamingClient.chart_history_futures(symbol = ['/ES'], frequency='m1', start_time='1586304000000', end_time='1586329200000')
 
 # # Timesale - Options - SUBS BUT NO DATA.
 # TDStreamingClient.timesale(service='TIMESALE_OPTIONS', symbols=['AAPL_040920C115'], fields=[0, 1, 2, 3, 4])
