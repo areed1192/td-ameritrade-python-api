@@ -68,11 +68,12 @@ This example demonstrates how to login to the API and demonstrates sending a req
 # Import the client
 from td.client import TDClient
 
-# Create a new session
+# Create a new session, credentials path is optional.
 TDSession = TDClient(
     account_number='ACCOUNT_NUMBER',
     consumer_id='CONSUMER_ID',
-    redirect_uri='REDIRECT_URI'
+    redirect_uri='REDIRECT_URI',
+    credentials_path='<PATH_TO_CREDENTIALS_FILE>'
 )
 
 # Login to the session
