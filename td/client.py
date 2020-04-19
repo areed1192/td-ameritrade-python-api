@@ -5,6 +5,7 @@ import datetime
 import pathlib
 import requests
 import urllib.parse
+from . import defaults
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -162,19 +163,23 @@ class TDClient():
             json_session_path = json_session_file.absolute()
         else:
             file_name = 'td_state.json'
-            json_session_file = pathlib.Path(__file__).joinpath(file_name)
+            json_file_dir = defaults.default_dir
+            if not os.path.isdir(defaults.default_dir): os.makedirs(defaults.default_dir)
+            json_session_file = os.path.join(json_file_dir, file_name)
+            json_session_file = pathlib.Path(json_session_file)
+            # print('file exists: ', json_session_file.exists())
             json_session_path = json_session_file.absolute()
 
         # if they allow for caching and the file exists then load it.
-        if action == 'init' and self.config['cache_state'] == True and json_session_file.exists:
+        if action == 'init' and self.config['cache_state'] == True and json_session_file.exists():
             self.state.update(json.load(open(json_session_path, 'r')))
 
         # If they don't allow for caching and the file exists, then delete it.
-        elif action == 'init' and self.config['cache_state'] == False and json_session_file.exists:
+        elif action == 'init' and self.config['cache_state'] == False and json_session_file.exists():
             json_session_file.unlink()
 
         # if they allow for caching and the file does not exists then use the default state.
-        elif action == 'init' and self.config['cache_state'] == True and json_session_file.exists == False:
+        elif action == 'init' and self.config['cache_state'] == True and json_session_file.exists() == False:
             print('Their is no state file to load, will use default state.')
 
         # if they want to save it and have allowed for caching then load the file.
@@ -270,7 +275,7 @@ class TDClient():
             data=data
         )
 
-        self._token_save(token_response.json())
+        self._token_save(token_response)
         self._state_manager('save')
         return True
     
