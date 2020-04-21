@@ -393,6 +393,7 @@ CSV_FIELD_KEYS = {
     "CHART_HISTORY_FUTURES": {
         "seq": "chart-sequence",
         "key": "symbol",
+        "0": "key",
         "1": "chart-time",
         "2": "open-price",
         "3": "high-price",

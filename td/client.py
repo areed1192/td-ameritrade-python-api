@@ -167,7 +167,8 @@ class TDClient():
 
         # if they allow for caching and the file exists then load it.
         if action == 'init' and self.config['cache_state'] == True and json_session_file.exists:
-            self.state.update(json.load(open(json_session_path, 'r')))
+            with open(json_session_path, 'r') as json_file:
+                self.state.update(json.load(json_file))
 
         # If they don't allow for caching and the file exists, then delete it.
         elif action == 'init' and self.config['cache_state'] == False and json_session_file.exists:
@@ -182,7 +183,8 @@ class TDClient():
 
             # build JSON string using dictionary comprehension.
             json_string = {key: self.state[key] for key in self.state}
-            json.dump(json_string, open(json_session_path, 'w+'))
+            with open(json_session_path, 'w+') as json_file:
+                json.dump(json_string, json_file)
 
     def login(self) -> bool:
         """Logs the user into the TD Ameritrade API.

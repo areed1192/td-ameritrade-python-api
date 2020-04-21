@@ -39,12 +39,12 @@ TDStreamingClient = TDSession.create_streaming_session()
 
 # Set the data dump location
 TDStreamingClient.write_behavior(
-    file_path = r"C:\Users\Alex\OneDrive\Desktop\Sigma\Repo - TD API Client\td-ameritrade-python-api\samples\raw_data.csv", 
+    file_path = "raw_data.csv", 
     append_mode = True
 )
 
 # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
 
 # # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
 # TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
@@ -87,8 +87,8 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 # # Charts Options - CANT GET TO WORK.
 # TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['/ESM20'], fields=[0,1,2,3,4,5,6,7])
 
-# # Chart History Futures
-# TDStreamingClient.chart_history_futures(symbol = ['./E3CJ20C2825'], frequency='m1', period='d1')
+# Chart History Futures
+TDStreamingClient.chart_history_futures(symbol=['/ES'], frequency='m1', period='d1')
 
 # # Timesale
 # TDStreamingClient.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[0, 1, 2, 3, 4])
@@ -154,7 +154,7 @@ TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "
 # TDStreamingClient.level_two_futures_options(symbols=['./E1AG20'])
 
 # Stream it.
-TDStreamingClient.stream()
+TDStreamingClient.stream(print=False)
 
 
 '''

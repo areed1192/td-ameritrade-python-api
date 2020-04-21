@@ -5,6 +5,7 @@ import json
 import urllib
 import websockets
 import unicodedata
+import io
 from td.fields import STREAM_FIELD_IDS, CSV_FIELD_KEYS, CSV_FIELD_KEYS_LEVEL_2
 
 class TDStreamerClient():
@@ -39,7 +40,9 @@ class TDStreamerClient():
         self.websocket_url = "wss://{}/ws".format(websocket_url)
         self.credentials = credentials
         self.user_principal_data = user_principal_data
-        self.connection = None
+        self.connection: websockets.WebSocketClientProtocol = None
+        self.file_stream: io.TextIOWrapper = None
+        self.file_stream_level_2: io.TextIOWrapper = None
 
         # this will hold all of our requests
         self.data_requests = {"requests": []}
@@ -50,6 +53,13 @@ class TDStreamerClient():
         self.fields_keys_write_level_2 = CSV_FIELD_KEYS_LEVEL_2
         self.approved_writes = list(self.fields_keys_write.keys())
         self.approved_writes_level_2 = list(self.fields_keys_write_level_2.keys())
+
+        try:
+            self.loop = asyncio.get_event_loop()
+        except websockets.WebSocketException:
+            self.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.loop)
+
 
     def write_behavior(self, write = 'csv', file_path = None, append_mode = True):
         """
@@ -82,14 +92,21 @@ class TDStreamerClient():
             elif append_mode == False:
                 self.CSV_APPEND_MODE = 'w+'
 
-            self.file_stream = open(self.CSV_PATH, mode = self.CSV_APPEND_MODE, newline='')
-            self.file_stream_level_2 = open(self.CSV_PATH_STREAM, mode = self.CSV_APPEND_MODE, newline='')
+            self.file_stream = open(
+                file=self.CSV_PATH, 
+                mode=self.CSV_APPEND_MODE, 
+                newline=''
+            )
+
+            self.file_stream_level_2 = open(
+                file=self.CSV_PATH_STREAM,
+                mode=self.CSV_APPEND_MODE,
+                newline=''
+            )
 
         
     async def _write_to_csv(self, data = None):
         '''
-            ONLY WORKS WITH LEVEL ONE QUOTES RIGHT NOW!
-
             Takes the data from a stream and writes it to a CSV file for further manipulation.
 
             NAME: data
@@ -98,7 +115,8 @@ class TDStreamerClient():
         '''
 
         # check if it's a list, this should always be the case.
-        if isinstance(data, list):            
+        if isinstance(data, list):
+
             for service_result in data:
 
                 # A Service response should have the following keys.
@@ -107,10 +125,10 @@ class TDStreamerClient():
                 service_command = service_result['command']
                 service_contents = service_result['content']
 
-                if service_name in self.approved_writes:
+                if service_name in self.approved_writes and service_name != 'CHART_HISTORY_FUTURES':
 
-                    # create the writer.
                     stream_writer = csv.writer(self.file_stream)
+
                     for data_section in service_contents:
                         for field_key in data_section:
 
@@ -120,6 +138,30 @@ class TDStreamerClient():
                             field_value = data_section[old_key]
                             data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
                             stream_writer.writerow(data)
+                
+                elif service_name in self.approved_writes and service_name == 'CHART_HISTORY_FUTURES':
+                    
+                    # create the writer.
+                    stream_writer = csv.writer(self.file_stream)
+                    for data_section in service_contents:
+                        for field_key in data_section:
+
+                            if field_key != '3':
+                                old_key = field_key
+                                new_key = self.fields_keys_write[service_name][old_key]
+                                field_value = data_section[old_key]
+                                data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
+                                stream_writer.writerow(data)
+
+                            elif field_key == '3':
+
+                                for candle in data_section['3']:
+                                    for candle_key in candle:
+                                        old_key = candle_key
+                                        new_key = self.fields_keys_write[service_name][old_key]
+                                        field_value = candle[old_key]
+                                        data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
+                                        stream_writer.writerow(data)
 
                 elif service_name in self.approved_writes_level_2:
                         
@@ -184,28 +226,31 @@ class TDStreamerClient():
 
         return json.dumps(login_request)
 
-    def stream(self):
+    def stream(self, print=True):
         '''
             Initalizes the stream by building a login request, starting an event loop,
             creating a connection, passing through the requests, and keeping the loop running.
         '''
+        
+        self.print = print
 
-        # Grab the login info.
         login_request = self._build_login_request()
 
         # Grab the Data Request.
         data_request = json.dumps(self.data_requests)
 
-        # Start a loop.
-        self.loop = asyncio.get_event_loop()
-
         # Start connection and get client connection protocol
         connection = self.loop.run_until_complete(self._connect())
+
+        # self.loop.run_until_complete(asyncio.ensure_future(self._receive_message(connection)))
+        # self.loop.run_until_complete(self._send_message(login_request))
+        # completed_connection = self.loop.run_until_complete(self._connect())       
 
         # Start listener and heartbeat
         asyncio.ensure_future(self._receive_message(connection))
         asyncio.ensure_future(self._send_message(login_request))
         asyncio.ensure_future(self._send_message(data_request))
+
         # asyncio.ensure_future(self.close_stream())
         
         # Keep Going.
@@ -274,14 +319,20 @@ class TDStreamerClient():
             and receive messages
         '''
 
+        # Grab the login info.
+        # login_request = self._build_login_request()
+
         # Create a connection.
         self.connection = await websockets.client.connect(self.websocket_url)
 
-        # check it before sending it bacl.
-        if self._check_connection():
+        # await self.connection.send(login_request)
+        # await self.connection.recv()
+
+        # check it before sending it back.
+        if await self._check_connection():
             return self.connection
 
-    def _check_connection(self):
+    async def _check_connection(self):
         '''
             There are multiple times we will need to check the connection 
             of the websocket, this function will help do that.
@@ -291,6 +342,9 @@ class TDStreamerClient():
         if self.connection.open:
             print('Connection established. Streaming will begin shortly.')
             return True
+        elif self.connection.close:
+            print('Connection was never opened and was closed.')
+            return False
         else:
             raise ConnectionError
 
@@ -303,6 +357,7 @@ class TDStreamerClient():
             TYPE: String
         '''
         await self.connection.send(message)
+
 
     async def _receive_message(self, connection):
         '''
@@ -327,11 +382,19 @@ class TDStreamerClient():
                     message = message.encode('utf-8').replace(b'\xef\xbf\xbd', bytes('"None"','utf-8')).decode('utf-8')
                     message_decoded = json.loads(message)
 
-                if 'data' in message_decoded.keys():                     
-                    await self._write_to_csv(data = message_decoded['data'])
+                write_1 = ('data' in message_decoded.keys() and self.file_stream is not None)
+                write_2 = ('snapshot' in message_decoded.keys() and self.file_stream is not None)
 
-                print('-'*20)
-                print('Received message from server: {}'.format(str(message_decoded)))
+                if write_1:                  
+                    await self._write_to_csv(data = message_decoded['data'])
+                elif write_2:
+                    await self._write_to_csv(data = message_decoded['snapshot'])
+                
+                if self.print:
+                    print('-'*20)
+                    print('Received message from server: {}'.format(str(message_decoded)))
+                
+                # return message_decoded
 
             except websockets.exceptions.ConnectionClosed:
 
@@ -469,13 +532,12 @@ class TDStreamerClient():
          '''
 
         # check to make sure it's a valid Chart Service.
-        service_flag = service in ['CHART_EQUITY',
-                                   'CHART_FUTURES', 'CHART_OPTIONS']
+        service_flag = service in ['CHART_EQUITY', 'CHART_FUTURES', 'CHART_OPTIONS']
 
         # valdiate argument.
         fields = self._validate_argument(
             argument=fields, endpoint=service.lower())
-
+        
         if service_flag and fields is not None:
 
             # Build the request
@@ -600,8 +662,9 @@ class TDStreamerClient():
         request = self._new_request_template()
         request['service'] = 'CHART_HISTORY_FUTURES'
         request['command'] = 'GET'
-        request['parameters']['symbols'] = symbol[0]
+        request['parameters']['symbol'] = symbol[0]
         request['parameters']['frequency'] = frequency
+
 
         # handle the case where we get a start time or end time. DO FURTHER VALIDATION.
         if start_time is not None or end_time is not None:
@@ -609,6 +672,11 @@ class TDStreamerClient():
             request['parameters']['START_TIME'] = start_time
         else:
             request['parameters']['period'] = period
+
+        del request['parameters']['keys']
+        del request['parameters']['fields']
+
+        request['requestid'] = str(request['requestid'])
 
         self.data_requests['requests'].append(request)
 
