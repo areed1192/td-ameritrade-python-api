@@ -44,20 +44,20 @@ TDStreamingClient.write_behavior(
 )
 
 # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
+TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/CL'], fields=[0,1,2,3,4,5,6,7])
 
-# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['MSFT_032720C9'], fields=[0,1,2,3,4,5,6,7])
 
-# # Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
-# TDStreamingClient.chart(service='CHART_EQUITY', symbols=['MSFT'], fields=[0,1,2,3,4,5,6,7])
+# Charts, this looks like it only streams every one minute. Hence if you want the last bar you should use this.
+TDStreamingClient.chart(service='CHART_EQUITY', symbols=['MSFT'], fields=[0,1,2,3,4,5,6,7])
 
 '''
     REGULAR - WORKING
 '''
 
 # Actives
-# TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
+TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
 
 # # Quality of Service
 # TDStreamingClient.quality_of_service(qos_level='express')
@@ -69,29 +69,29 @@ TDStreamingClient.write_behavior(
 # Level One Quote
 TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
-# # Level One Option
-# TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
+# Level One Option
+TDStreamingClient.level_one_options(symbols=['MSFT_030620P140'], fields=list(range(0,42)))
 
-# # Level One Futures
-# TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3", "4"])
+# Level One Futures
+TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3", "4"])
 
-# # Level One Forex - VALIDATE JSON RESPONSE
-# TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))
+# Level One Forex - VALIDATE JSON RESPONSE
+TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))
 
-# # Level One Futures Options - VALIDATE JSON RESPONSE
-# TDStreamingClient.level_one_futures_options(symbols=['./E1AG20C3220'], fields=list(range(0,36)))
+# Level One Futures Options - VALIDATE JSON RESPONSE
+TDStreamingClient.level_one_futures_options(symbols=['./E1AG20C3220'], fields=list(range(0,36)))
 
-# # Charts Futures
-# TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/ES'], fields=[0,1,2,3,4,5,6,7])
+# Charts Futures
+TDStreamingClient.chart(service='CHART_FUTURES', symbols=['/ES'], fields=[0,1,2,3,4,5,6,7])
 
-# # Charts Options - CANT GET TO WORK.
-# TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['/ESM20'], fields=[0,1,2,3,4,5,6,7])
+# Charts Options - CANT GET TO WORK.
+TDStreamingClient.chart(service='CHART_OPTIONS', symbols=['/ESM20'], fields=[0,1,2,3,4,5,6,7])
 
 # Chart History Futures
 TDStreamingClient.chart_history_futures(symbol=['/ES'], frequency='m1', period='d1')
 
-# # Timesale
-# TDStreamingClient.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[0, 1, 2, 3, 4])
+# Timesale
+TDStreamingClient.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[0, 1, 2, 3, 4])
 
 # '''
 #     Hard to Identify what fixed the inital error.
@@ -128,20 +128,20 @@ TDStreamingClient.chart_history_futures(symbol=['/ES'], frequency='m1', period='
 #     EXPERIMENTAL SECTION
 # '''
 
-# # Level Two Options
-# TDStreamingClient.level_two_options(symbols=['ESH20_022120C20'], fields = [0,1,2])
+# Level Two Options
+TDStreamingClient.level_two_options(symbols=['ESH20_022120C20'], fields = [0,1,2])
 
-# # Level Two Quotes
-# TDStreamingClient.level_two_quotes(symbols = ['IBM'], fields = [0,1,2])
+# Level Two Quotes
+TDStreamingClient.level_two_quotes(symbols = ['IBM'], fields = [0,1,2])
 
-# # Level Two NASQDAQ
-# TDStreamingClient.level_two_nasdaq(symbols = ['MSFT'], fields = [0,1,2])
+# Level Two NASQDAQ
+TDStreamingClient.level_two_nasdaq(symbols = ['MSFT'], fields = [0,1,2])
 
 # # Level Two NYSE
 # TDStreamingClient.level_two_nyse(symbols = ['AA'], fields = [0,1,2])
 
-# # Level Two Total View 
-# TDStreamingClient.level_two_total_view(symbols = ['AAPL'], fields = [0,1,2])
+# Level Two Total View 
+TDStreamingClient.level_two_total_view(symbols = ['AAPL'], fields = [0,1,2])
 
 
 # # Level Two Futures - NOT WORKING - MAY WORK IF YOU HAVE FUTURES TRADING ENABLED ON YOUR ACCOUNT.
@@ -154,7 +154,7 @@ TDStreamingClient.chart_history_futures(symbol=['/ES'], frequency='m1', period='
 # TDStreamingClient.level_two_futures_options(symbols=['./E1AG20'])
 
 # Stream it.
-TDStreamingClient.stream(print=False)
+TDStreamingClient.stream(print_to_console=True)
 
 
 '''

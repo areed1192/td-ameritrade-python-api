@@ -8,7 +8,7 @@
     "orderStrategyType": "OCO",
     "childOrderStrategies": [
         {
-            // Order 1, it's a LIMIT order that's good for the DAY, and SELLs 2 shares of MSFT
+            // Order 1, it's a LIMIT order that's good for the DAY, and SELLs 2 shares of MSFT. This acts as my `take profit`.
             "orderType": "LIMIT",
             "session": "NORMAL",
             "price": 45.97,
@@ -26,12 +26,12 @@
             ]
         },
         {
-            // Order 2, it's a STOP LIMIT which means it activates at $35.00 but won't pay more than $37.00, sells 2 shares of MSFT
-            // and is still only good for the day.
+            // Order 2, it's a STOP LIMIT which means it activates at $37.00 but won't sell below than $35.00, sells 2 shares of MSFT
+            // and is still only good for the day. This acts as my `stop loss`.
             "orderType": "STOP_LIMIT",
             "session": "NORMAL",
-            "price": 35.00,
-            "stopPrice": 37.00,
+            "price": 37.00,
+            "stopPrice": 35.00,
             "duration": "DAY",
             "orderStrategyType": "SINGLE",
             "orderLegCollection": [

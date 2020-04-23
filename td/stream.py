@@ -41,7 +41,7 @@ class TDStreamerClient():
         self.credentials = credentials
         self.user_principal_data = user_principal_data
         self.connection: websockets.WebSocketClientProtocol = None
-        self.file_stream: io.TextIOWrapper = None
+        self.file_stream_level_1: io.TextIOWrapper = None
         self.file_stream_level_2: io.TextIOWrapper = None
 
         # this will hold all of our requests
@@ -51,8 +51,11 @@ class TDStreamerClient():
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_write = CSV_FIELD_KEYS
         self.fields_keys_write_level_2 = CSV_FIELD_KEYS_LEVEL_2
-        self.approved_writes = list(self.fields_keys_write.keys())
+        self.approved_writes_level_1 = list(self.fields_keys_write.keys())
         self.approved_writes_level_2 = list(self.fields_keys_write_level_2.keys())
+
+        self.print_to_console = True
+        self.write_flag = False
 
         try:
             self.loop = asyncio.get_event_loop()
@@ -92,7 +95,7 @@ class TDStreamerClient():
             elif append_mode == False:
                 self.CSV_APPEND_MODE = 'w+'
 
-            self.file_stream = open(
+            self.file_stream_level_1 = open(
                 file=self.CSV_PATH, 
                 mode=self.CSV_APPEND_MODE, 
                 newline=''
@@ -104,184 +107,423 @@ class TDStreamerClient():
                 newline=''
             )
 
+            self.write_flag = True
+
+    def _write_non_chart_services(self, data_content: dict, service_name: str) -> list:
+        """Takes a Non-Chart Services and parses the values to write.
+
+        Arguments:
+        ----
+        data_content {dict} -- The content from the stream.
+
+        service_name {str} -- The name of the service the data came from.
+
+        Returns:
+        ----
+        list -- A single row of data.
+        """
+
+        all_data = []
+
+        for data_section in data_content:
+            for field_key in data_section:
+                new_key = self.fields_keys_write[service_name][field_key]
+                field_value = data_section[field_key]
+                data = [service_name, field_key, new_key, field_value]
+                all_data.append(data)
         
-    async def _write_to_csv(self, data = None):
-        '''
-            Takes the data from a stream and writes it to a CSV file for further manipulation.
+        return all_data
 
-            NAME: data
-            DESC: The streaming data requested.
-            TYPE: Dictionary.
-        '''
+    def _write_chart_services(self, data_content: dict, service_name: str) -> list:
+        """Takes a Chart Services and parses the values to write.
 
-        # check if it's a list, this should always be the case.
-        if isinstance(data, list):
+        Arguments:
+        ----
+        data_content {dict} -- The content from the stream.
 
-            for service_result in data:
+        service_name {str} -- The name of the service the data came from.
 
-                # A Service response should have the following keys.
-                service_name = service_result['service']
-                service_timestamp = service_result['timestamp']
-                service_command = service_result['command']
-                service_contents = service_result['content']
+        Returns:
+        ----
+        list -- A single row of data.
+        """
 
-                if service_name in self.approved_writes and service_name != 'CHART_HISTORY_FUTURES':
+        all_data = []
 
-                    stream_writer = csv.writer(self.file_stream)
+        for data_section in data_content:
+            for field_key in data_section:
 
-                    for data_section in service_contents:
-                        for field_key in data_section:
+                if field_key != '3':
+                    new_key = self.fields_keys_write[service_name][field_key]
+                    field_value = data_section[field_key]
+                    data = [service_name, field_key, new_key, field_value]
+                    all_data.append(data)
 
-                            # This adds functionality by allowing us to dump the field names and not numbers.
-                            old_key = field_key
-                            new_key = self.fields_keys_write[service_name][old_key]
-                            field_value = data_section[old_key]
-                            data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
-                            stream_writer.writerow(data)
+                elif field_key == '3':
+
+                    for candle in data_section['3']:
+                        for candle_key in candle:
+                            new_key = self.fields_keys_write[service_name][candle_key]
+                            field_value = candle[candle_key]
+                            data = [service_name, candle_key, new_key, field_value]
+                            all_data.append(data)
+
+        return all_data
+
+    def _write_level_two_services(self, data_content: dict, service_name: str) -> list:
+        """Takes Level 2 services and parses them so they can be written.
+
+        Arguments:
+        ----
+        data_content {dict} -- The content from the stream.
+
+        service_name {str} -- The name of the service the data came from.
+
+        Returns:
+        ----
+        list -- A single row of data.
+        """
+
+        all_data = []
+
+        for service_content in data_content:
+
+            symbol = service_content['key']
+            book_timestamp = service_content['1']
+            book_bid = service_content['2']
+            book_ask = service_content['3']
+
+            content_names = [symbol, service_name]
+            book_data_full = [
+                {'book_type':'bid','book_data':book_bid}, 
+                {'book_type':'ask','book_data':book_ask}
+            ]
+
+            for book_dict in book_data_full:
+                book_data = book_dict['book_data']
+                book_type = book_dict['book_type']
+
+                for index, activity_section in enumerate(book_data):                                                           
+                    section_id = str(book_timestamp) + "_" + str(index)
+                    price = activity_section['0']
+                    total_size = activity_section['1']
+                    total_count = activity_section['2']
+                    book_data_collection = activity_section['3']
+
+                    for book_data in book_data_collection:                                    
+                        mpid = book_data["0"]
+                        size = book_data["1"]
+                        _time = book_data["2"]
+
+                        data = [
+                            "book_{}".format(book_type), section_id, 
+                            "book_{}_price".format(book_type), price, 
+                            "book_{}_size".format(book_type), total_size, 
+                            "book_{}_total_count".format(book_type), total_count, 
+                            "book_{}_section_mpid".format(book_type), mpid, 
+                            "book_{}_section_size".format(book_type), size, 
+                            "book_{}_section_time".format(book_type), _time
+                        ]
+
+                        all_data.append(content_names + data)
+
+        return all_data
+    
+    def _write_active_services(self,data_content: dict, service_name: str) -> list:
+        """Takes Level 2 services and parses them so they can be written.
+
+        Arguments:
+        ----
+        data_content {dict} -- The content from the stream.
+
+        service_name {str} -- The name of the service the data came from.
+
+        Returns:
+        ----
+        list -- A single row of data.
+        """
+
+        all_data = []    
+
+        for data_section in data_content:
+
+            active_key = data_section['key']
+            active_data = data_section['1']
+
+            active_data_parts = active_data.split(';')
+            active_data_id = active_data_parts[0]
+            active_data_duration = active_data_parts[1]
+            active_data_timestamp = active_data_parts[2]
+            active_data_display_time = active_data_parts[3]
+            active_data_number_of_groups = active_data_parts[4]
+
+            all_data.append([service_name, "", 'active-key', active_key])
+            all_data.append([service_name, "", 'active-id', active_data_id])
+            all_data.append([service_name, "", 'active-duration', active_data_duration])
+            all_data.append([service_name, "", 'active-timestamp', active_data_timestamp])
+            all_data.append([service_name, "", 'active-display-time', active_data_display_time])
+            all_data.append([service_name, "", 'active-group-count', active_data_number_of_groups])
+
+            active_data_groups = active_data_parts[5:]
+
+            for active_data_group in active_data_groups:
+
+                group_split = active_data_group.split(':')
+
+                group_id = group_split[0]
+                group_count = group_split[1]
+                group_total_volume = group_split[2]
+
+                group_id_label = 'active-group-id'
+                group_id_count_label = 'active-group-id-{}-count'.format(group_id)
+                group_id_volume_label = 'active-group-id-{}-volume'.format(group_id)
+
+                all_data.append([service_name, "", group_id_label, group_id])
+                all_data.append([service_name, "", group_id_count_label, group_count])
+                all_data.append([service_name, "", group_id_volume_label, group_total_volume])
+
+                group_symbols = group_split[3:]
+                new_groups = [group_symbols[i:i + 3] for i in range(0, len(group_symbols), 3)]
+
+                for index, group in enumerate(new_groups):
+
+                    group_item_id_label = 'active-group-id-{}-item-{}-symbol'.format(group_id, index + 1)
+                    group_item_volume_label = 'active-group-id-{}-item-{}-volume'.format(group_id, index + 1)
+                    group_item_percent_label = 'active-group-id-{}-item-{}-percent'.format(group_id, index + 1)
+
+                    all_data.append([service_name, "", group_item_id_label, group[0]])
+                    all_data.append([service_name, "", group_item_volume_label, group[1]])
+                    all_data.append([service_name, "", group_item_percent_label, group[2]])
+        
+        return all_data
+
+
+    async def _write_to_csv(self, data: dict) -> None:
+        """Writes the stream to a CSV file.
+
+        Takes the data from a stream, determines which sections can be
+        written and then writes it to a CSV file for further manipulation.
+
+        Arguments:
+        ----
+        data {dict} -- The data stream.
+        """
+
+        # Deterimne what part of the message we need to get.
+        if 'data' in data.keys():
+            data = data['data']
+        elif 'snapshot' in data.keys():
+            data = data['snapshot']
+        else:
+            return None
+
+        stream_writer_level_1 = csv.writer(self.file_stream_level_1)
+        stream_writer_level_2 = csv.writer(self.file_stream_level_2)
+
+        for service_result in data:
+
+            # A Service response should have the following keys.
+            service_name = service_result['service']
+            service_timestamp = service_result['timestamp']
+            service_contents = service_result['content']
+
+            approved_level_1 = service_name in self.approved_writes_level_1
+            approved_level_2 = service_name in self.approved_writes_level_2
+            chart_history_service = service_name == 'CHART_HISTORY_FUTURES'
+            active_service = 'ACTIVES_' in service_name
+
+            # Write the non-chart level 1 services.
+            if approved_level_1 and chart_history_service == False and active_service == False:
+
+                # Grab the data
+                new_data = self._write_non_chart_services(data_content=service_contents, service_name=service_name)
+
+                for row in new_data:
+                    new_row = [service_timestamp] + row
+                    stream_writer_level_1.writerow(new_row)  
+
+            # Write the Chart Services.
+            elif approved_level_1 and chart_history_service and active_service == False:
                 
-                elif service_name in self.approved_writes and service_name == 'CHART_HISTORY_FUTURES':
+                # Grab the data
+                new_data = self._write_chart_services(data_content=service_contents, service_name=service_name)
+
+                for row in new_data:
+                    new_row = [service_timestamp] + row
+                    stream_writer_level_1.writerow(new_row)  
+
+            # Write the Active Services.
+            elif approved_level_1 and chart_history_service == False and active_service:
+                
+                # Grab the data
+                new_data = self._write_active_services(data_content=service_contents, service_name=service_name)
+
+                for row in new_data:
+                    new_row = [service_timestamp] + row
+                    stream_writer_level_1.writerow(new_row)  
+
+            # Write the Level 2 Services
+            elif approved_level_2:
                     
-                    # create the writer.
-                    stream_writer = csv.writer(self.file_stream)
-                    for data_section in service_contents:
-                        for field_key in data_section:
+                # Grab the data
+                new_data = self._write_level_two_services(data_content=service_contents, service_name=service_name)
 
-                            if field_key != '3':
-                                old_key = field_key
-                                new_key = self.fields_keys_write[service_name][old_key]
-                                field_value = data_section[old_key]
-                                data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
-                                stream_writer.writerow(data)
+                for row in new_data:
+                    new_row = [service_timestamp] + row
+                    stream_writer_level_2.writerow(new_row)
 
-                            elif field_key == '3':
+            # # Write the data to the correct file.
+            # if approved_level_2:
 
-                                for candle in data_section['3']:
-                                    for candle_key in candle:
-                                        old_key = candle_key
-                                        new_key = self.fields_keys_write[service_name][old_key]
-                                        field_value = candle[old_key]
-                                        data = [service_name, service_timestamp, service_command, old_key, new_key, field_value]
-                                        stream_writer.writerow(data)
+            #     for row in new_data:
+            #         new_row = [service_timestamp] + row
+            #         stream_writer_level_2.writerow(new_row)
+            
+            # elif active_service == True and new_data and approved_level_2 == False:
 
-                elif service_name in self.approved_writes_level_2:
-                        
-                    # create the writer.
-                    stream_writer_level_2 = csv.writer(self.file_stream_level_2)
+            #     for row in new_data:
+            #         new_row = [service_timestamp] + row
+            #         stream_writer_level_1.writerow(new_row)  
+            
+            # elif active_service == False and new_data and approved_level_2 == False:
 
-                    for service_content in service_contents:
+            #     for row in new_data:
+            #         new_row = [service_timestamp] + row
+            #         stream_writer_level_1.writerow(new_row)
+                
 
-                        symbol = service_content['key']
-                        book_timestamp = service_content['1']
-                        book_bid = service_content['2']
-                        book_ask = service_content['3']
-                        content_names = [symbol, service_name, service_timestamp, service_command]
-                        book_data_full = [{'book_type':'bid','book_data':book_bid}, {'book_type':'ask','book_data':book_ask}]
+    def _build_login_request(self) -> str:
+        """Builds the Login request for the streamer.
 
-                        for book_dict in book_data_full:
-                            book_data = book_dict['book_data']
-                            book_type = book_dict['book_type']
+        Builds the login request dictionary that will 
+        be used as the first service request with the 
+        streaming API.
 
-                            for index, activity_section in enumerate(book_data):                                                                    
-                                section_id = str(book_timestamp) + "_" + str(index)
-                                price = activity_section['0']
-                                total_size = activity_section['1']
-                                total_count = activity_section['2']
-                                book_data_collection = activity_section['3']
+        Returns:
+        ----
+        [str] -- A JSON string with the login details.
 
-                                for book_data in book_data_collection:                                    
-                                    mpid = book_data["0"]
-                                    size = book_data["1"]
-                                    _time = book_data["2"]
-
-                                    data = [
-                                        "book_{}".format(book_type), section_id, 
-                                        "book_{}_price".format(book_type), price, 
-                                        "book_{}_size".format(book_type), total_size, 
-                                        "book_{}_total_count".format(book_type), total_count, 
-                                        "book_{}_section_mpid".format(book_type), mpid, 
-                                        "book_{}_section_size".format(book_type), size, 
-                                        "book_{}_section_time".format(book_type), _time
-                                    ]
-
-                                    stream_writer_level_2.writerow(content_names + data)
-
-
-    def _build_login_request(self):
-        '''
-            Builds the login request dictionary that will be used as the first 
-            service request with the streaming API.
-
-            RTYPE: Dictionary.
-        '''
+        """        
 
         # define a request
-        login_request = {"requests": [{"service": "ADMIN",
-                                       "requestid": "0",
-                                       "command": "LOGIN",
-                                       "account": self.user_principal_data['accounts'][0]['accountId'],
-                                       "source": self.user_principal_data['streamerInfo']['appId'],
-                                       "parameters": {"credential": urllib.parse.urlencode(self.credentials),
-                                                      "token": self.user_principal_data['streamerInfo']['token'],
-                                                      "version": "1.0"}}]}
+        login_request = {
+            "requests": [
+                {
+                    "service": "ADMIN",
+                    "requestid": "0",
+                    "command": "LOGIN",
+                    "account": self.user_principal_data['accounts'][0]['accountId'],
+                    "source": self.user_principal_data['streamerInfo']['appId'],
+                    "parameters": {
+                        "credential": urllib.parse.urlencode(self.credentials),
+                        "token": self.user_principal_data['streamerInfo']['token'],
+                        "version": "1.0"
+                    }
+                }
+            ]
+        }
 
         return json.dumps(login_request)
 
-    def stream(self, print=True):
-        '''
-            Initalizes the stream by building a login request, starting an event loop,
-            creating a connection, passing through the requests, and keeping the loop running.
-        '''
-        
-        self.print = print
+    def _build_data_request(self) -> str:
+        """Builds the data request for the streaming service.
 
-        login_request = self._build_login_request()
+        Takes all the service requests and converts them to a JSON 
+        string.
 
-        # Grab the Data Request.
-        data_request = json.dumps(self.data_requests)
+        Returns:
+        ----
+        [str] -- A JSON string with the login details.
 
-        # Start connection and get client connection protocol
-        connection = self.loop.run_until_complete(self._connect())
+        """
 
-        # self.loop.run_until_complete(asyncio.ensure_future(self._receive_message(connection)))
-        # self.loop.run_until_complete(self._send_message(login_request))
-        # completed_connection = self.loop.run_until_complete(self._connect())       
+        return json.dumps(self.data_requests)
 
-        # Start listener and heartbeat
-        asyncio.ensure_future(self._receive_message(connection))
-        asyncio.ensure_future(self._send_message(login_request))
-        asyncio.ensure_future(self._send_message(data_request))
+    async def build_pipeline(self) -> websockets.WebSocketClientProtocol:
+        """Builds a data pipeine for processing data.
 
-        # asyncio.ensure_future(self.close_stream())
-        
-        # Keep Going.
+        Often we want to take the data we are streaming and
+        use it in other functions or store it in other platforms.
+        This method makes the process of building a pipeline easy
+        by handling all the connection setup and request setup.
+
+        Returns:
+        ----
+        websockets.WebSocketClientProtocol -- The websocket connection.
+        """
+
+        # In this case, we don't want things printing to the console.
+        self.print_to_console = False
+
+        # Connect to Websocket.
+        await self._connect()
+
+        # Build the Data Request.
+        await self._send_message(self._build_data_request())
+
+        return self.connection
+
+    async def start_pipeline(self) -> dict:     
+        """Recieves the data as it streams in.
+
+        Returns:
+        ----
+        dict -- The data coming from the websocket.
+        """
+
+        return await self._receive_message(return_value=True)
+
+    def stream(self, print_to_console: bool = True) -> None:
+        """Starts the stream and prints the output to the console.
+
+        Initalizes the stream by building a login request, starting 
+        an event loop, creating a connection, passing through the 
+        requests, and keeping the loop running.
+
+        Keyword Arguments:
+        ----
+        print_to_console {bool} -- Specifies whether the content is to be printed
+            to the console or not. (default: {True})
+        """        
+
+        # Print it to the console.
+        self.print_to_console = print_to_console
+
+        # Connect to the Websocket.
+        self.loop.run_until_complete(self._connect(pipeline_start=False))
+
+        # Send the Request.
+        asyncio.ensure_future(self._send_message(self._build_data_request()))
+
+        # Start Recieving Messages.
+        asyncio.ensure_future(self._receive_message(return_value=False))
+
+        # Keep the Loop going, until an exception is reached.
         self.loop.run_forever()
 
-    def close_logic(self, run_duration = None):
-        '''
-            Sets the logic to determine how long to keep the server open. If Not specified,
-            Server will remain open forever or until it encounters an error.
-            
-            NAME: run_duration
-            DESC: The time in seconds to run.
-            TYPE: int
+    def close_logic(self, run_duration: int = 0) -> None:
+        """Defines how the stream should close.
 
-        '''
+        Sets the logic to determine how long to keep the server open. 
+        If Not specified, Server will remain open forever or until 
+        it encounters an error.
 
-        if run_duration is not None:
+        Keyword Arguments:
+        ----
+        run_duration {int} -- The length of how long the stream
+            should run. (default: {0})
+        """        
+
+        if run_duration:
             self.RUN_DURATION = run_duration
         else:
-            self.RUN_DURATION = None
+            self.RUN_DURATION = -1
 
 
-    async def close_stream(self):
-        '''
-            Closes the connection to the streaming service.
-        '''
+    async def close_stream(self) -> None:
+        """Closes the connection to the streaming service."""        
 
-        if self.RUN_DURATION is not None:
-            run_duration = self.RUN_DURATION
-        else:
-            run_duration = -1
+        run_duration = self.RUN_DURATION
 
         increment = 0
 
@@ -312,31 +554,59 @@ class TDStreamerClient():
             except asyncio.CancelledError:
                 print("main(): cancel_me is cancelled now")
 
-    async def _connect(self):
-        '''
-            Connecting to webSocket server websockets.client.connect 
-            returns a WebSocketClientProtocol, which is used to send 
-            and receive messages
-        '''
+    async def _connect(self, pipeline_start: bool = True) -> websockets.WebSocketClientProtocol:
+        """Connects the Client to the TD Websocket.
+
+        Connecting to webSocket server websockets.client.connect 
+        returns a WebSocketClientProtocol, which is used to send 
+        and receive messages
+
+        Keyword Arguments:
+        ----
+        pipeline_start {bool} -- This is also used to start the data
+            pipeline so, in that case we can handle more tasks here.
+            (default: {True})
+
+        Returns:
+        ---
+        websockets.WebSocketClientProtocol -- The websocket connection.
+        """        
 
         # Grab the login info.
-        # login_request = self._build_login_request()
+        login_request = self._build_login_request()
 
         # Create a connection.
         self.connection = await websockets.client.connect(self.websocket_url)
 
-        # await self.connection.send(login_request)
-        # await self.connection.recv()
-
         # check it before sending it back.
-        if await self._check_connection():
+        if await self._check_connection() and pipeline_start == True:
+
+            # Login to the stream.
+            await self._send_message(login_request)
+            await self._receive_message(return_value=True)
+            return self.connection
+        
+        else:
+            # Login to the stream.
+            await self._send_message(login_request)
             return self.connection
 
-    async def _check_connection(self):
-        '''
-            There are multiple times we will need to check the connection 
-            of the websocket, this function will help do that.
-        '''
+
+    async def _check_connection(self) -> bool:
+        """Determines if we have an active connection
+
+        There are multiple times we will need to check the connection 
+        of the websocket, this function will help do that.
+
+        Raises:
+        ----
+        ConnectionError: An error is raised if we can't connect to the
+            websocket.
+
+        Returns:
+        ----
+        bool -- True if the connection healthy, False otherwise.
+        """        
 
         # if it's open we can stream.
         if self.connection.open:
@@ -348,59 +618,81 @@ class TDStreamerClient():
         else:
             raise ConnectionError
 
-    async def _send_message(self, message=None):
-        '''
-            Sending message to webSocket server
+    async def _send_message(self, message: str):
+        """Sends a message to webSocket server
 
-            NAME: message
-            DESC: The streaming request you wish to submit.
-            TYPE: String
-        '''
+        Arguments:
+        ----
+        message {str} -- The JSON string with the
+            data streaming service subscription.
+        """        
+
         await self.connection.send(message)
 
 
-    async def _receive_message(self, connection):
-        '''
-            Receiving all server messages and handle them.
+    async def _receive_message(self, return_value: bool = False) -> dict:
+        """Recieves and processes the messages as needed.
 
-            NAME: connection
-            DESC: The WebSocket Connection Client.
-            TYPE: Object
-        '''
+        Keyword Arguments:
+        ----
+        return_value {bool} -- Specifies whether the messages should be returned
+            back to the calling function or not. (default: {False})
+
+        Returns:
+        ----
+        {dict} -- A python dictionary
+        """
 
         # Keep going until cancelled.
         while True:
 
             try:
-
-                # recieve and decode the message.
-                message = await connection.recv()
-            
-                try:
-                    message_decoded = json.loads(message)
-                except:
-                    message = message.encode('utf-8').replace(b'\xef\xbf\xbd', bytes('"None"','utf-8')).decode('utf-8')
-                    message_decoded = json.loads(message)
-
-                write_1 = ('data' in message_decoded.keys() and self.file_stream is not None)
-                write_2 = ('snapshot' in message_decoded.keys() and self.file_stream is not None)
-
-                if write_1:                  
-                    await self._write_to_csv(data = message_decoded['data'])
-                elif write_2:
-                    await self._write_to_csv(data = message_decoded['snapshot'])
                 
-                if self.print:
-                    print('-'*20)
-                    print('Received message from server: {}'.format(str(message_decoded)))
-                
-                # return message_decoded
+                # Grab the Message
+                message = await self.connection.recv()
+
+                # Parse Message
+                message_decoded = await self._parse_json_message(message=message)
+
+                # Write the data if needed.
+                if self.write_flag:
+                    await self._write_to_csv(data = message_decoded)
+
+                if return_value:
+                    return message_decoded
+                elif self.print_to_console:
+                    print('='*20)
+                    print('Message Recieved:')
+                    print('')
+                    print(message_decoded)
+                    print('='*20)
+                    print('')                  
 
             except websockets.exceptions.ConnectionClosed:
 
                 # stop the connection if there is an error.
                 print('Connection with server closed')
                 break
+
+    async def _parse_json_message(self, message: str) -> dict:
+        """Parses incoming messages from the stream
+
+        Arguments:
+        ----
+        message {str} -- The JSON string needing to be parsed.
+
+        Returns:
+        ----
+        dict -- A python dictionary containing the original values.
+        """        
+
+        try:
+            message_decoded = json.loads(message)
+        except:
+            message = message.encode('utf-8').replace(b'\xef\xbf\xbd', bytes('"None"','utf-8')).decode('utf-8')
+            message_decoded = json.loads(message)
+        
+        return message_decoded
 
     async def heartbeat(self, connection):
         '''
@@ -1004,6 +1296,8 @@ class TDStreamerClient():
         self.data_requests['requests'].append(request)
 
     def level_two_total_view(self, symbols=None, fields=None):
+
+        fields = [str(field) for field in fields]
 
         # Build the request
         request = self._new_request_template()

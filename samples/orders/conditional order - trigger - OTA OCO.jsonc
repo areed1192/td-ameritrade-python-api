@@ -2,8 +2,7 @@
     // This is my buy order, this will trigger the other one.
     "orderStrategyType": "TRIGGER",
     "session": "NORMAL",
-    // I also went and made this a "GOOD_TILL_CANCEL" order.
-    "duration": "GOOD_TILL_CANCEL",
+    "duration": "DAY",
     "cancelTime": "2020-04-15",
     "orderType": "LIMIT",
     "price": 50.00,
@@ -42,12 +41,12 @@
                     ]
                 },
                 {
-                    // The is my order that limits my loss, note the price is here is lower than my original buy order.
-                    "orderStrategyType": "SINGLE",
+                    // The is my order that stops my loss, note the price is here is lower than my original buy order.
+                    "orderStrategyType": "STOP",
                     "session": "NORMAL",
                     "duration": "DAY",
                     "orderType": "LIMIT",
-                    "price": 40.00,
+                    "stopPrice": 40.00,
                     "orderLegCollection": [
                         {
                             "instruction": "SELL",

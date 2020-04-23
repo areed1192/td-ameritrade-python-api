@@ -346,6 +346,22 @@ STREAM_FIELD_IDS = {
 
 
 CSV_FIELD_KEYS = {
+    "ACTIVES_NASDAQ":{
+        "key":"key",
+        "1":"data"
+    },
+    "ACTIVES_OTCBB":{
+        "key":"key",
+        "1":"data"
+    },
+    "ACTIVES_NYSE":{
+        "key":"key",
+        "1":"data"
+    },
+    "ACTIVES_OPTIONS":{
+        "key":"key",
+        "1":"data"
+    },
     "CHART_EQUITY": {
         "seq": "chart-sequence",
         "key": "symbol",
