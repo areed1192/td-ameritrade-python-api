@@ -1,36 +1,35 @@
 from td.client import TDClient
 from td.AccountsManager import AccountsManager
-import Extensions.file_utils as file_utils
-import json
-import os
+
+#-----------set up accounts programatically-------------------------
 
 Accounts = AccountsManager("***client_id****", '***redirect_uri***')
 
-Accounts.add_account('name of an account', '### account ###', '***credentials_path***')
-Accounts.add_account('2', '### account ###', '***credentials_path***')
+Accounts.add_account('My IRA', '### account ###', '***credentials_path***')
+Accounts.add_account('Dads IRA', '### account ###', '***credentials_path***')
 #...
 
 Accounts.login() #logs in all accounts
 
-Accounts.print_account_worths() #prints liquidation values of all accounts -- just handy, arguably moved/removed
+#prints liquidation values of all accounts -- just handy, arguably could be moved|removed
+Accounts.print_account_worths() 
 
-#save:
-file_utils.save_json('../Accounts.json', Accounts.to_dict()) 
+#Save by any user chosen means (with possible helpers to be included in td.utils):
+Accounts.to_dict()
 
 Accounts.logout()
 
+#-----------------------------Load from anything-----------------------
+accounts_dict = #pull from something, eg with json.load
 
-#load:
-accounts_dict = file_utils.load_json('../Accounts.json')
-if len(accounts_dict) == 0:
-    print('Found no accounts logged in!')
-    pass
+#initialize once source is known good:
 Accounts = AccountsManager.from_dict(accounts_dict)
 
+#repeat:
 Accounts.login()
 
 Accounts.print_account_worths()
 
 
 
-TDSession = Accounts['My IRA']
+current_session = Accounts['My IRA']
