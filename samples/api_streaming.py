@@ -77,21 +77,3 @@ TDStreamingClient.level_two_total_view(symbols = ['AAPL'], fields = ['0','1','2'
 
 # Stream it.
 TDStreamingClient.stream()
-
-
-'''
-    DEFINING CLOSE LOGIC
-
-    Closing the stream involves defining the number of seconds you want to keep it open. Right now,
-    the logic is basic but in future releases we will be able to specify specific times like during
-    market hours.
-'''
-
-# Let's keep the server open for only 10 seconds, so define the time in seconds.
-keep_open_in_seconds = 10
-
-# Call the streaming client, and set the logic.
-TDStreamingClient.close_logic(run_duration=keep_open_in_seconds)
-
-# # Start Streaming.
-TDStreamingClient.stream()

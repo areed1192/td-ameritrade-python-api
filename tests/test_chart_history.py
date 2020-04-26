@@ -7,65 +7,65 @@ from td.client import TDClient
 
 # Create a new session
 TDSession = TDClient(
-    account_number=config.TRADING_ACCOUNT,
-    client_id=config.CONSUMER_ID,
+    account_number=config.ACCOUNT_NUMBER,
+    client_id=config.CLIENT_ID,
     redirect_uri=config.REDIRECT_URI,
     credentials_path=config.JSON_PATH
 )
 
-# Login to the session
-TDSession.login()
+# # Login to the session
+# TDSession.login()
 
-# Define a list of all valid periods
-valid_values = {
-    'minute':{
-        'day':[1, 2, 3, 4, 5, 10]
-    },
-    'daily':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
-    },
-    'weekly':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
-    },
-    'monthly':{
-        'year':[1, 2, 3, 5, 10, 15, 20]
-    }
-}
+# # Define a list of all valid periods
+# valid_values = {
+#     'minute':{
+#         'day':[1, 2, 3, 4, 5, 10]
+#     },
+#     'daily':{
+#         'month':[1, 2, 3, 6],
+#         'year':[1, 2, 3, 5, 10, 15, 20],
+#         'ytd':[1]
+#     },
+#     'weekly':{
+#         'month':[1, 2, 3, 6],
+#         'year':[1, 2, 3, 5, 10, 15, 20],
+#         'ytd':[1]
+#     },
+#     'monthly':{
+#         'year':[1, 2, 3, 5, 10, 15, 20]
+#     }
+# }
 
-valid_minute_frequencies = [1, 5, 10, 15, 30]
+# valid_minute_frequencies = [1, 5, 10, 15, 30]
 
 
-# Define the static arguments.
+# # Define the static arguments.
 hist_symbol = 'MSFT'
 hist_needExtendedHoursData = False
 
-for frequency_type in valid_values.keys():
-    frequency_periods = valid_values[frequency_type]
+# for frequency_type in valid_values.keys():
+#     frequency_periods = valid_values[frequency_type]
 
-    for frequency_period in frequency_periods.keys():
-        possible_values = frequency_periods[frequency_period]
+#     for frequency_period in frequency_periods.keys():
+#         possible_values = frequency_periods[frequency_period]
 
-        for value in possible_values:
+#         for value in possible_values:
             
-            # Define the dynamic arguments - I want 5 DAYS of historical 1-minute bars.
-            hist_periodType = frequency_period
-            hist_period = value
-            hist_frequencyType = frequency_type
-            hist_frequency = 1
+#             # Define the dynamic arguments - I want 5 DAYS of historical 1-minute bars.
+#             hist_periodType = frequency_period
+#             hist_period = value
+#             hist_frequencyType = frequency_type
+#             hist_frequency = 1
 
-            # make the request
-            historical_1_minute = TDSession.get_price_history(
-                symbol=hist_symbol, 
-                period_type=hist_periodType,
-                period=hist_period, 
-                frequency_type=hist_frequencyType,
-                frequency=hist_frequency,
-                extended_hours=hist_needExtendedHoursData
-            )
+#             # make the request
+#             historical_1_minute = TDSession.get_price_history(
+#                 symbol=hist_symbol, 
+#                 period_type=hist_periodType,
+#                 period=hist_period, 
+#                 frequency_type=hist_frequencyType,
+#                 frequency=hist_frequency,
+#                 extended_hours=hist_needExtendedHoursData
+#             )
 
 
 # #
@@ -73,7 +73,7 @@ for frequency_type in valid_values.keys():
 #
 
 # The max look back period for minute data is 31 Days.
-lookback_period = 31
+lookback_period = 10
 
 # Define today.
 today_00 = datetime.now()
