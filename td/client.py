@@ -178,18 +178,22 @@ class TDClient():
         if self.credentials_path is not None:
             json_session_file = pathlib.Path(self.credentials_path)
             json_session_path = json_session_file.absolute()
+            
         else:
             file_name = 'td_state.json'
+            
             json_file_dir = defaults.default_dir
+
             if not os.path.isdir(defaults.default_dir): os.makedirs(defaults.default_dir)
             json_session_file = os.path.join(json_file_dir, file_name)
             json_session_file = pathlib.Path(json_session_file)
-            # print('file exists: ', json_session_file.exists())
             json_session_path = json_session_file.absolute()
 
         # if they allow for caching and the file exists then load it.
         if action == 'init' and self.config['cache_state'] == True and json_session_file.exists():
-            self.state.update(json.load(open(json_session_path, 'r')))
+            
+            with open(json_session_path, 'r') as json_file:
+                self.state.update(json.load(json_file))
 
         # If they don't allow for caching and the file exists, then delete it.
         elif action == 'init' and self.config['cache_state'] == False and json_session_file.exists():
@@ -507,8 +511,6 @@ class TDClient():
 
             elif response_headers['Content-Type'] in ('application/json;charset=UTF-8','application/json'):
                 return response.json()
-
-
 
         elif status_code in (401, 400, 403, 415, 500):
             print('-'*80)

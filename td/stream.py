@@ -574,11 +574,14 @@ class TDStreamerClient():
         # Stop the loop.
         if self.loop.is_running():
             self.loop.call_soon_threadsafe(self.loop.stop())
+        
+        self.loop.close()
 
         # Once closed, verify it's closed.
         if self.loop.is_closed():
             print('Event loop was closed.')
         else:
+            
             print('Event loop was not closed.')
 
         # # cancel all the task.
