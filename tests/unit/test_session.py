@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from datetime import timedelta
 from unittest import TestCase
 from configparser import ConfigParser
 from td.client import TDClient
@@ -112,6 +113,151 @@ class TDSession(TestCase):
         # Make sure it's a list.
         self.assertIsInstance(get_instrument, list)
         self.assertIn('cusip', get_instrument[0])
+
+    def test_chart_history(self):
+        """Test getting historical prices."""
+        
+        # Define a list of all valid periods
+        valid_values = {
+            'minute':{
+                'day':[1, 2, 3, 4, 5, 10]
+            },
+            'daily':{
+                'month':[1, 2, 3, 6],
+                'year':[1, 2, 3, 5, 10, 15, 20],
+                'ytd':[1]
+            },
+            'weekly':{
+                'month':[1, 2, 3, 6],
+                'year':[1, 2, 3, 5, 10, 15, 20],
+                'ytd':[1]
+            },
+            'monthly':{
+                'year':[1, 2, 3, 5, 10, 15, 20]
+            }
+        }
+
+        # Define the static arguments.
+        hist_symbol = 'MSFT'
+        hist_needExtendedHoursData = False
+
+        for frequency_type in valid_values.keys():
+            frequency_periods = valid_values[frequency_type]
+
+            for frequency_period in frequency_periods.keys():
+                possible_values = frequency_periods[frequency_period]
+
+                for value in possible_values:
+                    
+                    # Define the dynamic arguments - I want 5 DAYS of historical 1-minute bars.
+                    hist_periodType = frequency_period
+                    hist_period = value
+                    hist_frequencyType = frequency_type
+                    hist_frequency = 1
+
+                    # make the request
+                    historical_prices = self.td_session.get_price_history(
+                        symbol=hist_symbol, 
+                        period_type=hist_periodType,
+                        period=hist_period, 
+                        frequency_type=hist_frequencyType,
+                        frequency=hist_frequency,
+                        extended_hours=hist_needExtendedHoursData
+                    )
+
+                    self.assertIsInstance(historical_prices, dict)
+                    self.assertFalse(historical_prices['empty'])
+    
+    def test_custom_historical_prices(self):
+        """Test getting historical prices for a custom date range."""
+
+        # The max look back period for minute data is 31 Days.
+        lookback_period = 10
+
+        # Define today.
+        today_00 = datetime.now()
+
+        # Define 300 days ago.
+        today_ago = datetime.now() - timedelta(days=lookback_period)
+
+        # The TD API expects a timestamp in milliseconds. However, the timestamp() method only returns to seconds so multiply it by 1000.
+        today_00 = str(int(round(today_00.timestamp() * 1000)))
+        today_ago = str(int(round(today_ago.timestamp() * 1000)))
+
+        # These values will now be our startDate and endDate parameters.
+        hist_startDate = today_ago
+        hist_endDate = today_00
+
+        # Define the dynamic arguments.
+        hist_periodType = 'day'
+        hist_frequencyType = 'minute'
+        hist_frequency = 1
+
+        # Make the request
+        historical_custom = self.td_session.get_price_history(
+            symbol='MSFT',
+            period_type=hist_periodType,
+            frequency_type=hist_frequencyType,
+            start_date=hist_startDate,
+            end_date=hist_endDate,
+            frequency=hist_frequency,
+            extended_hours=True
+        )
+
+        self.assertIsInstance(historical_custom, dict)
+        self.assertFalse(historical_custom['empty'])
+
+    def test_search_instruments(self):
+        """Test Searching for Instruments."""
+
+        # `search_instruments` Endpoint
+        instrument_search_data = self.td_session.search_instruments(
+            symbol='MSFT',
+            projection='symbol-search'
+        )
+
+        self.assertIsInstance(instrument_search_data, dict)
+        self.assertIn('MSFT', instrument_search_data)
+
+    def test_get_movers(self):
+        """Test getting Market movers."""
+
+        # `get_movers` Endpoint
+        movers_data = self.td_session.get_movers(
+            market='$DJI',
+            direction='up',
+            change ='value'
+        )
+
+        self.assertIsInstance(movers_data, list)
+        self.assertIn('symbol', movers_data[0])
+
+    def test_get_user_preferences(self):
+        """Test getting user preferences."""
+
+        # `get_preferences` endpoint. Should not return an error
+        preference_data = self.td_session.get_preferences(account=self.td_session.account_number)
+
+        self.assertIsInstance(preference_data, dict)
+        self.assertIn('expressTrading', preference_data)
+
+    def test_get_user_principals(self):
+        """Test getting user principals."""
+
+        # `get_preferences` endpoint. Should not return an error
+        user_principals = self.td_session.get_user_principals(fields=['preferences','surrogateIds'])
+
+        self.assertIsInstance(user_principals, dict)
+        self.assertIn('authToken', user_principals)
+
+    def test_get_streamer_keys(self):
+        """Test getting user preferences."""
+
+        # `get_subscription_keys` endpoint. Should not return an error
+        streamer_keys = self.td_session.get_streamer_subscription_keys(accounts=[self.td_session.account_number])
+
+        self.assertIsInstance(streamer_keys, dict)
+        self.assertIn('keys', streamer_keys)
 
     def tearDown(self) -> None:
         """Teardown the Robot."""
