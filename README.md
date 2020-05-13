@@ -70,8 +70,7 @@ from td.client import TDClient
 
 # Create a new session, credentials path is optional.
 TDSession = TDClient(
-    account_number='ACCOUNT_NUMBER',
-    consumer_id='CONSUMER_ID',
+    client_id='CLIENT_ID',
     redirect_uri='REDIRECT_URI',
     credentials_path='<PATH_TO_CREDENTIALS_FILE>'
 )
