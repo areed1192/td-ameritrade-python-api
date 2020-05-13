@@ -226,7 +226,7 @@ class TDClient():
 
         # if caching is enabled then attempt silent authentication.
         if self.config['cache_state'] and self._silent_sso():
-            self.authstate = 'Authenticated'
+            self.authstate = True
             return True
 
         # prepare the payload to login
@@ -256,7 +256,7 @@ class TDClient():
 
         # this will complete the final part of the authentication process.
         self.grab_access_token()
-        self.authstate = 'Authenticated'
+        self.authstate = True
 
         return True
 
