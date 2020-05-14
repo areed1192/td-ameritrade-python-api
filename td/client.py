@@ -1881,13 +1881,13 @@ class TDClient():
 
         # check to see if it's an order object.
         if isinstance(saved_order, Order):
-            order = order._saved_order_to_json()
+            saved_order = saved_order._saved_order_to_json()
         else:
-            order = order
+            saved_order = saved_order
 
         # make the request
         endpoint = 'accounts/{}/savedorders'.format(account)
-        return self._make_request(method='post', endpoint=endpoint, mode='json', data=order, order_details=True)
+        return self._make_request(method='post', endpoint=endpoint, mode='json', data=saved_order, order_details=True)
 
     def _create_token_timestamp(self, token_timestamp: str) -> int:
         """Parses the token and converts it to a timestamp.
