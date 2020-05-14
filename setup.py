@@ -36,7 +36,8 @@ setup(
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
         'websockets>=8.0.2',
-        'requests>=2.22.0'
+        'requests>=2.22.0',
+        'flask'
     ],
 
     # some keywords for my library.
