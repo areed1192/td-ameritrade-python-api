@@ -12,7 +12,7 @@ class TDSession(TestCase):
     """Will perform a unit test for the TD session."""
 
     def setUp(self) -> None:
-        """Set up the Robot."""
+        """Set up the Client."""
 
         # Grab configuration values.
         config = ConfigParser()
@@ -34,7 +34,7 @@ class TDSession(TestCase):
         self.stream_session = self.td_session.create_streaming_session()
 
     def test_creates_instance_of_session(self):
-        """Create an instance and make sure it's a robot."""
+        """Create an instance and make sure it's a client."""
 
         self.assertIsInstance(self.td_session, TDClient)
 
@@ -50,17 +50,50 @@ class TDSession(TestCase):
         self.assertIn('QUOTE', self.stream_session.data_requests['requests'][0]['service'])
 
     def test_subscribe_level_two_quotes(self):
-        """Test subscribing to Level One Quotes."""
+        """Test subscribing to Level Two Quotes."""
 
         self.stream_session.level_two_quotes(symbols=['MSFT','AAPL'], fields=[0,1,2,3])
         self.assertIn('LISTED_BOOK', self.stream_session.data_requests['requests'][0]['service'])
 
+    def test_subscribe_level_one_options(self):
+        """Test subscribing to Level One Options."""
+
+        self.stream_session.level_one_options(symbols=['AAPL_040920C115'], fields=list(range(0,42)))
+        self.assertIn('OPTION', self.stream_session.data_requests['requests'][0]['service'])
+
+    def test_subscribe_level_one_futures(self):
+        """Test subscribing to Level One Futures."""
+
+        # Level One Futures
+        self.stream_session.level_one_futures(symbols=['/CL'], fields=[0,1,2,3,4,5])
+        self.assertIn('FUTURES', self.stream_session.data_requests['requests'][0]['service'])
+
+    def test_subscribe_level_one_forex(self):
+        """Test subscribing to Level One Forex."""
+
+        # Level One Forex
+        self.stream_session.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))
+        self.assertIn('FOREX', self.stream_session.data_requests['requests'][0]['service'])
+
+    def test_subscribe_level_one_futures_options(self):
+        """Test subscribing to Level One Futures Options."""
+
+        # Level One Forex
+        self.stream_session.level_one_futures_options(symbols=['./E1AG20C3220'], fields=list(range(0,36)))
+        self.assertIn('FUTURES_OPTION', self.stream_session.data_requests['requests'][0]['service'])
+
+    def test_subscribe_timesale_futures(self):
+        """Test subscribing to Timesale Futures."""
+
+        # Timesale Futures
+        self.stream_session.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[0,1,2,3,4])
+        self.assertIn('TIMESALE_FUTURES', self.stream_session.data_requests['requests'][0]['service'])
+
     def tearDown(self) -> None:
-        """Teardown the Robot."""
+        """Teardown the Stream Client."""
 
         self.td_session = None
         self.stream_session = None
-
 
 if __name__ == '__main__':
     unittest.main()

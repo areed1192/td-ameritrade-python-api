@@ -70,14 +70,14 @@ TDStreamingClient.write_behavior(
     LEVEL ONE DATA
 '''
 
-# Level One Quote
-TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
+# # Level One Quote
+# TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH", "SPXL", "SPXS", "SPXU", "SSO", "UPRO", "VOO"],  fields=list(range(0,8)))
 
 # # Level One Option
 # TDStreamingClient.level_one_options(symbols=['AAPL_040920C115'], fields=list(range(0,42)))
 
-# Level One Futures
-TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3", "4"])
+# # Level One Futures
+# TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3", "4"])
 
 # # Level One Forex
 # TDStreamingClient.level_one_forex(symbols=['EUR/USD'], fields=list(range(0,26)))
@@ -119,7 +119,6 @@ TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3",
 # TDStreamingClient.account_activity()
 
 
-
 # # Level Two Options
 # TDStreamingClient.level_two_options(symbols=['ESH20_022120C20'], fields = [0,1,2])
 
@@ -151,21 +150,3 @@ TDStreamingClient.level_one_futures(symbols=['/CL'], fields=["0", "1", "2", "3",
 
 # Stream it.
 TDStreamingClient.stream(print_to_console=True)
-
-
-'''
-    DEFINING CLOSE LOGIC
-
-    Closing the stream involves defining the number of seconds you want to keep it open. Right now,
-    the logic is basic but in future releases we will be able to specify specific times like during
-    market hours.
-'''
-
-# # Let's keep the server open for only 10 seconds, so define the time in seconds.
-# keep_open_in_seconds = 10
-
-# # Call the streaming client, and set the logic.
-# TDStreamingClient.close_logic(run_duration=keep_open_in_seconds)
-
-# # Start Streaming.
-# TDStreamingClient.stream()
