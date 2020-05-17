@@ -1,8 +1,10 @@
 import unittest
+
+from unittest import TestCase
 from datetime import datetime
 from datetime import timedelta
-from unittest import TestCase
 from configparser import ConfigParser
+
 from td.client import TDClient
 from td.stream import TDStreamerClient
 
@@ -50,13 +52,23 @@ class TDSession(TestCase):
         self.assertIsNotNone(self.td_session.state['access_token'])
         self.assertNotEqual(self.td_session.state['access_token_expires_at'], 0)
 
-    def test_get_quotes(self):
-        """Test Get Quotes."""
+    def test_single_get_quotes(self):
+        """Test Getting a Single quote."""
 
-        quotes = self.td_session.get_quotes(instruments=['MSFT', 'AAPL'])
-        
+        # Grab a single quote.
+        quotes = self.td_session.get_quotes(instruments=['MSFT'])
+
+        # See if the Symbol is in the Quotes.
         self.assertIn('MSFT', quotes)
-        self.assertIn('AAPL', quotes)
+
+    def test_get_quotes(self):
+        """Test Getting Multiple Quotes."""
+
+        # Grab multiple Quotes.
+        quotes = self.td_session.get_quotes(instruments=['MSFT', 'AAPL'])
+
+        # See if the Symbols are in the Quotes.
+        self.assertTrue(set(['MSFT','AAPL']).issuperset(set(quotes.keys())))
 
     def test_get_accounts(self):
         """Test Get Accounts."""
@@ -98,9 +110,17 @@ class TDSession(TestCase):
             date=datetime.today().isoformat()
         )
 
-        # Make sure it's a list.
-        self.assertIsInstance(market_hours_multi, dict)
-        self.assertIn('isOpen', market_hours_multi['equity']['EQ'])
+        # If it's a weekend nothing is returned, so raise an error.
+        if datetime.today().weekday() in (5,6):
+
+            # Make sure it's a list.
+            self.assertIsInstance(market_hours_multi, dict)
+            self.assertIn('isOpen', market_hours_multi['equity']['equity'])
+
+        else:
+            # Make sure it's a list.
+            self.assertIsInstance(market_hours_multi, dict)
+            self.assertIn('isOpen', market_hours_multi['equity']['EQ'])
 
     def test_get_instrument(self):
         """Test getting an instrument."""
@@ -229,8 +249,12 @@ class TDSession(TestCase):
             change ='value'
         )
 
-        self.assertIsInstance(movers_data, list)
-        self.assertIn('symbol', movers_data[0])
+        if datetime.today().weekday() in (5,6):
+            self.assertIsInstance(movers_data, list)
+            self.assertFalse(movers_data)
+        else:
+            self.assertIsInstance(movers_data, list)
+            self.assertIn('symbol', movers_data[0])
 
     def test_get_user_preferences(self):
         """Test getting user preferences."""

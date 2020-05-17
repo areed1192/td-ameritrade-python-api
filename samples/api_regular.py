@@ -25,7 +25,7 @@ quotes_futures = TDSession.get_quotes(instruments=['/ES'])
 # `get_quotes` with Forex
 quotes_forex = TDSession.get_quotes(instruments=['AUD/USD'])
 
-# `get_quotes` endpoint with multiple values. Should not return an error.
+# `get_quotes` endpoint with multiple values
 quotes_multi = TDSession.get_quotes(instruments=['SQ', 'MSFT'])
 
 # `search_instruments` Endpoint

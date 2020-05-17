@@ -1,7 +1,13 @@
 import os
-import pathlib
 import sys
 import json
+import pathlib
+
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Union
+from typing import Optional
 
 if sys.version_info >= (3, 5):
     home_dir = str(pathlib.Path.home())
@@ -159,6 +165,85 @@ class StatePath():
             json.dump(obj=state,fp=credenitals_file)
 
         return json_settings_path
+    
+    def write_credentials(self, file_path: Union[pathlib.Path, str], state: dict) -> pathlib.Path:
+        """Writes the credentials to the Settigns folder.
+
+        Arguments:
+        ----
+        file_path {Union[pathlib.Path, str]} -- The path to the credentials file.
+
+        state {dict} -- The session state dictionary.
+
+        Returns:
+        ----
+        pathlib.Path -- The path to credentials path.
+        """        
+
+        if isinstance(file_path, str):
+            json_path = pathlib.Path(file_path).absolute()
+        else:
+            json_path = file_path.absolute()
+
+        # Check to see if the folder exists.
+        if not self.does_directory_exist(file_path=json_path):
+            json_path.parent.mkdir()
+        
+        # write to the JSON file.
+        with open(file=json_path, mode='w+') as credenitals_file:
+            json.dump(obj=state,fp=credenitals_file)
+
+        return json_path
+
+    def read_credentials(self, file_path: Union[pathlib.Path, str]) -> dict:
+        """Read the credentials file.
+
+        Arguments:
+        ----
+        file_path {Union[pathlib.Path, str]} -- The path to the credentials file.
+
+        Returns:
+        ----
+        {dict} -- The session state dictionary.
+        """
+
+        # Handle the file path input.
+        if isinstance(file_path, str):
+            json_path = pathlib.Path(file_path).absolute()
+        else:
+            json_path = file_path.absolute()
+
+        # Check to see if the folder exists.
+        if not self.does_directory_exist(file_path=json_path):
+            raise FileNotFoundError("Credentials File does not exist.")
+        
+        # read the JSON file.
+        with open(file=json_path, mode='r') as credenitals_file:
+            state_dict = json.load(fp=credenitals_file)
+
+        return state_dict
+
+    def set_path(self, path: str) -> None:
+        """Sets the path to credentials file.
+
+        Arguments:
+        ----
+        path {str} -- The path to set.
+        """  
+        self._credentials_full_path = path
+
+    def delete_credentials(self, file_path: pathlib.Path) -> None:
+
+        file_path.unlink()
+
+    def define_settings_location(self, location_id:str, location: str) -> pathlib.Path:
+
+        new_path = pathlib.Path(location)
+
+        self.settings_location[location_id] = new_path
+
+        return new_path
+
 
 if __name__ == '__main__':
 

@@ -5,6 +5,7 @@ import datetime
 import pathlib
 import requests
 import urllib.parse
+
 from . import defaults
 from typing import Dict
 from typing import List
@@ -94,11 +95,11 @@ class TDClient():
         self.account_number = account_number
         self.credentials_path = credentials_path
         
-        # call the state_manager method and update the state to init (initalized)
-        self._state_manager('init')
-
         # define a new attribute called 'authstate' and initalize it to '' (Blank). This will be used by our login function.
         self.authstate = False
+
+        # call the state_manager method and update the state to init (initalized)
+        self._state_manager('init')
 
         # Initalize the client with no streaming session.
         self.streaming_session = None
@@ -107,7 +108,7 @@ class TDClient():
         """String representation of our TD Ameritrade Class instance."""
 
         # define the string representation
-        str_representation = '<TDAmeritrade Client (logged_in = {}, authorized = {})>'.format(self.state['loggedin'], self.authstate)
+        str_representation = '<TDAmeritrade Client (logged_in = {}, authorized = {})>'.format(self.state['logged_in'], self.authstate)
 
         return str_representation
 
@@ -376,7 +377,7 @@ class TDClient():
         refresh_token_expire = time.time() + int(token_dict['refresh_token_expires_in'])
         self.state['access_token_expires_at'] = access_token_expire
         self.state['refresh_token_expires_at'] = refresh_token_expire
-        self.state['loggedin'] = True
+        self.state['logged_in'] = True
 
         return True
 
