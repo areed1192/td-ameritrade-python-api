@@ -70,8 +70,8 @@ from td.client import TDClient
 
 # Create a new session, credentials path is optional.
 TDSession = TDClient(
-    client_id='CLIENT_ID',
-    redirect_uri='REDIRECT_URI',
+    client_id='<CLIENT_ID>',
+    redirect_uri='<REDIRECT_URI>',
     credentials_path='<PATH_TO_CREDENTIALS_FILE>'
 )
 
@@ -79,7 +79,7 @@ TDSession = TDClient(
 TDSession.login()
 
 # Grab real-time quotes for 'MSFT' (Microsoft)
-msft_quotes = TDSession.get_quotes(instruments='MSFT')
+msft_quotes = TDSession.get_quotes(instruments=['MSFT'])
 
 # Grab real-time quotes for 'AMZN' (Amazon) and 'SQ' (Square)
 multiple_quotes = TDSession.get_quotes(instruments=['AMZN','SQ'])
