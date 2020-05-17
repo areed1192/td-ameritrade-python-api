@@ -35,16 +35,17 @@ setup(
 
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
-        'websockets>=8.0.2',
-        'requests>=2.22.0',
-        'flask'
+        'websockets',
+        'requests',
+        'flask',
+        'requests-oauthlib'
     ],
 
     # some keywords for my library.
     keywords='finance, td ameritrade, api',
 
     # here are the packages I want "build."
-    packages=find_packages(include=['td']),
+    packages=find_packages(include=['td', 'samples']),
 
     # I also have some package data, like photos and JSON files, so I want to
     # include those too.
