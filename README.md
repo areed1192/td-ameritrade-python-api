@@ -104,7 +104,7 @@ Requests for saved orders, regular orders, watchlists, and option chains can be 
 The following requirements must be met before being able to use the TD Ameritrade Python API library.
 
 - You must have a TD Ameritrade Account.
-- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources/td-developer-account) for instructions on how to create a Developer account.
+- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources) for instructions on how to create a Developer account.
 
 ## Documentation and Resources
 

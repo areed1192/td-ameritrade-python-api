@@ -43,7 +43,10 @@ class StreamingMessage():
         """
 
         message = message.encode(
-            'utf-8').replace(b'\xef\xbf\xbd', bytes('"None"', 'utf-8')).decode('utf-8')
+            'utf-8').replace(
+                b'\xef\xbf\xbd',
+                bytes('"None"', 'utf-8')
+            ).decode('utf-8')
         message = json.loads(message)
 
         return message
@@ -62,16 +65,24 @@ class StreamingMessage():
 
             # Loop through the data responses.
             for component in self.decoded_message['data']:
+                
                 new_component = StreamingMessageComponent(
-                    message_component=component, response_type='data')
+                    message_component=component, 
+                    response_type='data'
+                )
+
                 self.components.append(new_component)
 
         elif self.is_subscription_response:
 
             # Loop through each Subscription response.
             for component in self.decoded_message['response']:
+                
                 new_component = StreamingMessageComponent(
-                    message_component=component, response_type='subscription')
+                    message_component=component,
+                    response_type='subscription'
+                )
+                
                 self.components.append(new_component)
 
     @property

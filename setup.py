@@ -38,7 +38,8 @@ setup(
         'websockets',
         'requests',
         'flask',
-        'requests-oauthlib'
+        'requests-oauthlib',
+        'pyopenssl'
     ],
 
     # some keywords for my library.

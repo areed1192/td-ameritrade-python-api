@@ -580,8 +580,7 @@ class TDStreamerClient():
         # Once closed, verify it's closed.
         if self.loop.is_closed():
             print('Event loop was closed.')
-        else:
-            
+        else:            
             print('Event loop was not closed.')
 
         # # cancel all the task.

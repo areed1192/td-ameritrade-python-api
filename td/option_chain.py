@@ -39,23 +39,25 @@ class OptionChain():
         }
 
         # define the parameters that we will take when a new object is initalized.
-        self.query_parameters = {'apikey': None,
-                                 'symbol': None,
-                                 'contractType': None,
-                                 'strikeCount': None,
-                                 'includeQuotes': None,
-                                 'strategy': None,
-                                 'interval': None,
-                                 'strike': None,
-                                 'range': None,
-                                 'fromDate': None,
-                                 'toDate': None,
-                                 'volatility': None,
-                                 'underlyingPrice': None,
-                                 'interestRate': None,
-                                 'daysToExpiration': None,
-                                 'expMonth': None,
-                                 'optionType': None}
+        self.query_parameters = {
+            'apikey': None,
+            'symbol': None,
+            'contractType': None,
+            'strikeCount': None,
+            'includeQuotes': None,
+            'strategy': None,
+            'interval': None,
+            'strike': None,
+            'range': None,
+            'fromDate': None,
+            'toDate': None,
+            'volatility': None,
+            'underlyingPrice': None,
+            'interestRate': None,
+            'daysToExpiration': None,
+            'expMonth': None,
+            'optionType': None
+        }
 
         # THIS WILL BE A TWO STEP VALIDATION
         # Step One: Make sure none of the kwargs are invalid. No sense of trying to validate an incorrect argument.

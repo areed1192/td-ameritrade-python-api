@@ -9,19 +9,31 @@ from typing import List
 from typing import Union
 from typing import Optional
 
-if sys.version_info >= (3, 5):
-    home_dir = str(pathlib.Path.home())
-else:
-    home_dir = os.path.expanduser('~')
+# if sys.version_info >= (3, 5):
+#     home_dir = str(pathlib.Path.home())
+# else:
+#     home_dir = os.path.expanduser('~')
 
-default_dir = os.path.join(home_dir, '.tdunofficial')
+# default_dir = os.path.join(home_dir, '.tdunofficial')
 
-class StatePath():
+class StatePath(type(pathlib.Path())):
 
-    def __init__(self):
-        """Initalizes the StatePath Class"""
+    def __init__(self, credentials_file: str = None):
+
+        """Initalizes the StatePath Class"""        
         self.python_version = sys.version_info
         self.credenitals_file_name = 'td_state.json'
+        self.settings_location = {}
+
+        if credentials_file and isinstance(credentials_file, str):
+            self.credentials_file: pathlib.Path = pathlib.Path(credentials_file)
+        else:
+            self.credentials_file: pathlib.Path = self.library_directory
+    
+    @property
+    def get_file_path(self):
+
+        return self.credentials_file.absolute()
 
     def path_home(self) -> pathlib.PurePath:
         """Determines the user's Home Path using Pathlib.
@@ -107,6 +119,12 @@ class StatePath():
              `td/td_state.json` file.
         """
         return self.library_directory.joinpath(self.credenitals_file_name)
+    
+    @property
+    def does_credentials_file_exist(self):
+        """Sepcifies whether the passed through credentials file exists."""
+
+        return self.credentials_file.exists()
 
     def does_file_exist(self, file_path: pathlib.Path) -> bool:
         """Checks if a file exists.
@@ -135,9 +153,13 @@ class StatePath():
         ----
         bool -- `True` if it exists, `False` if it does not exist.
         """
-               
-        # Grab the directory
-        directory = file_path.parent
+
+        if isinstance(file_path, str):
+            file_path = pathlib.Path(file_path).absolute()
+            directory = file_path
+        else:
+            file_path = file_path.absolute()
+            directory = file_path.parent        
 
         # See if it exists
         return directory.exists()
@@ -188,7 +210,7 @@ class StatePath():
         # Check to see if the folder exists.
         if not self.does_directory_exist(file_path=json_path):
             json_path.parent.mkdir()
-        
+
         # write to the JSON file.
         with open(file=json_path, mode='w+') as credenitals_file:
             json.dump(obj=state,fp=credenitals_file)

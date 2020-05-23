@@ -1,13 +1,12 @@
 import asyncio
 import pprint
-import config.credentials as config
 from td.client import TDClient
 
 # Create a new session
 TDSession = TDClient(
-    client_id=config.CLIENT_ID,
-    redirect_uri=config.REDIRECT_URI,
-    credentials_path=config.JSON_PATH
+    client_id='<YOUR_CLIENT_ID>',
+    redirect_uri='<YOUR_REDIRECT_URI>',
+    credentials_path='<YOUR_CREDENTIALS_PATH>'
 )
 
 # Login to the session
@@ -17,10 +16,16 @@ TDSession.login()
 TDStreamingClient = TDSession.create_streaming_session()
 
 # Level One Quote
-TDStreamingClient.level_one_quotes(symbols=["SPY", "IVV", "SDS", "SH"], fields=list(range(0,50)))
+TDStreamingClient.level_one_quotes(
+    symbols=["SPY", "IVV", "SDS", "SH"],
+    fields=list(range(0,50))
+)
 
 # Level One Option
-TDStreamingClient.level_one_futures(symbols=['/ES'], fields=list(range(0,42)))
+TDStreamingClient.level_one_futures(
+    symbols=['/ES'],
+    fields=list(range(0,42))
+)
 
 # Data Pipeline function
 async def data_pipeline():

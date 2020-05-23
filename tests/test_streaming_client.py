@@ -20,15 +20,23 @@ chart_fields = ['key', 'open-price', 'high-price', 'low-price',
                 'close-price', 'volume', 'sequence', 'chart-time', 'chart-day']
 
 import pprint
+from configparser import ConfigParser
 from td.client import TDClient
-import config.credentials as config
 
+# Grab configuration values.
+config = ConfigParser()
+config.read('config/config.ini')
+
+CLIENT_ID = config.get('main', 'CLIENT_ID')
+REDIRECT_URI = config.get('main', 'REDIRECT_URI')
+JSON_PATH = config.get('main', 'JSON_PATH')
+ACCOUNT_NUMBER = config.get('main', 'ACCOUNT_NUMBER')
 
 # Create a new session
 TDSession = TDClient(
-    client_id=config.CLIENT_ID,
-    redirect_uri=config.REDIRECT_URI,
-    credentials_path=config.JSON_PATH
+    client_id=CLIENT_ID,
+    redirect_uri=REDIRECT_URI,
+    credentials_path=JSON_PATH
 )
 
 # Login to the session
