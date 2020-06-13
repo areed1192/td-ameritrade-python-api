@@ -1763,6 +1763,7 @@ class TDClient():
         # check to see if it's an order object.
         if isinstance(order, Order):
             order = order._saved_order_to_json()
+            order = json.loads(order) #additional line to validate JSON order 
         else:
             order = order
 
@@ -1793,6 +1794,14 @@ class TDClient():
         ----
         {dict} -- A response dicitonary.
         """
+
+        # added this to test the order placement 06.13.20
+        # check to see if it's an order object.
+        if isinstance(order, Order):
+            order = order._saved_order_to_json()
+            order = json.loads(order)                                      
+        else:
+            order = order
         # make the request
         endpoint = 'accounts/{account_id}/orders/{order_id}'.format(account_id=account, order_id=order_id)
         return self._make_request(method='put', endpoint=endpoint, mode='json', json=order, order_details=True)
