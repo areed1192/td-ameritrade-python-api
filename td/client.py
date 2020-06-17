@@ -1923,7 +1923,7 @@ class TDClient():
 
         # check to see if it's an order object.
         if isinstance(saved_order, Order):
-            saved_order = saved_order._saved_order_to_json()
+            saved_order = saved_order._grab_order()
         else:
             saved_order = saved_order
 

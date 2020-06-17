@@ -43,10 +43,10 @@ new_order_leg.order_leg_instruction(instruction=ORDER_INSTRUCTIONS.SELL)
 new_order_leg.order_leg_price(price=112.50)
 
 # Define the QUANTITY - CAN ONLY BE A INTEGER.
-new_order_leg.order_leg_quantity(quantity=10)
+new_order_leg.order_leg_quantity(quantity=1)
 
 # Define the ASSET to be traded - ENUM EXAMPLE -- SYMBOL MUST ALWAYS BE A STRING.
-new_order_leg.order_leg_asset(asset_type=ORDER_ASSET_TYPE.EQUITY, symbol='MSFT')
+new_order_leg.order_leg_asset(asset_type=ORDER_ASSET_TYPE.EQUITY, symbol='AA')
 
 # Define the ASSET to be traded - STRING EXAMPLE -- SYMBOL MUST ALWAYS BE A STRING.
 new_order_leg.order_leg_asset(asset_type='EQUITY', symbol='MSFT')
