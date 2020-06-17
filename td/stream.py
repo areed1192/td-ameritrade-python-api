@@ -712,7 +712,7 @@ class TDStreamerClient():
 
                 elif self.print_to_console:
                     print('='*20)
-                    print('Message Recieved:')
+                    print('Message Received:')
                     print('')
                     print(message_decoded)
                     print('-'*20)

@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <title>Authentication Successful</title>
+</head>
+
+<body>
+    <h1>Response Info:</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>Refresh Token</td>
+                <td>{{state.refresh_token}}</td>
+                <td>{{state.refresh_token_expires}}</td>
+            </tr>
+            <tr>
+                <td>Access Token</td>
+                <td>{{state.access_token}}</td>
+                <td>{{state.access_token_expires}}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
+
+
+<!-- <h1>Hi, {{ user.username }}!</h1>
+    {% for post in posts %}
+    <div>
+        <p>{{ post.author.username }} says: <b>{{ post.body }}</b></p>
+    </div>
+    {% endfor %} -->
