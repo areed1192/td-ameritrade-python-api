@@ -43,6 +43,12 @@ class TDSession(TestCase):
         
         self.assertIsInstance(self.stream_session, TDStreamerClient)
 
+    def test_create_account_activity(self):
+        """Test subscribing to account activity."""
+
+        self.stream_session.account_activity()
+        self.assertIn('ACCT_ACTIVITY', self.stream_session.data_requests['requests'][0]['service'])
+
     def test_subscribe_level_one_quotes(self):
         """Test subscribing to Level One Quotes."""
 

@@ -23,6 +23,9 @@ TDStreamingClient.write_behavior(
     append_mode=True
 )
 
+# Account Activity
+TDStreamingClient.account_activity()
+
 # Actives
 TDStreamingClient.actives(service='ACTIVES_NASDAQ', venue='NASDAQ', duration='ALL')
 
@@ -58,9 +61,6 @@ TDStreamingClient.timesale(service='TIMESALE_FUTURES', symbols=['/ES'], fields=[
 
 # News Headline
 TDStreamingClient.news_headline(symbols=['AAPL', 'SPY'], fields=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-
-# Account Activity
-TDStreamingClient.account_activity()
 
 # Level Two Quotes
 TDStreamingClient.level_two_quotes(symbols = ['IBM'], fields = [0,1,2])
