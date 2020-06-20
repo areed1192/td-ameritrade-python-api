@@ -17,7 +17,7 @@ setup(
 
     # I'm in alpha development still, so a compliant version number is a1.
     # read this as MAJOR VERSION 0, MINOR VERSION 1, MAINTENANCE VERSION 0
-    version='0.2.6',
+    version='0.2.8',
 
     # here is a simple description of the library, this will appear when
     # someone searches for the library on https://pypi.org/search
@@ -46,7 +46,13 @@ setup(
     keywords='finance, td ameritrade, api',
 
     # here are the packages I want "build."
-    packages=find_packages(include=['td', 'samples']),
+    packages=find_packages(include=['td', 'samples', 'td.app','td.templates']),
+
+    # here we specify any package data.
+    package_data={
+        # And include any files found subdirectory of the "td" package.
+        "td": ["app/*", "templates/*"],
+    },
 
     # I also have some package data, like photos and JSON files, so I want to
     # include those too.

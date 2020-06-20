@@ -630,8 +630,10 @@ class TDStreamerClient():
             return self.connection
         
         else:
+
             # Login to the stream.
             await self._send_message(login_request)
+            await self._receive_message(return_value=False)
             return self.connection
 
 
@@ -703,7 +705,6 @@ class TDStreamerClient():
                         await self._write_to_csv(data = message_decoded)
                     except:
                         print('Could not write content to CSV file, closing stream')
-                        # await asyncio.get_running_loop().stop()
                         await self.close_stream()
                         break
 

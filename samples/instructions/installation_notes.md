@@ -156,7 +156,7 @@ pip install --upgrade twine
 Now that we have everything installed, we can build or distribution package. To build our distribution pacakge run the following command:
 
 ```console
-setup.py sdist bdist_wheel
+python setup.py sdist bdist_wheel
 ```
 
 This will generate a distrubtion archives in the _dist_ folder. In fact, if you look in your directory you should see a few new folders one called _dist_ and one called _build_. These were generated when we ran the command.
