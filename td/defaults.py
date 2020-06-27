@@ -15,7 +15,7 @@ class StatePath(type(pathlib.Path())):
 
         """Initalizes the StatePath Class"""        
         self.python_version = sys.version_info
-        self.credenitals_file_name = 'td_state.json'
+        self.credenitals_file_name = 'TDAmeritradeState.json'
         self.settings_location = {}
 
         if credentials_file and isinstance(credentials_file, str):
