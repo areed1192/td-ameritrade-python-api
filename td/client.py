@@ -199,7 +199,12 @@ class TDClient():
 
         credentials_file = self.credentials_path
         credentials_file_exists = credentials_file.does_credentials_file_exist
-        credentials_file_path = credentials_file.credentials_file.absolute()
+        
+        # If it's a directory, then create json setting path.
+        if credentials_file.is_dir:
+            credentials_file_path = credentials_file.json_library_path()
+        else:
+            credentials_file_path = credentials_file.credentials_file.absolute()
 
         # if they allow for caching and the file exists then load it.
         if action == 'init' and self.config['cache_state'] and credentials_file_exists:
@@ -551,6 +556,7 @@ class TDClient():
             return response_dict
 
         elif response.ok:
+
             return response.json()
 
         else:

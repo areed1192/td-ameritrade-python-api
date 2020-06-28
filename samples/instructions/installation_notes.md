@@ -223,7 +223,7 @@ Successfully installed example-pkg-YOUR-USERNAME-HERE-0.0.1
 ```
 
 ```console
-pip show td_ameritrade_python_api
+pip show td-ameritrade-python-api
 ```
 
 ### Step 8: Test that the package was installed correctly
