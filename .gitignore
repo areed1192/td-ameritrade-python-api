@@ -116,3 +116,4 @@ pypirc
 *State.json
 tests/parse_level_two.py
 certs/
+td/td_state.json
