@@ -21,6 +21,20 @@ from td.app.auth import FlaskTDAuth
 from td.oauth import run
 from td.oauth import shutdown
 
+class TknExpError(Exception):
+    """Raise exception when refresh or access token is expired.
+
+    Args:
+        Exception (Exception): The base python exception class
+    """
+    def __init__(self, message):
+        """Print out message for this exception.
+
+        Args:
+            message (str): Pass in the message returned by the server.
+        """
+        self.message = message
+        super().__init__(self.message)
 
 class TDClient():
 
@@ -568,6 +582,9 @@ class TDClient():
             print("RESPONSE PARAMS: {params}".format(params=response.links))
             print("RESPONSE TEXT: {text}".format(text=response.text))
             print('-'*80)
+
+            if response.status_code == 401:
+                raise TknExpError(message=response.text)
 
     def _validate_arguments(self, endpoint: str, parameter_name: str, parameter_argument: List[str]) -> bool:
         """Validates arguments for an API call.
