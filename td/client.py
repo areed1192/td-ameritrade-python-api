@@ -21,6 +21,20 @@ from td.app.auth import FlaskTDAuth
 from td.oauth import run
 from td.oauth import shutdown
 
+class TknExpError(Exception):
+    """Raise exception when refresh or access token is expired.
+
+    Args:
+        Exception (Exception): The base python exception class
+    """
+    def __init__(self, message):
+        """Print out message for this exception.
+
+        Args:
+            message (str): Pass in the message returned by the server.
+        """
+        self.message = message
+        super().__init__(self.message)
 
 class TDClient():
 
@@ -438,25 +452,25 @@ class TDClient():
         if token_type == 'access_token':
 
             # if the time to expiration is less than or equal to 0, return 0.
-            if not self.state['access_token'] or time.time() >= self.state['access_token_expires_at']:
+            if not self.state['access_token'] or time.time() + 60 >= self.state['access_token_expires_at']:
                 return 0
 
             # else return the number of seconds until expiration.
-            token_exp = int(self.state['access_token_expires_at'] - time.time())
+            token_exp = int(self.state['access_token_expires_at'] - time.time() - 60)
 
         # if needed check the refresh token.
         elif token_type == 'refresh_token':
 
             # if the time to expiration is less than or equal to 0, return 0.
-            if not self.state['refresh_token'] or time.time() >= self.state['refresh_token_expires_at']:
+            if not self.state['refresh_token'] or time.time() + 60 >= self.state['refresh_token_expires_at']:
                 return 0
 
             # else return the number of seconds until expiration.
-            token_exp = int(self.state['refresh_token_expires_at'] - time.time())
+            token_exp = int(self.state['refresh_token_expires_at'] - time.time() - 60)
 
         return token_exp
 
-    def _token_validation(self, nseconds: int = 5):
+    def _token_validation(self, nseconds: int = 60):
         """Checks if a token is valid.
 
         Verify the current access token is valid for at least N seconds, and
@@ -568,6 +582,9 @@ class TDClient():
             print("RESPONSE PARAMS: {params}".format(params=response.links))
             print("RESPONSE TEXT: {text}".format(text=response.text))
             print('-'*80)
+
+            if response.status_code == 401:
+                raise TknExpError(message=response.text)
 
     def _validate_arguments(self, endpoint: str, parameter_name: str, parameter_argument: List[str]) -> bool:
         """Validates arguments for an API call.
