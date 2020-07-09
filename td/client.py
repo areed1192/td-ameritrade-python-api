@@ -36,6 +36,21 @@ class TknExpError(Exception):
         self.message = message
         super().__init__(self.message)
 
+class ExdLmtError(Exception):
+    """Raise exception when exceeding query limit of the server.
+
+    Args:
+        Exception (Exception): The base python exception class
+    """
+    def __init__(self, message):
+        """Print out message for this exception.
+
+        Args:
+            message (str): Pass in the message returned by the server.
+        """
+        self.message = message
+        super().__init__(self.message)
+
 class TDClient():
 
     """TD Ameritrade API Client Class.
@@ -585,6 +600,8 @@ class TDClient():
 
             if response.status_code == 401:
                 raise TknExpError(message=response.text)
+            elif response.status_code == 429:
+                raise ExdLmtError(message=response.text)
 
     def _validate_arguments(self, endpoint: str, parameter_name: str, parameter_argument: List[str]) -> bool:
         """Validates arguments for an API call.
