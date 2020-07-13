@@ -1,5 +1,6 @@
 import os
 import time
+import calendar
 import json
 import datetime
 import pathlib
@@ -46,7 +47,7 @@ class TDClient():
     """
 
     def __init__(self, client_id: str, redirect_uri: str, account_number: str = None, credentials_path: str = None, 
-                       auth_flow: str = 'default', _do_init: bool = True) -> None:     
+                       qry_lmt_prtc_delay:float = 4, auth_flow: str = 'default', _do_init: bool = True) -> None:     
         """Creates a new instance of the TDClient Object.
 
         Initializes the session with default values and any user-provided overrides.The 
@@ -70,6 +71,11 @@ class TDClient():
 
         auth_flow {str} -- Specifies is authentication is done through the command line (`default`) or 
             through the flask app `flask`. (default: {'default'})
+
+        qry_lmt_prtc_delay {float} -- Query limit protection delay, in seconds. A dis-sync of client time 
+            and Server time can cause the first query in the subsequent minute incorrectly counted towards 
+            the previous minute on the Server, thus throwing 429 ExdLmtError. Delay the first query at each
+            client minute by this amount to protect against the mentioned situation. Default to 4s.
 
         Usage:
         ----
@@ -135,6 +141,11 @@ class TDClient():
 
         # Initalize the client with no streaming session.
         self.streaming_session = None
+
+        # Time related flag
+        self.qry_lmt_prtc_delay = qry_lmt_prtc_delay # query limit protection delay, in seconds
+        self.response_minute = 0 # The minute time flag of server time where the current query was made
+        self.num_queries = 0 # number of queries already made in the current minute time flag of server time
 
     def __repr__(self) -> str:
         """String representation of our TD Ameritrade Class instance."""
@@ -563,10 +574,31 @@ class TDClient():
             json=json
         ).prepare()
         
+        # Sleep if number of queries reach server limit
+        if not (endpoint.startswith('accounts') or endpoint.startswith('orders')):
+            if self.num_queries == 120:
+                self.num_queries = 0
+                # Sleep till the next minute on the server and start query again
+                # Sleep an amount of self.qry_lmt_prtc_delay extra seconds to be safe
+                sleep_time = 60 * (self.response_minute + 1) + self.qry_lmt_prtc_delay - calendar.timegm(time.gmtime())
+                if sleep_time > 0:
+                    time.sleep(sleep_time)
+
         # Send the request.
         response: requests.Response = request_session.send(request=request_request)
 
         request_session.close()
+
+        # Evaluate the time flag
+        if not (endpoint.startswith('accounts') or endpoint.startswith('orders')):
+            response_minute = calendar.timegm(time.strptime(
+                response.headers['Date'], '%a, %d %b %Y %H:%M:%S %Z')) // 60
+
+            if self.response_minute != response_minute:
+                self.response_minute = response_minute
+                self.num_queries = 1
+            else:
+                self.num_queries += 1
 
         # grab the status code
         status_code = response.status_code
