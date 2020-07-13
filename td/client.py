@@ -215,7 +215,7 @@ class TDClient():
         credentials_file_exists = credentials_file.does_credentials_file_exist
         
         # If it's a directory, then create json setting path.
-        if credentials_file.is_dir:
+        if credentials_file.credentials_file.is_dir():
             credentials_file_path = credentials_file.json_library_path()
         else:
             credentials_file_path = credentials_file.credentials_file.absolute()
