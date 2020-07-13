@@ -20,21 +20,8 @@ from td.fields import ENDPOINT_ARGUMENTS
 from td.app.auth import FlaskTDAuth
 from td.oauth import run
 from td.oauth import shutdown
-
-class TknExpError(Exception):
-    """Raise exception when refresh or access token is expired.
-
-    Args:
-        Exception (Exception): The base python exception class
-    """
-    def __init__(self, message):
-        """Print out message for this exception.
-
-        Args:
-            message (str): Pass in the message returned by the server.
-        """
-        self.message = message
-        super().__init__(self.message)
+from td.exceptions import TknExpError, ExdLmtError, NotNulError, \
+    ForbidError, NotFndError, ServerError, GeneralError
 
 class TDClient():
 
@@ -583,8 +570,20 @@ class TDClient():
             print("RESPONSE TEXT: {text}".format(text=response.text))
             print('-'*80)
 
-            if response.status_code == 401:
+            if response.status_code == 400:
+                raise NotNulError(message=response.text)
+            elif response.status_code == 401:
                 raise TknExpError(message=response.text)
+            elif response.status_code == 403:
+                raise ForbidError(message=response.text)
+            elif response.status_code == 404:
+                raise NotFndError(message=response.text)
+            elif response.status_code == 429:
+                raise ExdLmtError(message=response.text)
+            elif response.status_code == 500 or response.status_code == 503:
+                raise ServerError(message=response.text)
+            elif response.status_code > 400:
+                raise GeneralError(message=response.text)
 
     def _validate_arguments(self, endpoint: str, parameter_name: str, parameter_argument: List[str]) -> bool:
         """Validates arguments for an API call.
