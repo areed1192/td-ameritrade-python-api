@@ -1,15 +1,15 @@
 {
-    "service": "TIMESALE_EQUITY",
-    "timestamp": 1403804712166,
-    "command": "SUBS",
-    "content": [
-        {
-            "1": 1403804709455,
-            "2": 90.2976,
-            "3": 1500,
-            "4": 91864,
-            "seq": 4,
-            "key": "AAPL"
-        }
-    ]
+  "service": "TIMESALE_EQUITY",
+  "timestamp": 1403804712166,
+  "command": "SUBS",
+  "content": [
+    {
+      "1": 1403804709455,
+      "2": 90.2976,
+      "3": 1500,
+      "4": 91864,
+      "seq": 4,
+      "key": "AAPL"
+    }
+  ]
 }

@@ -5,7 +5,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-
     # this will be my Library name.
     name='td-ameritrade-python-api',
 
@@ -46,7 +45,9 @@ setup(
     keywords='finance, td ameritrade, api',
 
     # here are the packages I want "build."
-    packages=find_packages(include=['td', 'samples', 'td.app','td.templates']),
+    packages=find_packages(
+        include=['td', 'samples', 'td.app', 'td.templates']
+    ),
 
     # here we specify any package data.
     package_data={
@@ -82,5 +83,4 @@ setup(
 
     # you will need python 3.7 to use this libary.
     python_requires='>=3.7'
-
 )

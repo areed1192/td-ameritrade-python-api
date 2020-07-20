@@ -4,7 +4,7 @@
     "orderType": "MARKET",
     "session": "NORMAL",
     "duration": "DAY",
-    "price": 9.00,
+    "price": 9.0,
     "orderStrategyType": "SINGLE",
     "orderLegCollection": [
       {
@@ -22,7 +22,7 @@
     "orderType": "MARKET",
     "session": "NORMAL",
     "duration": "DAY",
-    "price": 20.00,
+    "price": 20.0,
     "orderStrategyType": "SINGLE",
     "orderLegCollection": [
       {

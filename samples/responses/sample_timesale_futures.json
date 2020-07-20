@@ -1,15 +1,15 @@
 {
-    "service": "TIMESALE_FUTURES",
-    "timestamp": 1403804712166,
-    "command": "SUBS",
-    "content": [
-        {
-            "1": 1403804709796,
-            "2": 1948.25,
-            "3": 1,
-            "4": 6375940,
-            "seq": 1,
-            "key": "/ES"
-        }
-    ]
+  "service": "TIMESALE_FUTURES",
+  "timestamp": 1403804712166,
+  "command": "SUBS",
+  "content": [
+    {
+      "1": 1403804709796,
+      "2": 1948.25,
+      "3": 1,
+      "4": 6375940,
+      "seq": 1,
+      "key": "/ES"
+    }
+  ]
 }

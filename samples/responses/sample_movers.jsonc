@@ -1,0 +1,82 @@
+[
+  {
+    "change": 6.800000000000011,
+    "description": "Microsoft Corporation - Common Stock",
+    "direction": "up",
+    "last": 209.68,
+    "symbol": "MSFT",
+    "totalVolume": 21422152
+  },
+  {
+    "change": 5.319999999999993,
+    "description": "Apple Inc. - Common Stock",
+    "direction": "up",
+    "last": 390.63,
+    "symbol": "AAPL",
+    "totalVolume": 14092212
+  },
+  {
+    "change": 4.150000000000006,
+    "description": "Visa Inc.",
+    "direction": "up",
+    "last": 199.24,
+    "symbol": "V",
+    "totalVolume": 4956329
+  },
+  {
+    "change": 1.3799999999999955,
+    "description": "International Business Machines Corporation Common Stock",
+    "direction": "up",
+    "last": 126.49,
+    "symbol": "IBM",
+    "totalVolume": 3711978
+  },
+  {
+    "change": 1.2800000000000011,
+    "description": "Goldman Sachs Group, Inc. (The) Common Stock",
+    "direction": "up",
+    "last": 212.69,
+    "symbol": "GS",
+    "totalVolume": 1435531
+  },
+  {
+    "change": 0.8299999999999983,
+    "description": "Intel Corporation - Common Stock",
+    "direction": "up",
+    "last": 60.83,
+    "symbol": "INTC",
+    "totalVolume": 9296616
+  },
+  {
+    "change": 0.377900000000011,
+    "description": "Boeing Company (The) Common Stock",
+    "direction": "up",
+    "last": 176.0379,
+    "symbol": "BA",
+    "totalVolume": 19061788
+  },
+  {
+    "change": 0.295499999999997,
+    "description": "Pfizer, Inc. Common Stock",
+    "direction": "up",
+    "last": 36.5455,
+    "symbol": "PFE",
+    "totalVolume": 26926038
+  },
+  {
+    "change": 0.27000000000001023,
+    "description": "McDonald's Corporation Common Stock",
+    "direction": "up",
+    "last": 191.75,
+    "symbol": "MCD",
+    "totalVolume": 1113165
+  },
+  {
+    "change": 0.18999999999999773,
+    "description": "Walmart Inc. Common Stock",
+    "direction": "up",
+    "last": 131.93,
+    "symbol": "WMT",
+    "totalVolume": 3689970
+  }
+]

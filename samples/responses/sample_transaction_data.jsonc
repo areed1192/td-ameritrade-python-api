@@ -1,0 +1,452 @@
+[
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-07-09",
+    "orderId": "1244113997",
+    "netAmount": -11.23,
+    "transactionDate": "2020-07-07T13:30:00+0000",
+    "orderDate": "2020-07-06T22:33:15+0000",
+    "transactionSubType": "BY",
+    "transactionId": 27444883992,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 11.23,
+      "cost": -11.23,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "DIVIDEND_OR_INTEREST",
+    "subAccount": "1",
+    "settlementDate": "2020-06-30",
+    "netAmount": 0.01,
+    "transactionDate": "2020-07-01T03:01:08+0000",
+    "transactionSubType": "CA",
+    "transactionId": 27322039306,
+    "cashBalanceEffectFlag": true,
+    "description": "FREE BALANCE INTEREST ADJUSTMENT",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "cost": 0.0
+    }
+  },
+  {
+    "type": "DIVIDEND_OR_INTEREST",
+    "subAccount": "1",
+    "settlementDate": "2020-05-29",
+    "netAmount": 0.01,
+    "transactionDate": "2020-05-30T02:53:26+0000",
+    "transactionSubType": "CA",
+    "transactionId": 26639977531,
+    "cashBalanceEffectFlag": true,
+    "description": "FREE BALANCE INTEREST ADJUSTMENT",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "cost": 0.0
+    }
+  },
+  {
+    "type": "DIVIDEND_OR_INTEREST",
+    "subAccount": "1",
+    "settlementDate": "2020-04-30",
+    "netAmount": 0.01,
+    "transactionDate": "2020-05-01T02:51:04+0000",
+    "transactionSubType": "CA",
+    "transactionId": 26128666968,
+    "cashBalanceEffectFlag": true,
+    "description": "FREE BALANCE INTEREST ADJUSTMENT",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "cost": 0.0
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1033169269",
+    "netAmount": 18.42,
+    "transactionDate": "2020-04-30T19:50:44+0000",
+    "orderDate": "2020-04-30T19:46:06+0000",
+    "transactionSubType": "SL",
+    "transactionId": 26111336942,
+    "cashBalanceEffectFlag": true,
+    "description": "SELL TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 3.0,
+      "price": 6.14,
+      "cost": 18.42,
+      "instruction": "SELL",
+      "instrument": {
+        "symbol": "MRO",
+        "cusip": "565849106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1033169267",
+    "netAmount": -18.21,
+    "transactionDate": "2020-04-30T19:46:06+0000",
+    "orderDate": "2020-04-30T19:46:06+0000",
+    "transactionSubType": "BY",
+    "transactionId": 26111225952,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 3.0,
+      "price": 6.07,
+      "cost": -18.21,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "MRO",
+        "cusip": "565849106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1033169262",
+    "netAmount": -8.2,
+    "transactionDate": "2020-04-30T19:46:05+0000",
+    "orderDate": "2020-04-30T19:46:05+0000",
+    "transactionSubType": "BY",
+    "transactionId": 26111227321,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 8.195,
+      "cost": -8.2,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1032762435",
+    "netAmount": 8.17,
+    "transactionDate": "2020-04-30T19:21:57+0000",
+    "orderDate": "2020-04-30T19:04:31+0000",
+    "transactionSubType": "SL",
+    "transactionId": 26110862759,
+    "cashBalanceEffectFlag": true,
+    "description": "SELL TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 8.1701,
+      "cost": 8.17,
+      "instruction": "SELL",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1032762210",
+    "netAmount": 18.18,
+    "transactionDate": "2020-04-30T19:12:17+0000",
+    "orderDate": "2020-04-30T18:52:10+0000",
+    "transactionSubType": "SL",
+    "transactionId": 26110729959,
+    "cashBalanceEffectFlag": true,
+    "description": "SELL TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 3.0,
+      "price": 6.06,
+      "cost": 18.18,
+      "instruction": "SELL",
+      "instrument": {
+        "symbol": "MRO",
+        "cusip": "565849106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1032762432",
+    "netAmount": -8.25,
+    "transactionDate": "2020-04-30T19:04:31+0000",
+    "orderDate": "2020-04-30T19:04:31+0000",
+    "transactionSubType": "BY",
+    "transactionId": 26110621086,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 8.2499,
+      "cost": -8.25,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-05-04",
+    "orderId": "1032762207",
+    "netAmount": -18.39,
+    "transactionDate": "2020-04-30T18:52:10+0000",
+    "orderDate": "2020-04-30T18:52:10+0000",
+    "transactionSubType": "BY",
+    "transactionId": 26110484188,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 3.0,
+      "price": 6.1299,
+      "cost": -18.39,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "MRO",
+        "cusip": "565849106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "ELECTRONIC_FUND",
+    "subAccount": "1",
+    "settlementDate": "2020-03-10",
+    "netAmount": 1000.0,
+    "transactionDate": "2020-03-09T09:16:01+0000",
+    "transactionSubType": "FI",
+    "transactionId": 25136509383,
+    "cashBalanceEffectFlag": true,
+    "description": "CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT (FUNDS NOW)",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "cost": 0.0
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-02-03",
+    "orderId": "T2484159987",
+    "netAmount": 13.97,
+    "transactionDate": "2020-01-30T19:24:40+0000",
+    "orderDate": "2020-01-30T19:24:40+0000",
+    "transactionSubType": "SL",
+    "transactionId": 24644044467,
+    "cashBalanceEffectFlag": true,
+    "description": "SELL TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 13.9701,
+      "cost": 13.97,
+      "instruction": "SELL",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  },
+  {
+    "type": "TRADE",
+    "subAccount": "1",
+    "settlementDate": "2020-02-03",
+    "orderId": "T2484131201",
+    "netAmount": -13.97,
+    "transactionDate": "2020-01-30T19:15:56+0000",
+    "orderDate": "2020-01-30T19:15:56+0000",
+    "transactionSubType": "BY",
+    "transactionId": 24643989798,
+    "cashBalanceEffectFlag": true,
+    "description": "BUY TRADE",
+    "fees": {
+      "rFee": 0.0,
+      "additionalFee": 0.0,
+      "cdscFee": 0.0,
+      "regFee": 0.0,
+      "otherCharges": 0.0,
+      "commission": 0.0,
+      "optRegFee": 0.0,
+      "secFee": 0.0
+    },
+    "transactionItem": {
+      "accountId": 111111111,
+      "amount": 1.0,
+      "price": 13.9698,
+      "cost": -13.97,
+      "instruction": "BUY",
+      "instrument": {
+        "symbol": "AA",
+        "cusip": "013872106",
+        "assetType": "EQUITY"
+      }
+    }
+  }
+]

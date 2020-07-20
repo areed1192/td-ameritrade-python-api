@@ -1,0 +1,16 @@
+{
+  "expressTrading": true,
+  "directOptionsRouting": true,
+  "directEquityRouting": true,
+  "defaultEquityOrderLegInstruction": "NONE",
+  "defaultEquityOrderType": "LIMIT",
+  "defaultEquityOrderPriceLinkType": "NONE",
+  "defaultEquityOrderDuration": "DAY",
+  "defaultEquityOrderMarketSession": "NORMAL",
+  "defaultEquityQuantity": 0,
+  "mutualFundTaxLotMethod": "FIFO",
+  "optionTaxLotMethod": "FIFO",
+  "equityTaxLotMethod": "FIFO",
+  "defaultAdvancedToolLaunch": "NONE",
+  "authTokenTimeout": "TWO_HOURS"
+}

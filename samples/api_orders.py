@@ -58,14 +58,18 @@ copied_order_leg = new_order_leg.copy()
 new_order.add_order_leg(order_leg=new_order_leg)
 
 # Print it out so you can see it, normally this method is called by the TD API when using the td.client object.
-print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(new_order.order_legs_count))
+print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(
+    new_order.order_legs_count)
+)
 print('-'*80)
 
 # We could also add a copied order to our order leg collection.
 new_order.add_order_leg(order_leg=copied_order_leg)
 
 # Print it out so we can see both now.
-print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(new_order.order_legs_count))
+print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(
+    new_order.order_legs_count)
+)
 print('-'*80)
 
 
@@ -113,7 +117,10 @@ child_order_leg.order_leg_quantity(quantity=30)
 
 
 # Define the ASSET to be traded - ENUM EXAMPLE -- SYMBOL MUST ALWAYS BE A STRING.
-child_order_leg.order_leg_asset(asset_type=ORDER_ASSET_TYPE.EQUITY, symbol='AMZN')
+child_order_leg.order_leg_asset(
+    asset_type=ORDER_ASSET_TYPE.EQUITY,
+    symbol='AMZN'
+)
 
 # Define the ASSET to be traded - STRING EXAMPLE -- SYMBOL MUST ALWAYS BE A STRING.
 child_order_leg.order_leg_asset(asset_type='EQUITY', symbol='AMZN')
@@ -123,11 +130,15 @@ child_order_leg.order_leg_asset(asset_type='EQUITY', symbol='AMZN')
 child_order.add_order_leg(order_leg=child_order_leg)
 
 # Display the count.
-print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(child_order.order_legs_count))
+print("YOU HAVE {} ORDER(S) IN THE ORDER LEGS COLLECTION.".format(
+    child_order.order_legs_count)
+)
 print('-'*80)
 
 # Add the Child Order Strategy to the PARENT ORDER or in other words the order we created originally.
 new_order.add_child_order_strategy(child_order_strategy=child_order)
 
 # Print it so the user can see all the info at once.
-print("YOU HAVE {} CHILD ORDER STRATEGIES IN THE CHILD ORDER STRATEGIES COLLECTION.".format(new_order.child_order_count))
+print("YOU HAVE {} CHILD ORDER STRATEGIES IN THE CHILD ORDER STRATEGIES COLLECTION.".format(
+    new_order.child_order_count)
+)

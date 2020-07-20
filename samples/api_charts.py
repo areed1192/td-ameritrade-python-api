@@ -15,21 +15,21 @@ TDSession.login()
 
 # Define a list of all valid periods
 valid_values = {
-    'minute':{
-        'day':[1, 2, 3, 4, 5, 10]
+    'minute': {
+        'day': [1, 2, 3, 4, 5, 10]
     },
-    'daily':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
+    'daily': {
+        'month': [1, 2, 3, 6],
+        'year': [1, 2, 3, 5, 10, 15, 20],
+        'ytd': [1]
     },
-    'weekly':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
+    'weekly': {
+        'month': [1, 2, 3, 6],
+        'year': [1, 2, 3, 5, 10, 15, 20],
+        'ytd': [1]
     },
-    'monthly':{
-        'year':[1, 2, 3, 5, 10, 15, 20]
+    'monthly': {
+        'year': [1, 2, 3, 5, 10, 15, 20]
     }
 }
 
@@ -47,7 +47,7 @@ for frequency_type in valid_values.keys():
         possible_values = frequency_periods[frequency_period]
 
         for value in possible_values:
-            
+
             # Define the dynamic arguments - I want 5 DAYS of historical 1-minute bars.
             hist_periodType = frequency_period
             hist_period = value
@@ -56,9 +56,9 @@ for frequency_type in valid_values.keys():
 
             # make the request
             historical_1_minute = TDSession.get_price_history(
-                symbol=hist_symbol, 
+                symbol=hist_symbol,
                 period_type=hist_periodType,
-                period=hist_period, 
+                period=hist_period,
                 frequency_type=hist_frequencyType,
                 frequency=hist_frequency,
                 extended_hours=hist_needExtendedHoursData
@@ -77,7 +77,8 @@ today_00 = datetime.now()
 # Define 300 days ago.
 today_ago = datetime.now() - timedelta(days=lookback_period)
 
-# The TD API expects a timestamp in milliseconds. However, the timestamp() method only returns to seconds so multiply it by 1000.
+# The TD API expects a timestamp in milliseconds. However, the timestamp() 
+# method only returns to seconds so multiply it by 1000.
 today_00 = str(int(round(today_00.timestamp() * 1000)))
 today_ago = str(int(round(today_ago.timestamp() * 1000)))
 
@@ -92,7 +93,7 @@ hist_frequency = 1
 
 # Make the request
 historical_custom = TDSession.get_price_history(
-    symbol=hist_symbol, 
+    symbol=hist_symbol,
     period_type=hist_periodType,
     frequency_type=hist_frequencyType,
     start_date=hist_startDate,
@@ -103,4 +104,6 @@ historical_custom = TDSession.get_price_history(
 
 # Grab the candle count.
 candle_count = len(historical_custom['candles'])
-print('For PERIOD TYPE {} with CUSTOM PERIOD {} you got {} candles.'.format(hist_periodType, lookback_period, candle_count))
+print('For PERIOD TYPE {} with CUSTOM PERIOD {} you got {} candles.'.format(
+    hist_periodType, lookback_period, candle_count)
+)

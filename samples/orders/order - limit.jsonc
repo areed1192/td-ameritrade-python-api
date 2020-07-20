@@ -4,7 +4,7 @@
     "orderType": "LIMIT",
     "session": "NORMAL",
     "duration": "DAY",
-    "activationPrice": 9.00,
+    "activationPrice": 9.0,
     "orderStrategyType": "SINGLE",
     "orderLegCollection": [
       {
@@ -22,7 +22,7 @@
     "orderType": "LIMIT",
     "session": "NORMAL",
     "duration": "DAY",
-    "price": 20.00,
+    "price": 20.0,
     "orderStrategyType": "SINGLE",
     "orderLegCollection": [
       {

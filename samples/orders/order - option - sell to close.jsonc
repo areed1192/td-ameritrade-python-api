@@ -2,7 +2,7 @@
   "orderType": "LIMIT",
   "session": "NORMAL",
   "orderStrategyType": "SINGLE",
-  "price": 2.00,
+  "price": 2.0,
   "orderLegCollection": [
     {
       "instrument": {

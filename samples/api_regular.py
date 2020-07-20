@@ -46,7 +46,7 @@ get_instrument_data = TDSession.get_instruments(cusip='594918104')
 
 # `get_market_hours` Endpoint with multiple values
 market_hours_multi = TDSession.get_market_hours(
-    markets=['EQUITY','FOREX'],
+    markets=['EQUITY', 'FOREX'],
     date=datetime.today().isoformat()
 )
 
@@ -72,25 +72,31 @@ transaction_data_multi = TDSession.get_transactions(
 preference_data = TDSession.get_preferences(account='<ACCOUNT_NUMBER>')
 
 # `get_subscription_keys` endpoint. Should not return an error
-streamer_keys = TDSession.get_streamer_subscription_keys(accounts=['<ACCOUNT_NUMBER>'])
+streamer_keys = TDSession.get_streamer_subscription_keys(
+    accounts=['<ACCOUNT_NUMBER>']
+)
 
 # `get_user_ principals` endpoint. Should not return an error.
-prinicpals_data = TDSession.get_user_principals(fields=['preferences', 'surrogateIds'])
+prinicpals_data = TDSession.get_user_principals(
+    fields=['preferences', 'surrogateIds']
+)
 
 # `get_transactions` Endpoint with single values
-transaction_data_single = TDSession.get_transactions(transaction_id='YOUR_TRANSACTION_ID')
+transaction_data_single = TDSession.get_transactions(
+    transaction_id='YOUR_TRANSACTION_ID'
+)
 
 # Option Chain Example
 opt_chain = {
-    'symbol':'MSFT',
-    'contractType':'CALL',
-    'optionType':'S',
-    'fromDate':'2020-04-01',
-    'afterDate':'2020-05-01',
-    'strikeCount':4,
-    'includeQuotes':True,
-    'range':'ITM',
-    'strategy':'ANALYTICAL',
+    'symbol': 'MSFT',
+    'contractType': 'CALL',
+    'optionType': 'S',
+    'fromDate': '2020-04-01',
+    'afterDate': '2020-05-01',
+    'strikeCount': 4,
+    'includeQuotes': True,
+    'range': 'ITM',
+    'strategy': 'ANALYTICAL',
     'volatility': 29.0
 }
 

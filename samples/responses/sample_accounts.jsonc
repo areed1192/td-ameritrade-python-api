@@ -1,0 +1,460 @@
+[
+  {
+    "securitiesAccount": {
+      "type": "CASH",
+      "accountId": "ACCOUNT_NUMBER",
+      "roundTrips": 0,
+      "isDayTrader": false,
+      "isClosingOnlyRestricted": false,
+      "positions": [
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 4.86867,
+          "currentDayProfitLoss": -632.56,
+          "currentDayProfitLossPercentage": -0.96,
+          "longQuantity": 135.0,
+          "settledLongQuantity": 135.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "58507M107",
+            "symbol": "MMNFF"
+          },
+          "marketValue": 24.71
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 9.755,
+          "currentDayProfitLoss": 6.03,
+          "currentDayProfitLossPercentage": 0.31,
+          "longQuantity": 2.0,
+          "settledLongQuantity": 2.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "013872106",
+            "symbol": "AA"
+          },
+          "marketValue": 25.54
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 8.27556,
+          "currentDayProfitLoss": -372.4,
+          "currentDayProfitLossPercentage": -1.0,
+          "longQuantity": 45.0,
+          "settledLongQuantity": 45.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "16942H109",
+            "symbol": "16942H109"
+          },
+          "marketValue": 0.0
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 101.47,
+          "currentDayProfitLoss": -101.47,
+          "currentDayProfitLossPercentage": -1.0,
+          "longQuantity": 1.0,
+          "settledLongQuantity": 1.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "233078708",
+            "symbol": "233078708"
+          },
+          "marketValue": 0.0
+        }
+      ],
+      "initialBalances": {
+        "accruedInterest": 0.0,
+        "cashAvailableForTrading": 1044.15,
+        "cashAvailableForWithdrawal": 1044.15,
+        "cashBalance": 1044.15,
+        "bondValue": 0.0,
+        "cashReceipts": 0.0,
+        "liquidationValue": 1095.53,
+        "longOptionMarketValue": 0.0,
+        "longStockValue": 51.38,
+        "moneyMarketFund": 0.0,
+        "mutualFundValue": 0.0,
+        "shortOptionMarketValue": 0.0,
+        "shortStockValue": 0.0,
+        "isInCall": false,
+        "unsettledCash": 0.0,
+        "cashDebitCallValue": 0.0,
+        "pendingDeposits": 0.0,
+        "accountValue": 1095.53
+      },
+      "currentBalances": {
+        "accruedInterest": 0.0,
+        "cashBalance": 1044.15,
+        "cashReceipts": 0.0,
+        "longOptionMarketValue": 0.0,
+        "liquidationValue": 1094.4,
+        "longMarketValue": 50.25,
+        "moneyMarketFund": 0.0,
+        "savings": 0.0,
+        "shortMarketValue": 0.0,
+        "pendingDeposits": 0.0,
+        "cashAvailableForTrading": 1044.15,
+        "cashAvailableForWithdrawal": 1044.15,
+        "cashCall": 0.0,
+        "longNonMarginableMarketValue": 1044.15,
+        "totalCash": 1044.15,
+        "shortOptionMarketValue": 0.0,
+        "bondValue": 0.0,
+        "cashDebitCallValue": 0.0,
+        "unsettledCash": 0.0
+      },
+      "projectedBalances": {
+        "cashAvailableForTrading": 1044.15,
+        "cashAvailableForWithdrawal": 1044.15
+      }
+    }
+  },
+  {
+    "securitiesAccount": {
+      "type": "MARGIN",
+      "accountId": "ACCOUNT_NUMBER",
+      "roundTrips": 0,
+      "isDayTrader": false,
+      "isClosingOnlyRestricted": false,
+      "positions": [
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 107.6875,
+          "currentDayProfitLoss": 1255.22,
+          "currentDayProfitLossPercentage": 1.46,
+          "longQuantity": 8.0,
+          "settledLongQuantity": 8.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "46090E103",
+            "symbol": "QQQ"
+          },
+          "marketValue": 2116.72
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 1.0,
+          "currentDayProfitLoss": 0.0,
+          "currentDayProfitLossPercentage": 0.0,
+          "longQuantity": 52.45,
+          "settledLongQuantity": 52.45,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "CASH_EQUIVALENT",
+            "cusip": "9ZZZFD104",
+            "symbol": "MMDA1",
+            "description": "FDIC INSURED DEPOSIT ACCOUNT  CORE  NOT COVERED BY SIPC",
+            "type": "MONEY_MARKET_FUND"
+          },
+          "marketValue": 52.45
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 146.52,
+          "currentDayProfitLoss": 125.5,
+          "currentDayProfitLossPercentage": 0.43,
+          "longQuantity": 2.0,
+          "settledLongQuantity": 2.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "594918104",
+            "symbol": "MSFT"
+          },
+          "marketValue": 418.54
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 6.78864,
+          "currentDayProfitLoss": 131.59,
+          "currentDayProfitLossPercentage": 0.88,
+          "longQuantity": 22.0,
+          "settledLongQuantity": 22.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "013872106",
+            "symbol": "AA"
+          },
+          "marketValue": 280.94
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 44.29667,
+          "currentDayProfitLoss": -175.65,
+          "currentDayProfitLossPercentage": -0.44,
+          "longQuantity": 9.0,
+          "settledLongQuantity": 9.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "37954Y293",
+            "symbol": "MLPX"
+          },
+          "marketValue": 223.02
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 45.97,
+          "currentDayProfitLoss": 33.0,
+          "currentDayProfitLossPercentage": 0.18,
+          "longQuantity": 4.0,
+          "settledLongQuantity": 4.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "808524508",
+            "symbol": "SCHM"
+          },
+          "marketValue": 216.88
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 22.01444,
+          "currentDayProfitLoss": 159.32,
+          "currentDayProfitLossPercentage": 0.2,
+          "longQuantity": 36.0,
+          "settledLongQuantity": 36.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "808524706",
+            "symbol": "SCHE"
+          },
+          "marketValue": 951.84
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 32.70158,
+          "currentDayProfitLoss": -30.62,
+          "currentDayProfitLossPercentage": -0.05,
+          "longQuantity": 19.0,
+          "settledLongQuantity": 19.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "46429B614",
+            "symbol": "SMIN"
+          },
+          "marketValue": 590.71
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 219.942,
+          "currentDayProfitLoss": 518.92,
+          "currentDayProfitLossPercentage": 0.47,
+          "longQuantity": 5.0,
+          "settledLongQuantity": 5.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "78462F103",
+            "symbol": "SPY"
+          },
+          "marketValue": 1618.63
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 180.93999999999997,
+          "currentDayProfitLoss": 258.87,
+          "currentDayProfitLossPercentage": 0.48,
+          "longQuantity": 3.0,
+          "settledLongQuantity": 3.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "78467X109",
+            "symbol": "DIA"
+          },
+          "marketValue": 801.69
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 27.37,
+          "currentDayProfitLoss": -23.01,
+          "currentDayProfitLossPercentage": -0.06,
+          "longQuantity": 13.0,
+          "settledLongQuantity": 13.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "33734X135",
+            "symbol": "FXO"
+          },
+          "marketValue": 332.8
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 31.12846,
+          "currentDayProfitLoss": 496.12,
+          "currentDayProfitLossPercentage": 0.61,
+          "longQuantity": 26.0,
+          "settledLongQuantity": 26.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "33737M102",
+            "symbol": "FNY"
+          },
+          "marketValue": 1305.46
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 158.355,
+          "currentDayProfitLoss": 67.79,
+          "currentDayProfitLossPercentage": 0.21,
+          "longQuantity": 2.0,
+          "settledLongQuantity": 2.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "464288208",
+            "symbol": "JKG"
+          },
+          "marketValue": 384.5
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 49.50571,
+          "currentDayProfitLoss": -14.36,
+          "currentDayProfitLossPercentage": -0.02,
+          "longQuantity": 14.0,
+          "settledLongQuantity": 14.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "00768Y727",
+            "symbol": "MINC"
+          },
+          "marketValue": 678.72
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 25.30778,
+          "currentDayProfitLoss": -6.15,
+          "currentDayProfitLossPercentage": -0.01,
+          "longQuantity": 27.0,
+          "settledLongQuantity": 27.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "02072L201",
+            "symbol": "IVAL"
+          },
+          "marketValue": 677.16
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 26.65333,
+          "currentDayProfitLoss": 48.16,
+          "currentDayProfitLossPercentage": 0.08,
+          "longQuantity": 24.0,
+          "settledLongQuantity": 24.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "233051705",
+            "symbol": "RVNU"
+          },
+          "marketValue": 687.84
+        },
+        {
+          "shortQuantity": 0.0,
+          "averagePrice": 5.60667,
+          "currentDayProfitLoss": -0.41,
+          "currentDayProfitLossPercentage": -0.02,
+          "longQuantity": 3.0,
+          "settledLongQuantity": 3.0,
+          "settledShortQuantity": 0.0,
+          "instrument": {
+            "assetType": "EQUITY",
+            "cusip": "565849106",
+            "symbol": "MRO"
+          },
+          "marketValue": 16.41
+        }
+      ],
+      "initialBalances": {
+        "accruedInterest": 0.0,
+        "availableFundsNonMarginableTrade": 52.45,
+        "bondValue": 0.0,
+        "buyingPower": 52.45,
+        "cashBalance": 0.0,
+        "cashAvailableForTrading": 0.0,
+        "cashReceipts": 0.0,
+        "dayTradingBuyingPower": 0.0,
+        "dayTradingBuyingPowerCall": 0.0,
+        "dayTradingEquityCall": 0.0,
+        "equity": 11255.99,
+        "equityPercentage": 100.0,
+        "liquidationValue": 11255.99,
+        "longMarginValue": 11203.54,
+        "longOptionMarketValue": 0.0,
+        "longStockValue": 11203.54,
+        "maintenanceCall": 0.0,
+        "maintenanceRequirement": 11203.54,
+        "margin": 0.0,
+        "marginEquity": 11203.54,
+        "moneyMarketFund": 52.45,
+        "mutualFundValue": 0.0,
+        "regTCall": 0.0,
+        "shortMarginValue": 0.0,
+        "shortOptionMarketValue": 0.0,
+        "shortStockValue": 0.0,
+        "totalCash": 0.0,
+        "isInCall": false,
+        "pendingDeposits": 0.0,
+        "marginBalance": 0.0,
+        "shortBalance": 0.0,
+        "accountValue": 11255.99
+      },
+      "currentBalances": {
+        "accruedInterest": 0.0,
+        "cashBalance": 0.0,
+        "cashReceipts": 0.0,
+        "longOptionMarketValue": 0.0,
+        "liquidationValue": 11354.31,
+        "longMarketValue": 11301.86,
+        "moneyMarketFund": 52.45,
+        "savings": 0.0,
+        "shortMarketValue": 0.0,
+        "pendingDeposits": 0.0,
+        "availableFunds": 52.45,
+        "availableFundsNonMarginableTrade": 52.45,
+        "buyingPower": 52.45,
+        "buyingPowerNonMarginableTrade": 52.45,
+        "dayTradingBuyingPower": 0.0,
+        "equity": 11354.31,
+        "equityPercentage": 100.0,
+        "longMarginValue": 11301.86,
+        "maintenanceCall": 0.0,
+        "maintenanceRequirement": 11301.86,
+        "marginBalance": 0.0,
+        "regTCall": 0.0,
+        "shortBalance": 0.0,
+        "shortMarginValue": 0.0,
+        "shortOptionMarketValue": 0.0,
+        "sma": 5909.51,
+        "bondValue": 0.0
+      },
+      "projectedBalances": {
+        "availableFunds": 52.45,
+        "availableFundsNonMarginableTrade": 52.45,
+        "buyingPower": 52.45,
+        "dayTradingBuyingPower": 0.0,
+        "dayTradingBuyingPowerCall": 0.0,
+        "maintenanceCall": 0.0,
+        "regTCall": 0.0,
+        "isInCall": false,
+        "stockBuyingPower": 52.45
+      }
+    }
+  }
+]

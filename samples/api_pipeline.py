@@ -18,16 +18,18 @@ TDStreamingClient = TDSession.create_streaming_session()
 # Level One Quote
 TDStreamingClient.level_one_quotes(
     symbols=["SPY", "IVV", "SDS", "SH"],
-    fields=list(range(0,50))
+    fields=list(range(0, 50))
 )
 
 # Level One Option
 TDStreamingClient.level_one_futures(
     symbols=['/ES'],
-    fields=list(range(0,42))
+    fields=list(range(0, 42))
 )
 
 # Data Pipeline function
+
+
 async def data_pipeline():
     """
     This is an example of how to build a data pipeline,
@@ -59,10 +61,10 @@ async def data_pipeline():
 
     # Keep going as long as we can recieve data.
     while True:
-        
+
         # Start the Pipeline.
         data = await TDStreamingClient.start_pipeline()
-       
+
         # Grab the Data, if there was any. Remember not every message will have `data.`
         if 'data' in data:
 
@@ -77,7 +79,7 @@ async def data_pipeline():
 
             print('-'*80)
             data_response_count += 1
-        
+
         # If we get a heartbeat notice, let's increment our counter.
         elif 'notify' in data:
             print(data['notify'][0])
@@ -94,8 +96,8 @@ async def data_pipeline():
         # Once we have 5 heartbeats, let's close the stream. Make sure to break the while loop.
         # or else you will encounter an exception.
         if heartbeat_response_count == 3:
-           await TDStreamingClient.close_stream()
-           break
+            await TDStreamingClient.close_stream()
+            break
 
 # Run the pipeline.
 asyncio.run(data_pipeline())
