@@ -24,8 +24,7 @@ from td.fields import ENDPOINT_ARGUMENTS
 from td.app.auth import FlaskTDAuth
 from td.oauth import run
 from td.oauth import shutdown
-from td.exceptions import TknExpError, ExdLmtError, NotNulError, \
-    ForbidError, NotFndError, ServerError, GeneralError
+from td.exceptions import TknExpError, ExdLmtError, NotNulError, ForbidError, NotFndError, ServerError, GeneralError
 
 class TDClient():
 
@@ -1162,8 +1161,11 @@ class TDClient():
                 'endDate': end_date
             }
 
+            if account is None and self.account_number:
+                account = self.account_number
+
             # define the endpoint
-            endpoint = '/accounts/{}/transactions'.format(account)
+            endpoint = 'accounts/{}/transactions'.format(account)
 
             # return the response of the get request.
             return self._make_request(method='get', endpoint=endpoint, params=params)

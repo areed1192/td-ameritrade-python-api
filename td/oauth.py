@@ -71,7 +71,7 @@ def callback():
 def refresh():
 
     # Grab the Refresh Token.
-    refresh_token_dict = app.config['auth_client'].flask_td_auth.grab_refresh_token()
+    refresh_token_dict = app.config['auth_client'].grab_refresh_token()
 
     return jsonify(refresh_token_dict)
 

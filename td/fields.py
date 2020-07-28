@@ -16,21 +16,21 @@ ENDPOINT_ARGUMENTS = {
 }
 
 VALID_CHART_VALUES = {
-    'minute':{
-        'day':[1, 2, 3, 4, 5, 10]
+    'minute': {
+        'day': [1, 2, 3, 4, 5, 10]
     },
-    'daily':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
+    'daily': {
+        'month': [1, 2, 3, 6],
+        'year': [1, 2, 3, 5, 10, 15, 20],
+        'ytd': [1]
     },
-    'weekly':{
-        'month':[1, 2, 3, 6],
-        'year':[1, 2, 3, 5, 10, 15, 20],
-        'ytd':[1]
+    'weekly': {
+        'month': [1, 2, 3, 6],
+        'year': [1, 2, 3, 5, 10, 15, 20],
+        'ytd': [1]
     },
-    'monthly':{
-        'year':[1, 2, 3, 5, 10, 15, 20]
+    'monthly': {
+        'year': [1, 2, 3, 5, 10, 15, 20]
     }
 }
 
@@ -346,21 +346,21 @@ STREAM_FIELD_IDS = {
 
 
 CSV_FIELD_KEYS = {
-    "ACTIVES_NASDAQ":{
-        "key":"key",
-        "1":"data"
+    "ACTIVES_NASDAQ": {
+        "key": "key",
+        "1": "data"
     },
-    "ACTIVES_OTCBB":{
-        "key":"key",
-        "1":"data"
+    "ACTIVES_OTCBB": {
+        "key": "key",
+        "1": "data"
     },
-    "ACTIVES_NYSE":{
-        "key":"key",
-        "1":"data"
+    "ACTIVES_NYSE": {
+        "key": "key",
+        "1": "data"
     },
-    "ACTIVES_OPTIONS":{
-        "key":"key",
-        "1":"data"
+    "ACTIVES_OPTIONS": {
+        "key": "key",
+        "1": "data"
     },
     "CHART_EQUITY": {
         "seq": "chart-sequence",
@@ -697,5 +697,5 @@ CSV_FIELD_KEYS_LEVEL_2 = {
     "NASDAQ_BOOK": "nested",
     "OPTIONS_BOOK": "nested",
     "LISTED_BOOK": "nested",
-    "FUTURES_BOOK":"nested"
+    "FUTURES_BOOK": "nested"
 }
