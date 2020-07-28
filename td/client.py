@@ -1871,9 +1871,26 @@ class TDClient():
         ----
         {dict} -- A response dicitonary.
         """
+
+        # Check if it's an order.
+        if isinstance(order, Order):
+            order = order._grab_order()
+        else:
+            order = order
+
         # make the request
-        endpoint = 'accounts/{account_id}/orders/{order_id}'.format(account_id=account, order_id=order_id)
-        return self._make_request(method='put', endpoint=endpoint, mode='json', json=order, order_details=True)
+        endpoint = 'accounts/{account_id}/orders/{order_id}'.format(
+            account_id=account,
+            order_id=order_id
+        )
+
+        return self._make_request(
+            method='put',
+            endpoint=endpoint,
+            mode='json',
+            json=order,
+            order_details=True
+        )
 
     def get_saved_order(self, account: str, saved_order_id: str = None) -> Dict:
         """Grabs a saved order.
