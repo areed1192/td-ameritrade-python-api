@@ -115,7 +115,7 @@ class TDClient():
         else:
             self._flask_app = None
         
-        # define a new attribute called 'authstate' and initalize it to '' (Blank). This will be used by our login function.
+        # define a new attribute called 'authstate' and initialize to `False`. This will be used by our login function.
         self.authstate = False
 
         # call the state_manager method and update the state to init (initalized)
@@ -702,7 +702,7 @@ class TDClient():
         # return the response of the get request.
         return self._make_request(method='get', endpoint=endpoint, params=params)
 
-    def get_price_history(self, symbol: str, period_type:str = None, period=None, start_date:str = None, end_date:str = None,
+    def get_price_history(self, symbol: str, period_type:str = None, period: str = None, start_date:str = None, end_date:str = None,
                           frequency_type: str = None, frequency: str = None, extended_hours: bool = True) -> Dict:
         """Gets historical candle data for a financial instrument.
         
@@ -748,14 +748,14 @@ class TDClient():
             try:
 
                 # check if the period is valid.
-                if period in VALID_CHART_VALUES[frequency_type][period_type]:
+                if period in VALID_CHART_VALUES[frequency_type][int(period_type)]:
                     True
                 else:
                     raise IndexError('Invalid Period.')
             except:
                 raise KeyError('Invalid Frequency Type or Period Type you passed through is not valid')
 
-            if frequency_type == 'minute' and frequency not in [1, 5, 10, 15, 30]:
+            if frequency_type == 'minute' and frequency not in ['1', '5', '10', '15', '30']:
                 raise ValueError('Invalid Minute Frequency, must be 1,5,10,15,30')
 
         # build the params dictionary
