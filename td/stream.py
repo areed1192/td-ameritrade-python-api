@@ -25,9 +25,9 @@ class TDStreamerClient():
         handles messages, and streams data back to the user.
     """
 
-    def __init__(self, websocket_url: str, user_principal_data: dict, credentials: dict) -> None:     
+    def __init__(self, websocket_url: str, user_principal_data: dict, credentials: dict) -> None:
         """Initalizes the Streaming Client.
-        
+
         Initalizes the Client Object and defines different components that will be needed to
         make a connection with the TD Streaming API.
 
@@ -35,12 +35,12 @@ class TDStreamerClient():
         ----
         websocket_url {str} -- The websocket URL that is returned from a Get_User_Prinicpals Request.
 
-        user_principal_data {dict} -- The data that was returned from the "Get_User_Principals" request. 
+        user_principal_data {dict} -- The data that was returned from the "Get_User_Principals" request.
             Contains the info need for the account info.
 
         credentials {dict} -- A credentials dictionary that is created from the "create_streaming_session"
             method.
-        
+
         Usage:
         ----
 
@@ -82,22 +82,22 @@ class TDStreamerClient():
 
         self.unsubscribe_count = 0
 
-    def write_behavior(self, file_path: str, write: str = 'csv', append_mode: bool = True) -> None:        
+    def write_behavior(self, file_path: str, write: str = 'csv', append_mode: bool = True) -> None:
         """Sets the csv dump location and the append mode.
 
         Arguments:
         ----
 
-        file_path {str} -- Specifies where you would like the CSV file to be written to. 
+        file_path {str} -- Specifies where you would like the CSV file to be written to.
             If nothing is provided then current working directory is used.
 
         Keyword Arguments:
         ----
-        
+
         write {str} -- Defines where you want to write the streaming data to. Right now can only specify
             'csv'. (default: {'csv'})
 
-        append_mode {bool} -- Defines whether the write mode should be append or new. If append-mode is True, 
+        append_mode {bool} -- Defines whether the write mode should be append or new. If append-mode is True,
             then all CSV data will go to the existing file. Can either be `True` or `False`. (default: {True})
 
         Usage:
@@ -123,8 +123,8 @@ class TDStreamerClient():
                 self.CSV_APPEND_MODE = 'w+'
 
             self.file_stream_level_1 = open(
-                file=self.CSV_PATH, 
-                mode=self.CSV_APPEND_MODE, 
+                file=self.CSV_PATH,
+                mode=self.CSV_APPEND_MODE,
                 newline=''
             )
 
@@ -158,7 +158,7 @@ class TDStreamerClient():
                 field_value = data_section[field_key]
                 data = [service_name, field_key, new_key, field_value]
                 all_data.append(data)
-        
+
         return all_data
 
     def _write_chart_services(self, data_content: dict, service_name: str) -> List:
@@ -222,7 +222,7 @@ class TDStreamerClient():
 
             content_names = [symbol, service_name]
             book_data_full = [
-                {'book_type':'bid','book_data':book_bid}, 
+                {'book_type':'bid','book_data':book_bid},
                 {'book_type':'ask','book_data':book_ask}
             ]
 
@@ -230,32 +230,32 @@ class TDStreamerClient():
                 book_data = book_dict['book_data']
                 book_type = book_dict['book_type']
 
-                for index, activity_section in enumerate(book_data):                                                           
+                for index, activity_section in enumerate(book_data):
                     section_id = str(book_timestamp) + "_" + str(index)
                     price = activity_section['0']
                     total_size = activity_section['1']
                     total_count = activity_section['2']
                     book_data_collection = activity_section['3']
 
-                    for book_data in book_data_collection:                                    
+                    for book_data in book_data_collection:
                         mpid = book_data["0"]
                         size = book_data["1"]
                         _time = book_data["2"]
 
                         data = [
-                            "book_{}".format(book_type), section_id, 
-                            "book_{}_price".format(book_type), price, 
-                            "book_{}_size".format(book_type), total_size, 
-                            "book_{}_total_count".format(book_type), total_count, 
-                            "book_{}_section_mpid".format(book_type), mpid, 
-                            "book_{}_section_size".format(book_type), size, 
+                            "book_{}".format(book_type), section_id,
+                            "book_{}_price".format(book_type), price,
+                            "book_{}_size".format(book_type), total_size,
+                            "book_{}_total_count".format(book_type), total_count,
+                            "book_{}_section_mpid".format(book_type), mpid,
+                            "book_{}_section_size".format(book_type), size,
                             "book_{}_section_time".format(book_type), _time
                         ]
 
                         all_data.append(content_names + data)
 
         return all_data
-    
+
     def _write_active_services(self,data_content: dict, service_name: str) -> List:
         """Takes Level 2 services and parses them so they can be written.
 
@@ -270,7 +270,7 @@ class TDStreamerClient():
         List -- A single row of data.
         """
 
-        all_data = []    
+        all_data = []
 
         for data_section in data_content:
 
@@ -321,7 +321,7 @@ class TDStreamerClient():
                     all_data.append([service_name, "", group_item_id_label, group[0]])
                     all_data.append([service_name, "", group_item_volume_label, group[1]])
                     all_data.append([service_name, "", group_item_percent_label, group[2]])
-        
+
         return all_data
 
     async def _write_to_csv(self, data: dict) -> None:
@@ -366,31 +366,31 @@ class TDStreamerClient():
 
                 for row in new_data:
                     new_row = [service_timestamp] + row
-                    stream_writer_level_1.writerow(new_row)  
+                    stream_writer_level_1.writerow(new_row)
 
             # Write the Chart Services.
             elif approved_level_1 and chart_history_service and active_service == False:
-                
+
                 # Grab the data
                 new_data = self._write_chart_services(data_content=service_contents, service_name=service_name)
 
                 for row in new_data:
                     new_row = [service_timestamp] + row
-                    stream_writer_level_1.writerow(new_row)  
+                    stream_writer_level_1.writerow(new_row)
 
             # Write the Active Services.
             elif approved_level_1 and chart_history_service == False and active_service:
-                
+
                 # Grab the data
                 new_data = self._write_active_services(data_content=service_contents, service_name=service_name)
 
                 for row in new_data:
                     new_row = [service_timestamp] + row
-                    stream_writer_level_1.writerow(new_row)  
+                    stream_writer_level_1.writerow(new_row)
 
             # Write the Level 2 Services
             elif approved_level_2:
-                    
+
                 # Grab the data
                 new_data = self._write_level_two_services(data_content=service_contents, service_name=service_name)
 
@@ -415,12 +415,12 @@ class TDStreamerClient():
         self.unsubscribe_count += 1
 
         service_count = len(self.data_requests['requests']) + self.unsubscribe_count
-        
+
         request = {
             "requests":[
                 {
-                    "service": service.upper(), 
-                    "requestid": service_count, 
+                    "service": service.upper(),
+                    "requestid": service_count,
                     "command": 'UNSUBS',
                     "account": self.user_principal_data['accounts'][0]['accountId'],
                     "source": self.user_principal_data['streamerInfo']['appId']
@@ -435,15 +435,15 @@ class TDStreamerClient():
     def _build_login_request(self) -> str:
         """Builds the Login request for the streamer.
 
-        Builds the login request dictionary that will 
-        be used as the first service request with the 
+        Builds the login request dictionary that will
+        be used as the first service request with the
         streaming API.
 
         Returns:
         ----
         [str] -- A JSON string with the login details.
 
-        """        
+        """
 
         # define a request
         login_request = {
@@ -468,7 +468,7 @@ class TDStreamerClient():
     def _build_data_request(self) -> str:
         """Builds the data request for the streaming service.
 
-        Takes all the service requests and converts them to a JSON 
+        Takes all the service requests and converts them to a JSON
         string.
 
         Returns:
@@ -503,7 +503,7 @@ class TDStreamerClient():
 
         return self.connection
 
-    async def start_pipeline(self) -> dict:     
+    async def start_pipeline(self) -> dict:
         """Recieves the data as it streams in.
 
         Returns:
@@ -516,15 +516,15 @@ class TDStreamerClient():
     def stream(self, print_to_console: bool = True) -> None:
         """Starts the stream and prints the output to the console.
 
-        Initalizes the stream by building a login request, starting 
-        an event loop, creating a connection, passing through the 
+        Initalizes the stream by building a login request, starting
+        an event loop, creating a connection, passing through the
         requests, and keeping the loop running.
 
         Keyword Arguments:
         ----
         print_to_console {bool} -- Specifies whether the content is to be printed
             to the console or not. (default: {True})
-        """        
+        """
 
         # Print it to the console.
         self.print_to_console = print_to_console
@@ -544,8 +544,8 @@ class TDStreamerClient():
     def close_logic(self, logic_type: str) -> bool:
         """Defines how the stream should close.
 
-        Sets the logic to determine how long to keep the server open. 
-        If Not specified, Server will remain open forever or until 
+        Sets the logic to determine how long to keep the server open.
+        If Not specified, Server will remain open forever or until
         it encounters an error.
 
         Keyword Arguments:
@@ -561,10 +561,10 @@ class TDStreamerClient():
         pass
 
     async def close_stream(self) -> None:
-        """Closes the connection to the streaming service."""        
+        """Closes the connection to the streaming service."""
 
         print('Connection with server closed, beginning close process...')
-        
+
         # close the connection.
         await self.connection.close()
 
@@ -574,18 +574,18 @@ class TDStreamerClient():
         # Stop the loop.
         if self.loop.is_running():
             self.loop.call_soon_threadsafe(self.loop.stop())
-        
+
         self.loop.close()
 
         # Once closed, verify it's closed.
         if self.loop.is_closed():
             print('Event loop was closed.')
-        else:            
+        else:
             print('Event loop was not closed.')
 
         # # cancel all the task.
         # for index, task in enumerate(asyncio.Task.all_tasks()):
-            
+
         #     # let the user know which task is cancelled.
         #     print("Cancelling Task: {}".format(index))
 
@@ -600,20 +600,19 @@ class TDStreamerClient():
     async def _connect(self) -> websockets.WebSocketClientProtocol:
         """Connects the Client to the TD Websocket.
 
-        Connecting to webSocket server websockets.client.connect 
-        returns a WebSocketClientProtocol, which is used to send 
+        Connecting to webSocket server websockets.client.connect
+        returns a WebSocketClientProtocol, which is used to send
         and receive messages
 
-        Keyword Arguments:
+        Raises:
         ----
-        pipeline_start {bool} -- This is also used to start the data
-            pipeline so, in that case we can handle more tasks here.
-            (default: {True})
+        ConnectionError: An error is raised if we can't connect to the websocket.
+        ValueError: An error is raised if we can't log in.
 
         Returns:
         ---
-        websockets.WebSocketClientProtocol -- The websocket connection.
-        """        
+        websockets.WebSocketClientProtocol -- The websocket connection on success
+        """
 
         # Grab the login info.
         login_request = self._build_login_request()
@@ -625,14 +624,19 @@ class TDStreamerClient():
         is_connected = await self._check_connection()
 
         # If we are connected then login.
-        if is_connected:
-            await self._send_message(login_request)
-            return self.connection
+        if not is_connected:
+            return None
+
+        await self._send_message(login_request)
+        resp = await self._receive_message(True)
+        if resp['response'][0]['content']['code'] == 3:
+            raise ValueError('LOGIN ERROR: ' + resp['response'][0]['content']['msg'])
+        return self.connection
 
     async def _check_connection(self) -> bool:
         """Determines if we have an active connection
 
-        There are multiple times we will need to check the connection 
+        There are multiple times we will need to check the connection
         of the websocket, this function will help do that.
 
         Raises:
@@ -643,7 +647,7 @@ class TDStreamerClient():
         Returns:
         ----
         bool -- True if the connection healthy, False otherwise.
-        """        
+        """
 
         # if it's open we can stream.
         if self.connection.open:
@@ -662,7 +666,7 @@ class TDStreamerClient():
         ----
         message {str} -- The JSON string with the
             data streaming service subscription.
-        """        
+        """
 
         await self.connection.send(message)
 
@@ -684,7 +688,7 @@ class TDStreamerClient():
         while True:
 
             try:
-                
+
                 # Grab the Message
                 message = await self.connection.recv()
 
@@ -709,13 +713,13 @@ class TDStreamerClient():
                     print('')
                     print(message_decoded)
                     print('-'*20)
-                    print('')         
+                    print('')
 
             except websockets.exceptions.ConnectionClosed:
 
                 # stop the connection if there is an error.
                 await self.close_stream()
-                break               
+                break
 
     async def _parse_json_message(self, message: str) -> dict:
         """Parses incoming messages from the stream
@@ -763,13 +767,13 @@ class TDStreamerClient():
         service_count = len(self.data_requests['requests']) + 1
 
         request = {
-            "service": None, 
-            "requestid": service_count, 
+            "service": None,
+            "requestid": service_count,
             "command": None,
             "account": self.user_principal_data['accounts'][0]['accountId'],
             "source": self.user_principal_data['streamerInfo']['appId'],
             "parameters": {
-                "keys": None, 
+                "keys": None,
                 "fields": None
             }
         }
@@ -783,14 +787,14 @@ class TDStreamerClient():
         ---
         argument {Union[str, int]} -- Either a single argument or a list of arguments that are
             fields to be requested.
-        
+
         endpoint {str} -- The subscription service the request will be sent to. For example,
             "level_one_quote".
 
         Returns:
         ----
         Union[List[str], str] -- The field or fields that have been validated.
-        """        
+        """
 
         # initalize a new list.
         arg_list = []
@@ -808,7 +812,7 @@ class TDStreamerClient():
                     arg_list.append(arg_str)
                 elif arg_str in val_list:
                     key_value = key_list[val_list.index(arg_str)]
-                    arg_list.append(key_value)                  
+                    arg_list.append(key_value)
 
             return arg_list
 
@@ -823,17 +827,17 @@ class TDStreamerClient():
             elif arg_str in val_list:
                 key_value = key_list[val_list.index(arg_str)]
                 return key_value
-                
+
 
     def quality_of_service(self, qos_level: str) -> None:
         """Quality of Service Subscription.
-        
+
         Allows the user to set the speed at which they recieve messages
         from the TD Server.
 
         Arguments:
         ----
-        qos_level {str} -- The Quality of Service level that you wish to set. 
+        qos_level {str} -- The Quality of Service level that you wish to set.
             Ranges from 0 to 5 where 0 is the fastest and 5 is the slowest.
 
         Raises:
@@ -871,17 +875,17 @@ class TDStreamerClient():
     def chart(self, service: str, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
         """Subscribes to the Chart Service.
 
-        Represents the CHART_EQUITY, CHART_FUTRUES, and CHART_OPTIONS endpoint that can 
+        Represents the CHART_EQUITY, CHART_FUTRUES, and CHART_OPTIONS endpoint that can
         be used to stream info needed to recreate charts.
 
         Arguments:
         ---
-        service {str} -- The type of Chart Service you wish to recieve. Can be either 
+        service {str} -- The type of Chart Service you wish to recieve. Can be either
             `CHART_EQUITY`, `CHART_FUTURES` or `CHART_OPTIONS`
-        
+
         symbols {List[str]} -- The symbol you wish to get chart data for.
-        
-        fields {Union[List[str], List[int]]} -- The fields for the request. Can either be a list of 
+
+        fields {Union[List[str], List[int]]} -- The fields for the request. Can either be a list of
             keys ['key 1','key 2'] or a list of ints [1, 2, 3]
 
         Raises:
@@ -898,27 +902,27 @@ class TDStreamerClient():
 
             >>> td_session.login()
             >>> td_stream_session = td_session.create_streaming_session()
-        
+
             >>> td_stream_session.charts(
-                service='CHART_EQUITY', 
-                symbols=['AAPL','MSFT'], 
+                service='CHART_EQUITY',
+                symbols=['AAPL','MSFT'],
                 fields=[0,1,2,3,4,5,6,7]
             )
 
             >>> td_stream_session.charts(
-                service='CHART_OPTIONS', 
-                symbols=['AAPL_040920C115'], 
+                service='CHART_OPTIONS',
+                symbols=['AAPL_040920C115'],
                 fields=[0,1,2,3,4,5,6,7]
             )
 
             >>> td_stream_session.charts(
-                service='CHART_FUTURES', 
-                symbols=['/ES','/CL'], 
+                service='CHART_FUTURES',
+                symbols=['/ES','/CL'],
                 fields=[0,1,2,3,4,5,6,7]
             )
 
             >>> td_stream_session.stream()
-        """        
+        """
 
         # check to make sure it's a valid Chart Service.
         service_flag = service in ['CHART_EQUITY', 'CHART_FUTURES', 'CHART_OPTIONS']
@@ -926,7 +930,7 @@ class TDStreamerClient():
         # valdiate argument.
         fields = self._validate_argument(
             argument=fields, endpoint=service.lower())
-        
+
         if service_flag and fields is not None:
 
             # Build the request
@@ -986,10 +990,10 @@ class TDStreamerClient():
 
     def account_activity(self):
         """
-            Represents the ACCOUNT_ACTIVITY endpoint of the TD Streaming API. This service is used to 
-            request streaming updates for one or more accounts associated with the logged in User ID. 
-            Common usage would involve issuing the OrderStatus API request to get all transactions 
-            for an account, and subscribing to ACCT_ACTIVITY to get any updates.     
+            Represents the ACCOUNT_ACTIVITY endpoint of the TD Streaming API. This service is used to
+            request streaming updates for one or more accounts associated with the logged in User ID.
+            Common usage would involve issuing the OrderStatus API request to get all transactions
+            for an account, and subscribing to ACCT_ACTIVITY to get any updates.
         """
 
         # Build the request
@@ -1003,7 +1007,7 @@ class TDStreamerClient():
 
     def chart_history_futures(self, symbol: str, frequency: str, start_time: str = None, end_time: str = None, period: str = None) -> None:
         """
-            Represents the CHART HISTORY FUTURES endpoint for the TD Streaming API. Only Futures 
+            Represents the CHART HISTORY FUTURES endpoint for the TD Streaming API. Only Futures
             chart history is available via Streamer Server.
 
             NAME: symbol
@@ -1217,7 +1221,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings>         
+            TYPE: List<Integer> | List<Strings>
         """
 
         # valdiate argument.
@@ -1235,7 +1239,7 @@ class TDStreamerClient():
 
     def timesale(self, service: str, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
         """
-            Represents the TIMESALE endpoint for the TD Streaming API. The TIMESALE server ID is used to 
+            Represents the TIMESALE endpoint for the TD Streaming API. The TIMESALE server ID is used to
             request Time & Sales data for all supported symbols
 
             NAME: symbols
@@ -1245,7 +1249,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings>         
+            TYPE: List<Integer> | List<Strings>
         """
 
         # valdiate argument.
@@ -1280,7 +1284,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1311,7 +1315,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1341,7 +1345,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
         # valdiate argument.
@@ -1410,7 +1414,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1437,7 +1441,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1466,7 +1470,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1496,7 +1500,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
@@ -1526,7 +1530,7 @@ class TDStreamerClient():
             NAME: fields
             DESC: The fields you want returned from the Endpoint, can either be the numeric representation
                   or the key value representation. For more info on fields, refer to the documentation.
-            TYPE: List<Integer> | List<Strings> 
+            TYPE: List<Integer> | List<Strings>
 
         """
 
