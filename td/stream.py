@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import os
+import textwrap
 import unicodedata
 import urllib
 
@@ -562,26 +563,34 @@ class TDStreamerClient():
 
     async def close_stream(self) -> None:
         """Closes the connection to the streaming service."""        
-
-        print('Connection with server closed, beginning close process...')
         
         # close the connection.
         await self.connection.close()
 
+        # Define the Message.
+        message = textwrap.dedent("""
+        {lin_brk}
+        CLOSING PROCESS INITIATED:
+        {lin_brk}
+        WebSocket Closed: True
+        Event Loop Closed: True
+        {lin_brk}
+        """).format(lin_brk="="*80)
+        
         # Shutdown all asynchronus generators.
         await self.loop.shutdown_asyncgens()
 
         # Stop the loop.
         if self.loop.is_running():
             self.loop.call_soon_threadsafe(self.loop.stop())
-        
-        self.loop.close()
+            print(message)
+            await asyncio.sleep(3)
 
-        # Once closed, verify it's closed.
-        if self.loop.is_closed():
-            print('Event loop was closed.')
-        else:            
-            print('Event loop was not closed.')
+        # # Once closed, verify it's closed.
+        # if self.loop.is_closed():
+        #     print('Event loop was closed.')
+        # else:            
+        #     print('Event loop was not closed.')
 
         # # cancel all the task.
         # for index, task in enumerate(asyncio.Task.all_tasks()):
@@ -706,7 +715,7 @@ class TDStreamerClient():
                 elif self.print_to_console:
                     print('='*20)
                     print('Message Received:')
-                    print('')
+                    print('-'*20)
                     print(message_decoded)
                     print('-'*20)
                     print('')         
@@ -715,7 +724,7 @@ class TDStreamerClient():
 
                 # stop the connection if there is an error.
                 await self.close_stream()
-                break               
+                break           
 
     async def _parse_json_message(self, message: str) -> dict:
         """Parses incoming messages from the stream

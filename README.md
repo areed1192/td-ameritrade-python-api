@@ -15,6 +15,8 @@
 
 ## Overview
 
+Current Version: **0.2.9**
+
 The unofficial Python API client library for TD Ameritrade allows individuals with TD Ameritrade accounts to manage trades, pull historical and real-time data, manage their accounts, create and modify orders all using the Python programming language.
 
 To learn more about the TD Ameritrade API, please refer to the [official documentation](https://developer.tdameritrade.com/apis).
@@ -58,6 +60,12 @@ The project can be found at PyPI, if you'd like to view the project please use t
 
 ```bash
 pip install td-ameritrade-python-api
+```
+
+To upgrade the library run the following command:
+
+```bash
+pip install --upgrade td-ameritrade-python-api
 ```
 
 ## Usage
