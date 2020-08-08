@@ -9,6 +9,8 @@ from configparser import ConfigParser
 from td.client import TDClient
 from td.stream import TDStreamerClient
 
+SAVE_FLAG = False
+
 
 class TDSession(TestCase):
 
@@ -71,8 +73,9 @@ class TDSession(TestCase):
         self.assertIn('MSFT', quotes)
 
         # Save the data.
-        with open(r'samples\responses\sample_single_quotes.jsonc', 'w+') as data_file:
-            json.dump(obj=quotes, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_single_quotes.jsonc', 'w+') as data_file:
+                json.dump(obj=quotes, fp=data_file, indent=3)
 
     def test_get_quotes(self):
         """Test Getting Multiple Quotes."""
@@ -84,8 +87,9 @@ class TDSession(TestCase):
         self.assertTrue(set(['MSFT', 'AAPL']).issuperset(set(quotes.keys())))
 
         # Save the data.
-        with open(r'samples\responses\sample_multiple_quotes.jsonc', 'w+') as data_file:
-            json.dump(obj=quotes, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_multiple_quotes.jsonc', 'w+') as data_file:
+                json.dump(obj=quotes, fp=data_file, indent=3)
 
     def test_get_accounts(self):
         """Test Get Accounts."""
@@ -100,8 +104,9 @@ class TDSession(TestCase):
         # self.assertIn('orderStrategies', accounts[0]['securitiesAccount'])
 
         # Save the data.
-        with open(r'samples\responses\sample_accounts.jsonc', 'w+') as data_file:
-            json.dump(obj=accounts, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_accounts.jsonc', 'w+') as data_file:
+                json.dump(obj=accounts, fp=data_file, indent=3)
 
     def test_create_stream_session(self):
         """Test Creating a new streaming session."""
@@ -123,8 +128,9 @@ class TDSession(TestCase):
         self.assertIn('type', transaction_data_multi[0])
 
         # Save the data.
-        with open(r'samples\responses\sample_transaction_data.jsonc', 'w+') as data_file:
-            json.dump(obj=transaction_data_multi, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_transaction_data.jsonc', 'w+') as data_file:
+                json.dump(obj=transaction_data_multi, fp=data_file, indent=3)
 
     def test_get_market_hours(self):
         """Test get market hours."""
@@ -148,8 +154,9 @@ class TDSession(TestCase):
             self.assertIn('isOpen', market_hours_multi['equity']['EQ'])
 
         # Save the data.
-        with open(r'samples\responses\sample_market_hours.jsonc', 'w+') as data_file:
-            json.dump(obj=market_hours_multi, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_market_hours.jsonc', 'w+') as data_file:
+                json.dump(obj=market_hours_multi, fp=data_file, indent=3)
 
     def test_get_instrument(self):
         """Test getting an instrument."""
@@ -164,8 +171,9 @@ class TDSession(TestCase):
         self.assertIn('cusip', get_instrument[0])
 
         # Save the data.
-        with open(r'samples\responses\sample_instrument.jsonc', 'w+') as data_file:
-            json.dump(obj=get_instrument, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_instrument.jsonc', 'w+') as data_file:
+                json.dump(obj=get_instrument, fp=data_file, indent=3)
 
     def test_chart_history(self):
         """Test getting historical prices."""
@@ -222,8 +230,9 @@ class TDSession(TestCase):
                     self.assertFalse(historical_prices['empty'])
 
         # Save the data.
-        with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
-            json.dump(obj=historical_prices, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
+                json.dump(obj=historical_prices, fp=data_file, indent=3)
 
     def test_custom_historical_prices(self):
         """Test getting historical prices for a custom date range."""
@@ -265,8 +274,9 @@ class TDSession(TestCase):
         self.assertFalse(historical_custom['empty'])
 
         # Save the data.
-        with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
-            json.dump(obj=historical_custom, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
+                json.dump(obj=historical_custom, fp=data_file, indent=3)
 
     def test_search_instruments(self):
         """Test Searching for Instruments."""
@@ -281,8 +291,9 @@ class TDSession(TestCase):
         self.assertIn('MSFT', instrument_search_data)
 
         # Save the data.
-        with open(r'samples\responses\sample_search_instrument.jsonc', 'w+') as data_file:
-            json.dump(obj=instrument_search_data, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_search_instrument.jsonc', 'w+') as data_file:
+                json.dump(obj=instrument_search_data, fp=data_file, indent=3)
 
     def test_get_movers(self):
         """Test getting Market movers."""
@@ -302,8 +313,9 @@ class TDSession(TestCase):
             self.assertIn('symbol', movers_data[0])
 
         # Save the data.
-        with open(r'samples\responses\sample_movers.jsonc', 'w+') as data_file:
-            json.dump(obj=movers_data, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_movers.jsonc', 'w+') as data_file:
+                json.dump(obj=movers_data, fp=data_file, indent=3)
 
     def test_get_user_preferences(self):
         """Test getting user preferences."""
@@ -317,8 +329,9 @@ class TDSession(TestCase):
         self.assertIn('expressTrading', preference_data)
 
         # Save the data.
-        with open(r'samples\responses\sample_account_preferences.jsonc', 'w+') as data_file:
-            json.dump(obj=preference_data, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_account_preferences.jsonc', 'w+') as data_file:
+                json.dump(obj=preference_data, fp=data_file, indent=3)
 
     def test_get_user_principals(self):
         """Test getting user principals."""
@@ -331,22 +344,25 @@ class TDSession(TestCase):
         self.assertIn('authToken', user_principals)
 
         # Save the data.
-        with open(r'samples\responses\sample_user_principals.jsonc', 'w+') as data_file:
-            json.dump(obj=user_principals, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_user_principals.jsonc', 'w+') as data_file:
+                json.dump(obj=user_principals, fp=data_file, indent=3)
 
     def test_get_streamer_keys(self):
         """Test getting user preferences."""
 
         # `get_subscription_keys` endpoint. Should not return an error
         streamer_keys = self.td_session.get_streamer_subscription_keys(
-            accounts=[self.td_session.account_number])
+            accounts=[self.td_session.account_number]
+        )
 
         self.assertIsInstance(streamer_keys, dict)
         self.assertIn('keys', streamer_keys)
 
         # Save the data.
-        with open(r'samples\responses\sample_streamer_keys.jsonc', 'w+') as data_file:
-            json.dump(obj=streamer_keys, fp=data_file, indent=3)
+        if SAVE_FLAG:
+            with open(r'samples\responses\sample_streamer_keys.jsonc', 'w+') as data_file:
+                json.dump(obj=streamer_keys, fp=data_file, indent=3)
 
     def tearDown(self) -> None:
         """Teardown the Robot."""
