@@ -405,15 +405,14 @@ class TDClient():
 
         # save the access token and refresh token
         self.state['access_token'] = token_dict['access_token']
-        self.state['refresh_token'] = token_dict['refresh_token']
-
-        # store token expiration time
         access_token_expire = time.time() + int(token_dict['expires_in'])
-        refresh_token_expire = time.time() + int(token_dict['refresh_token_expires_in'])
         self.state['access_token_expires_at'] = access_token_expire
-        self.state['refresh_token_expires_at'] = refresh_token_expire
         self.state['access_token_expires_at_date'] = datetime.datetime.fromtimestamp(access_token_expire).isoformat()
-        self.state['refresh_token_expires_at_date'] = datetime.datetime.fromtimestamp(refresh_token_expire).isoformat()
+        if 'refresh_token' in token_dict:
+            self.state['refresh_token'] = token_dict['refresh_token']
+            refresh_token_expire = time.time() + int(token_dict['refresh_token_expires_in'])
+            self.state['refresh_token_expires_at'] = refresh_token_expire
+            self.state['refresh_token_expires_at_date'] = datetime.datetime.fromtimestamp(refresh_token_expire).isoformat()
         self.state['logged_in'] = True
 
         self._state_manager('save')
