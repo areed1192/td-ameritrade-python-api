@@ -341,7 +341,6 @@ class TDClient():
         data = {
             'client_id': self.client_id,
             'grant_type': 'refresh_token',
-            'access_type': 'offline',
             'refresh_token': self.state['refresh_token']
         }
 
@@ -507,12 +506,12 @@ class TDClient():
         """
 
         url = self._api_endpoint(endpoint=endpoint)
-        headers = self._headers(mode=mode)
 
         # Make sure the token is valid if it's not a Token API call.
         if endpoint != self.config['token_endpoint']:
             self._token_validation()
-        elif endpoint == self.config['token_endpoint']:
+        headers = self._headers(mode=mode)
+        if endpoint == self.config['token_endpoint']:
             del headers['Authorization']
 
         # Define a new session.
