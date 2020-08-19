@@ -5,7 +5,7 @@ import pathlib
 from configparser import ConfigParser
 from requests_oauthlib import OAuth2Session
 from datetime import datetime
-from td.defaults import StatePath
+from td.utils import StatePath
 
 from typing import Union
 from typing import List

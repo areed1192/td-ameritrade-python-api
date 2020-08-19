@@ -74,7 +74,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_single_quotes.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_single_quotes.jsonc', 'w+') as data_file:
                 json.dump(obj=quotes, fp=data_file, indent=3)
 
     def test_get_quotes(self):
@@ -88,7 +88,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_multiple_quotes.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_multiple_quotes.jsonc', 'w+') as data_file:
                 json.dump(obj=quotes, fp=data_file, indent=3)
 
     def test_get_accounts(self):
@@ -105,7 +105,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_accounts.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_accounts.jsonc', 'w+') as data_file:
                 json.dump(obj=accounts, fp=data_file, indent=3)
 
     def test_create_stream_session(self):
@@ -129,7 +129,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_transaction_data.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_transaction_data.jsonc', 'w+') as data_file:
                 json.dump(obj=transaction_data_multi, fp=data_file, indent=3)
 
     def test_get_market_hours(self):
@@ -155,7 +155,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_market_hours.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_market_hours.jsonc', 'w+') as data_file:
                 json.dump(obj=market_hours_multi, fp=data_file, indent=3)
 
     def test_get_instrument(self):
@@ -172,7 +172,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_instrument.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_instrument.jsonc', 'w+') as data_file:
                 json.dump(obj=get_instrument, fp=data_file, indent=3)
 
     def test_chart_history(self):
@@ -231,7 +231,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_historical_prices.jsonc', 'w+') as data_file:
                 json.dump(obj=historical_prices, fp=data_file, indent=3)
 
     def test_custom_historical_prices(self):
@@ -275,7 +275,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_historical_prices.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_historical_prices.jsonc', 'w+') as data_file:
                 json.dump(obj=historical_custom, fp=data_file, indent=3)
 
     def test_search_instruments(self):
@@ -292,7 +292,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_search_instrument.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_search_instrument.jsonc', 'w+') as data_file:
                 json.dump(obj=instrument_search_data, fp=data_file, indent=3)
 
     def test_get_movers(self):
@@ -314,7 +314,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_movers.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_movers.jsonc', 'w+') as data_file:
                 json.dump(obj=movers_data, fp=data_file, indent=3)
 
     def test_get_user_preferences(self):
@@ -330,7 +330,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_account_preferences.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_account_preferences.jsonc', 'w+') as data_file:
                 json.dump(obj=preference_data, fp=data_file, indent=3)
 
     def test_get_user_principals(self):
@@ -345,7 +345,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_user_principals.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_user_principals.jsonc', 'w+') as data_file:
                 json.dump(obj=user_principals, fp=data_file, indent=3)
 
     def test_get_streamer_keys(self):
@@ -361,7 +361,7 @@ class TDSession(TestCase):
 
         # Save the data.
         if SAVE_FLAG:
-            with open(r'samples\responses\sample_streamer_keys.jsonc', 'w+') as data_file:
+            with open('samples/responses/sample_streamer_keys.jsonc', 'w+') as data_file:
                 json.dump(obj=streamer_keys, fp=data_file, indent=3)
 
     def tearDown(self) -> None:

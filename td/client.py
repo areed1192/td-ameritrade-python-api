@@ -6,25 +6,34 @@ import pathlib
 import requests
 import urllib.parse
 
-from . import defaults
-
 from typing import Any
 from typing import Dict
 from typing import List
 from typing import Union
 from typing import Optional
 
+from td.utils import StatePath
+from td.utils import TDUtilities
+
 from td.orders import Order
 from td.orders import OrderLeg
-from td.defaults import StatePath
 from td.stream import TDStreamerClient
 from td.option_chain import OptionChain
-from td.fields import VALID_CHART_VALUES
-from td.fields import ENDPOINT_ARGUMENTS
-from td.app.auth import FlaskTDAuth
+
+from td.enums import VALID_CHART_VALUES
+from td.enums import ENDPOINT_ARGUMENTS
+
 from td.oauth import run
 from td.oauth import shutdown
-from td.exceptions import TknExpError, ExdLmtError, NotNulError, ForbidError, NotFndError, ServerError, GeneralError
+from td.app.auth import FlaskTDAuth
+
+from td.exceptions import TknExpError
+from td.exceptions import ExdLmtError
+from td.exceptions import NotNulError
+from td.exceptions import ForbidError
+from td.exceptions import NotFndError
+from td.exceptions import ServerError
+from td.exceptions import GeneralError
 
 class TDClient():
 
@@ -105,6 +114,7 @@ class TDClient():
         self.account_number = account_number
         self.credentials_path = StatePath(credentials_file=credentials_path)
         self._redirect_code = None
+        self._td_utilities = TDUtilities()
 
         if self.auth_flow == 'flask':
             self._flask_app = FlaskTDAuth(
@@ -546,8 +556,8 @@ class TDClient():
         else:
             order_id = ''
 
+        # If it's okay and we need details, then add them.
         if response.ok and order_details:
-
             response_dict = {
                 'order_id':order_id,
                 'headers':response_headers,
@@ -559,19 +569,11 @@ class TDClient():
 
             return response_dict
 
+        # If it's okay and no details.
         elif response.ok:
-
             return response.json()
 
         else:
-            
-            print('='*80)
-            print("RESPONSE STATUS CODE: {status_code}".format(status_code=status_code))
-            print("RESPONSE URL: {url}".format(url=response.url))
-            print("RESPONSE HEADERS: {headers}".format(headers=response.headers))
-            print("RESPONSE PARAMS: {params}".format(params=response.links))
-            print("RESPONSE TEXT: {text}".format(text=response.text))
-            print('-'*80)
 
             if response.status_code == 400:
                 raise NotNulError(message=response.text)
@@ -745,17 +747,13 @@ class TDClient():
         elif (not start_date and not end_date and period):
 
             # Attempt to grab the key, if it fails we know there is an error.
-            try:
+            # check if the period is valid.
+            if int(period) in VALID_CHART_VALUES[frequency_type][period_type]:
+                True
+            else:
+                raise IndexError('Invalid Period.')
 
-                # check if the period is valid.
-                if period in VALID_CHART_VALUES[frequency_type][int(period_type)]:
-                    True
-                else:
-                    raise IndexError('Invalid Period.')
-            except:
-                raise KeyError('Invalid Frequency Type or Period Type you passed through is not valid')
-
-            if frequency_type == 'minute' and frequency not in ['1', '5', '10', '15', '30']:
+            if frequency_type == 'minute' and int(frequency) not in [1, 5, 10, 15, 30]:
                 raise ValueError('Invalid Minute Frequency, must be 1,5,10,15,30')
 
         # build the params dictionary
@@ -2027,7 +2025,8 @@ class TDClient():
         
         # Grab the Streamer Info.
         userPrincipalsResponse = self.get_user_principals(
-            fields=['streamerConnectionInfo','streamerSubscriptionKeys','preferences','surrogateIds'])
+            fields=['streamerConnectionInfo','streamerSubscriptionKeys','preferences','surrogateIds']
+        )
 
 
         # Grab the timestampe.
@@ -2038,7 +2037,8 @@ class TDClient():
 
         # Parse the token timestamp.
         tokenTimeStampAsMs = self._create_token_timestamp(
-            token_timestamp=tokenTimeStamp)
+            token_timestamp=tokenTimeStamp
+        )
 
         # Define our Credentials Dictionary used for authentication.
         credentials = {

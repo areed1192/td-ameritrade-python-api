@@ -12,9 +12,9 @@ from typing import Union
 
 import websockets
 
-from td.fields import CSV_FIELD_KEYS
-from td.fields import CSV_FIELD_KEYS_LEVEL_2
-from td.fields import STREAM_FIELD_IDS
+from td.enums import CSV_FIELD_KEYS
+from td.enums import CSV_FIELD_KEYS_LEVEL_2
+from td.enums import STREAM_FIELD_IDS
 
 
 class TDStreamerClient():

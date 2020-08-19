@@ -118,7 +118,7 @@ class StatePathSession(TestCase):
         """Test writing to a User Provided Path."""
 
         # Define the file path.
-        file_path = r'config\td_state_custom.json'
+        file_path = 'config/td_state_custom.json'
 
         # Define the truth.
         truth = pathlib.Path(__file__).parents[2].joinpath(file_path)
@@ -163,7 +163,7 @@ class StatePathSession(TestCase):
 
         truth = {'value': 'custom'}
 
-        file_path = pathlib.Path(r'config\td_state_custom.json')
+        file_path = pathlib.Path('config/td_state_custom.json')
 
         check = self.state_path.read_credentials(file_path=file_path)
 
@@ -174,7 +174,7 @@ class StatePathSession(TestCase):
         """Test writing to a User Provided Path."""
 
         truth = 'Credentials File does not exist.'
-        file_path = pathlib.Path(r'config\no\td_state_custom.json')
+        file_path = pathlib.Path('config/no/td_state_custom.json')
 
         with self.assertRaises(FileNotFoundError) as context:
             self.state_path.read_credentials(file_path=file_path)
