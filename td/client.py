@@ -748,7 +748,7 @@ class TDClient():
             try:
 
                 # check if the period is valid.
-                if period in VALID_CHART_VALUES[frequency_type][int(period_type)]:
+                if int(period) in VALID_CHART_VALUES[frequency_type][period_type]:
                     True
                 else:
                     raise IndexError('Invalid Period.')
