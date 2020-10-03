@@ -15,7 +15,7 @@
 
 ## Overview
 
-Current Version: **0.3.0**
+Current Version: **0.3.1**
 
 The unofficial Python API client library for TD Ameritrade allows individuals with TD Ameritrade accounts to manage trades, pull historical and real-time data, manage their accounts, create and modify orders all using the Python programming language.
 

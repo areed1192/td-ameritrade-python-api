@@ -212,13 +212,16 @@ class TDClient():
         """
 
         credentials_file = self.credentials_path
-        credentials_file_exists = credentials_file.does_credentials_file_exist
         
         # If it's a directory, then create json setting path.
         if credentials_file.credentials_file.is_dir():
             credentials_file_path = credentials_file.json_library_path()
         else:
             credentials_file_path = credentials_file.credentials_file.absolute()
+        
+        credentials_file_exists = self.credentials_path.does_file_exist(
+            file_path=credentials_file_path
+        )
 
         # if they allow for caching and the file exists then load it.
         if action == 'init' and self.config['cache_state'] and credentials_file_exists:
@@ -551,7 +554,7 @@ class TDClient():
         response_headers = response.headers
 
         # Grab the order id, if it exists.
-        if 'Location' in response_headers:
+        if 'Location' in response_headers:            
             order_id = response_headers['Location'].split('orders/')[1]
         else:
             order_id = ''
@@ -1284,10 +1287,13 @@ class TDClient():
         return self._make_request(method='get', endpoint=endpoint, params=params)
 
     def update_preferences(self, account: str, data_payload: Dict) -> Dict:
-        """Update User Preferences
+        """Updates the User's Preferences.
 
-        Update preferences for a specific account. Please note that the directOptionsRouting and 
-        directEquityRouting values cannot be modified via this operation.
+        Overview:
+        ----
+        Update preferences for a specific account. Please note that the 
+        `directOptionsRouting` and `directEquityRouting` values cannot be modified
+        via this operation.
 
         Documentation:
         ----
