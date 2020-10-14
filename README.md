@@ -179,4 +179,4 @@ Take the URL and copy it into the Terminal, after you have pasted it, press `Ent
 
 ![Paste URL](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/paste_url.jpg "Paste URL")
 
-After, that the script should run. Additionally, inside the `td` folder you'll notice a new JSON file called `TdAmeritradeState.json`. This file contains all the info used during a session. Please DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.
+After, that the script should run. Additionally, inside the `td` folder you'll notice a new JSON file called `td_state.json`. This file contains all the info used during a session. Please DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.
