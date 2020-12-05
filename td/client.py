@@ -11,6 +11,7 @@ from typing import Dict
 from typing import List
 from typing import Union
 from typing import Optional
+from datetime import timedelta
 
 from td.utils import StatePath
 from td.utils import TDUtilities
@@ -112,7 +113,7 @@ class TDClient():
         self.client_id = client_id
         self.redirect_uri = redirect_uri
         self.account_number = account_number
-        self.credentials_path = StatePath(credentials_file=credentials_path)
+        self.credentials_path = pathlib.Path(credentials_path)
         self._redirect_code = None
         self._td_utilities = TDUtilities()
 
@@ -211,36 +212,16 @@ class TDClient():
             'save' -- Save the current state.
         """
 
-        credentials_file = self.credentials_path
-        
-        # If it's a directory, then create json setting path.
-        if credentials_file.credentials_file.is_dir():
-            credentials_file_path = credentials_file.json_library_path()
-        else:
-            credentials_file_path = credentials_file.credentials_file.absolute()
-        
-        credentials_file_exists = self.credentials_path.does_file_exist(
-            file_path=credentials_file_path
-        )
+        credentials_file_exists = self.credentials_path.exists()
 
         # if they allow for caching and the file exists then load it.
-        if action == 'init' and self.config['cache_state'] and credentials_file_exists:
-            
-            with open(file=credentials_file_path, mode='r') as json_file:
+        if action == 'init' and credentials_file_exists:
+            with open(file=self.credentials_path, mode='r') as json_file:
                 self.state.update(json.load(json_file))
 
-        # If they don't allow for caching and the file exists, then delete it.
-        elif action == 'init' and self.config['cache_state'] == False and credentials_file_exists:
-            credentials_file.unlink()
-
-        # if they allow for caching and the file does not exists then use the default state.
-        elif action == 'init' and self.config['cache_state'] and not credentials_file_exists:
-            print('Their is no state file to load, will use default state.')
-
         # if they want to save it and have allowed for caching then load the file.
-        elif action == 'save' and self.config['cache_state']:
-            
-            with open(file=credentials_file_path, mode='w+') as json_file:
+        elif action == 'save' and self.config['cache_state']:            
+            with open(file=self.credentials_path, mode='w+') as json_file:
                 json.dump(obj=self.state, fp=json_file, indent=4)
 
     def login(self) -> bool:
@@ -257,43 +238,16 @@ class TDClient():
         """
 
         # if caching is enabled then attempt silent authentication.
-        if self.config['cache_state'] and self._silent_sso():
+        if self._silent_sso():
+            self.authstate = True
+            return True
+        else:
+            self.oauth()
             self.authstate = True
             return True
         
         if self._flask_app and self.auth_flow == 'flask':
             run(flask_client=self._flask_app, close_after=True)
-
-        else:
-
-            # prepare the payload to login
-            data = {
-                'response_type': 'code',
-                'redirect_uri': self.redirect_uri,
-                'client_id': self.client_id + '@AMER.OAUTHAP'
-            }
-
-            # url encode the data.
-            params = urllib.parse.urlencode(data)
-
-            # build the full URL for the authentication endpoint.
-            url = self.config['auth_endpoint'] + "/?" + params
-
-            # aks the user to go to the URL provided, they will be prompted to authenticate themsevles.
-            print('Please go to URL provided authorize your account: {}'.format(url))
-
-            # ask the user to take the final URL after authentication and paste here so we can parse.
-            my_response = input('Paste the full URL redirect here: ')
-
-            # store the redirect URL
-            self._redirect_code = my_response
-
-            # this will complete the final part of the authentication process.
-            self.grab_access_token()
-
-        self.authstate = True
-
-        return True
 
     def logout(self) -> None:
         """Clears the current TD Ameritrade Connection state."""
@@ -302,43 +256,38 @@ class TDClient():
         # new access token or refresh token next time they use the API
         self._state_manager('init')
 
-    def grab_access_token(self) -> bool:
-        """Access token handler for AuthCode Workflow.
-        
-        This takes the authorization code parsed from
-        the auth endpoint to call the token endpoint
-        and obtain an access token.
+    def grab_access_token(self) -> dict:
+        """Refreshes the current access token.
 
-        Returns:
+        This takes a  valid refresh token and refreshes
+        an expired access token.
+
+        ### Returns:
         ----
         {bool} -- `True` if successful, `False` otherwise.
         """
 
-        # Parse the URL
-        url_dict = urllib.parse.parse_qs(self._redirect_code)
-
-        # Grab the Code.
-        url_code = list(url_dict.values())[0][0]
-
-        # Define the parameters of our access token post.
+        # build the parameters of our request
         data = {
-            'grant_type': 'authorization_code',
-            'client_id': self.client_id + '@AMER.OAUTHAP',
-            'access_type': 'offline',
-            'code': url_code,
-            'redirect_uri': self.redirect_uri
+            'client_id': self.client_id,
+            'grant_type': 'refresh_token',
+            'refresh_token': self.state['refresh_token']
         }
 
-        token_response = self._make_request(
-            method='post',
-            endpoint=self.config['token_endpoint'],
-            mode='form',
+        # Make the request.
+        response = requests.post(
+            url="https://api.tdameritrade.com/v1/oauth2/token",
+            headers={'Content-Type': 'application/x-www-form-urlencoded'},
             data=data
         )
 
-        self._token_save(token_response)
-        return True
-    
+        if response.ok:
+
+            self._token_save(
+                token_dict=response.json(),
+                includes_refresh=False
+            )
+
     def grab_refresh_token(self) -> bool:
         """Refreshes the current access token.
         
@@ -358,46 +307,173 @@ class TDClient():
             'refresh_token': self.state['refresh_token']
         }
 
-        token_response = self._make_request(
-            method='post',
-            endpoint=self.config['token_endpoint'],
-            mode='form',
+        # Make the request.
+        response = requests.post(
+            url="https://api.tdameritrade.com/v1/oauth2/token",
+            headers={'Content-Type': 'application/x-www-form-urlencoded'},
             data=data
         )
 
-        self._token_save(token_response)
+        if response.ok:
+
+            self._token_save(
+                token_dict=response.json(),
+                includes_refresh=True
+            )
+
+            return True
+
+    def grab_url(self) -> dict:
+        """Builds the URL that is used for oAuth."""
+
+        # prepare the payload to login
+        data = {
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri,
+            'client_id': self.client_id + '@AMER.OAUTHAP'
+        }
+
+        # url encode the data.
+        params = urllib.parse.urlencode(data)
+
+        # build the full URL for the authentication endpoint.
+        url = "https://auth.tdameritrade.com/auth?" + params
+
+        return url
+
+    def oauth(self) -> None:
+        """Runs the oAuth process for the TD Ameritrade API."""
+
+        # Create the Auth URL.
+        url = self.grab_url()
+
+        # Print the URL.
+        print(
+            'Please go to URL provided authorize your account: {}'.format(url)
+        )
+
+        # Paste it back and store it.
+        self.code = input(
+            'Paste the full URL redirect here: '
+        )
+
+        # Exchange the Code for an Acess Token.
+        self.exchange_code_for_token(
+            code=self.code,
+            return_refresh_token=True
+        )
+
+    def exchange_code_for_token(self, code: str, return_refresh_token: bool) -> dict:
+        """Access token handler for AuthCode Workflow.
+
+        ### Overview:
+        ----
+        This takes the authorization code parsed from
+        the auth endpoint to call the token endpoint
+        and obtain an access token.
+
+        ### Returns:
+        ----
+        {bool} -- `True` if successful, `False` otherwise.
+        """
+
+        # Parse the URL
+        url_dict = urllib.parse.parse_qs(self._redirect_code)
+
+        # Grab the Code.
+        url_code = list(url_dict.values())[0][0]
+
+        # Define the parameters of our access token post.
+        data = {
+            'grant_type': 'authorization_code',
+            'client_id': self.client_id + '@AMER.OAUTHAP',
+            'access_type': 'offline',
+            'code': url_code,
+            'redirect_uri': self.redirect_uri
+        }
+
+        # Make the request.
+        response = requests.post(
+            url="https://api.tdameritrade.com/v1/oauth2/token",
+            headers={'Content-Type': 'application/x-www-form-urlencoded'},
+            data=data
+        )
         
-        return True
+        if response.ok:
+
+            self._token_save(
+                token_dict=response.json(),
+                includes_refresh=True
+            )
+
+            return True
+
+    def validate_token(self) -> bool:
+        """Validates whether the tokens are valid or not.
+
+        ### Returns
+        -------
+        bool
+            Returns `True` if the tokens were valid, `False` if
+            the credentials file doesn't exist.
+        """        
+
+        if 'refresh_token_expires_at' in self.state:
+
+            # Grab the Expire Times.
+            refresh_token_exp = self.state['refresh_token_expires_at']
+            access_token_exp = self.state['access_token_expires_at']
+
+            refresh_token_ts = datetime.datetime.fromtimestamp(refresh_token_exp)
+            access_token_ts = datetime.datetime.fromtimestamp(access_token_exp)
+
+            # Grab the Expire Thresholds.
+            refresh_token_exp_threshold = refresh_token_ts - timedelta(days=2)
+            access_token_exp_threshold = access_token_ts - timedelta(minutes=5)
+
+            # Convert to Seconds.
+            refresh_token_exp_threshold = refresh_token_exp_threshold.timestamp()
+            access_token_exp_threshold = access_token_exp_threshold.timestamp()
+
+            # See if we need a new Refresh Token.
+            if datetime.datetime.now().timestamp() > refresh_token_exp_threshold:
+                print("Grabbing new refresh token...")
+                self.grab_refresh_token()
+
+            # See if we need a new Access Token.
+            if datetime.datetime.now().timestamp() > access_token_exp_threshold:
+                print("Grabbing new access token...")
+                self.grab_access_token()
+
+            return True
+
+        else:
+
+            return False
 
     def _silent_sso(self) -> bool:
         """
-        Attempt a silent authentication, by checking whether current access token
-        is valid and/or attempting to refresh it. Returns True if we have successfully 
-        stored a valid access token.
+        Overview:
+        ----
+        Attempt a silent authentication, by checking whether current
+        access token is valid and/or attempting to refresh it. Returns
+        True if we have successfully stored a valid access token.
 
         Returns:
         ----
         {bool} -- Specifies whether it was successful or not.
         """
 
-        # if the current access token is not expired then we are still authenticated.
-        if self._token_seconds(token_type='access_token') > 0:
+        if self.validate_token():
             return True
-
-        # if the refresh token is expired then you have to do a full login.
-        elif self._token_seconds(token_type='refresh_token') <= 0:
+        else:
             return False
 
-        # if the current access token is expired then try and refresh access token.
-        elif self.state['refresh_token'] and self.grab_refresh_token():
-            return True
-
-        # More than likely a first time login, so can't do silent authenticaiton.
-        return False
-
-    def _token_save(self, token_dict: dict) -> dict:
+    def _token_save(self, token_dict: dict, includes_refresh: bool = False) -> dict:
         """Parses the token and saves it.
         
+        Overview:
+        ----
         Parses an access token from the response of a POST request and saves it
         in the state dictionary for future use. Additionally, it will store the
         expiration time and the refresh token.
@@ -412,83 +488,31 @@ class TDClient():
         {dict} -- A token dictionary with the new added values.
         """
 
-        # make sure there is an access token before proceeding.
-        if 'access_token' not in token_dict:
-            self.logout()
-            return False
-
-        # save the access token and refresh token
-        self.state['access_token'] = token_dict['access_token']
-        self.state['refresh_token'] = token_dict['refresh_token']
-
         # store token expiration time
         access_token_expire = time.time() + int(token_dict['expires_in'])
-        refresh_token_expire = time.time() + int(token_dict['refresh_token_expires_in'])
-        self.state['access_token_expires_at'] = access_token_expire
-        self.state['refresh_token_expires_at'] = refresh_token_expire
-        self.state['access_token_expires_at_date'] = datetime.datetime.fromtimestamp(access_token_expire).isoformat()
-        self.state['refresh_token_expires_at_date'] = datetime.datetime.fromtimestamp(refresh_token_expire).isoformat()
-        self.state['logged_in'] = True
+        acc_timestamp = datetime.datetime.fromtimestamp(access_token_expire)
+        acc_timestamp = acc_timestamp.isoformat()
 
+        # Save to the State.
+        self.state['access_token'] = token_dict['access_token']
+        self.state['access_token_expires_at'] = access_token_expire
+        self.state['access_token_expires_at_date'] = acc_timestamp
+
+        if includes_refresh:
+
+            refresh_token_expire = time.time() + int(token_dict['refresh_token_expires_in'])
+            ref_timestamp = datetime.datetime.fromtimestamp(refresh_token_expire)
+            ref_timestamp = ref_timestamp.isoformat()
+
+            # Save to the State.
+            self.state['refresh_token'] = token_dict['refresh_token']
+            self.state['refresh_token_expires_at'] = refresh_token_expire
+            self.state['refresh_token_expires_at_date'] = ref_timestamp
+
+        self.state['logged_in'] = True
         self._state_manager('save')
 
         return self.state
-
-    def _token_seconds(self, token_type: str = 'access_token') -> int:
-        """Determines time till expiration for a token.
-        
-        Return the number of seconds until the current access token or refresh token
-        will expire. The default value is access token because this is the most commonly used
-        token during requests.
-
-        Arguments:
-        ----
-        token_type {str} --  The type of token you would like to determine lifespan for. 
-            Possible values are ['access_token', 'refresh_token'] (default: {access_token})
-        
-        Returns:
-        ----
-        {int} -- The number of seconds till expiration.
-        """
-
-        # if needed check the access token.
-        if token_type == 'access_token':
-
-            # if the time to expiration is less than or equal to 0, return 0.
-            if not self.state['access_token'] or time.time() + 60 >= self.state['access_token_expires_at']:
-                return 0
-
-            # else return the number of seconds until expiration.
-            token_exp = int(self.state['access_token_expires_at'] - time.time() - 60)
-
-        # if needed check the refresh token.
-        elif token_type == 'refresh_token':
-
-            # if the time to expiration is less than or equal to 0, return 0.
-            if not self.state['refresh_token'] or time.time() + 60 >= self.state['refresh_token_expires_at']:
-                return 0
-
-            # else return the number of seconds until expiration.
-            token_exp = int(self.state['refresh_token_expires_at'] - time.time() - 60)
-
-        return token_exp
-
-    def _token_validation(self, nseconds: int = 60):
-        """Checks if a token is valid.
-
-        Verify the current access token is valid for at least N seconds, and
-        if not then attempt to refresh it. Can be used to assure a valid token
-        before making a call to the TD Ameritrade API.
-
-        Arguments:
-        ----
-        nseconds {int} -- The minimum number of seconds the token has to be 
-            valid for before attempting to get a refresh token. (default: {5})
-        """
-
-        if self._token_seconds(token_type='access_token') < nseconds and self.config['refresh_enabled']:
-            self.grab_refresh_token()
-
 
     def _make_request(self, method: str, endpoint: str, mode: str = None, params: dict = None, data: dict = None, json:dict = None, 
                         order_details: bool = False) -> Any:
@@ -523,10 +547,7 @@ class TDClient():
         headers = self._headers(mode=mode)
 
         # Make sure the token is valid if it's not a Token API call.
-        if endpoint != self.config['token_endpoint']:
-            self._token_validation()
-        elif endpoint == self.config['token_endpoint']:
-            del headers['Authorization']
+        self.validate_token()
 
         # Define a new session.
         request_session = requests.Session()
@@ -561,6 +582,7 @@ class TDClient():
 
         # If it's okay and we need details, then add them.
         if response.ok and order_details:
+
             response_dict = {
                 'order_id':order_id,
                 'headers':response_headers,
@@ -693,7 +715,9 @@ class TDClient():
 
         """
         # because we have a list argument, prep it for the request.
-        instruments = self._prepare_arguments_list(parameter_list=instruments)
+        instruments = self._prepare_arguments_list(
+            parameter_list=instruments
+        )
 
         # build the params dictionary
         params = {
