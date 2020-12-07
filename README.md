@@ -72,11 +72,17 @@ pip install --upgrade td-ameritrade-python-api
 
 This example demonstrates how to login to the API and demonstrates sending a request using the `get_quotes` endpoint, using your API key.
 
+**Credentials:**
+Please note, that the `credentials_path` is a file path that will house the credentials like your refresh token and access token. You
+must specify the `credentials_path` argument yourself so that you are aware of where the tokens will be stored. For example, if you
+specify the `credentials_path` as `C:\Users\Public\Credentials\td_state.json` it would store your tokens in a JSON file located in a
+folder called Credentials located under the Users profile.
+
 ```python
 # Import the client
 from td.client import TDClient
 
-# Create a new session, credentials path is optional.
+# Create a new session, credentials path is required.
 TDSession = TDClient(
     client_id='<CLIENT_ID>',
     redirect_uri='<REDIRECT_URI>',
