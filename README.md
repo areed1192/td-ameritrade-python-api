@@ -17,9 +17,12 @@
 
 Current Version: **0.3.1**
 
-The unofficial Python API client library for TD Ameritrade allows individuals with TD Ameritrade accounts to manage trades, pull historical and real-time data, manage their accounts, create and modify orders all using the Python programming language.
+The unofficial Python API client library for TD Ameritrade allows individuals with
+TD Ameritrade accounts to manage trades, pull historical and real-time data, manage
+their accounts, create and modify orders all using the Python programming language.
 
-To learn more about the TD Ameritrade API, please refer to the [official documentation](https://developer.tdameritrade.com/apis).
+To learn more about the TD Ameritrade API, please refer to
+the [official documentation](https://developer.tdameritrade.com/apis).
 
 ## What's in the API
 
@@ -48,15 +51,22 @@ The following requirements must be met to use this API:
 
 ## API Key and Credentials
 
-Each TD Ameritrade API request requires a TD Ameritrade Developer API Key, a consumer ID, an account password, an account number, and a redirect URI. API Keys, consumer IDs, and redirect URIs are generated from the TD Ameritrade developer portal. To set up and create your TD Ameritrade developer account, please refer to the [official documentation](https://developer.tdameritrade.com/content/phase-1-authentication-update-xml-based-api).
+Each TD Ameritrade API request requires a TD Ameritrade Developer API Key, a consumer ID,
+an account password, an account number, and a redirect URI. API Keys, consumer IDs, and
+redirect URIs are generated from the TD Ameritrade developer portal. To set up and create
+your TD Ameritrade developer account, please refer to
+the [official documentation](https://developer.tdameritrade.com/content/phase-1-authentication-update-xml-based-api).
 
-Additionally, to authenticate yourself using this library, you will need to provide your account number and password for your main TD Ameritrade account.
+Additionally, to authenticate yourself using this library, you will need to provide your
+account number and password for your main TD Ameritrade account.
 
-**Important:** Your account number, an account password, consumer ID, and API key should be kept secret.
+**Important:** Your account number, an account password, consumer ID, and API key should
+be kept secret.
 
 ## Installation
 
-The project can be found at PyPI, if you'd like to view the project please use this [link](https://pypi.org/project/td-ameritrade-python-api/).
+The project can be found at PyPI, if you'd like to view the project please use
+this [link](https://pypi.org/project/td-ameritrade-python-api/).
 
 ```bash
 pip install td-ameritrade-python-api
@@ -70,13 +80,16 @@ pip install --upgrade td-ameritrade-python-api
 
 ## Usage
 
-This example demonstrates how to login to the API and demonstrates sending a request using the `get_quotes` endpoint, using your API key.
+This example demonstrates how to login to the API and demonstrates sending a request
+using the `get_quotes` endpoint, using your API key.
 
 **Credentials:**
-Please note, that the `credentials_path` is a file path that will house the credentials like your refresh token and access token. You
-must specify the `credentials_path` argument yourself so that you are aware of where the tokens will be stored. For example, if you
-specify the `credentials_path` as `C:\Users\Public\Credentials\td_state.json` it would store your tokens in a JSON file located in a
-folder called Credentials located under the Users profile.
+Please note, that the `credentials_path` is a file path that will house the credentials
+like your refresh token and access token. You must specify the `credentials_path` argument
+yourself so that you are aware of where the tokens will be stored. For example, if you
+specify the `credentials_path` as `C:\Users\Public\Credentials\td_state.json` it would
+store your tokens in a JSON file located in a folder called Credentials located under
+the Users profile.
 
 ```python
 # Import the client
@@ -103,22 +116,29 @@ multiple_quotes = TDSession.get_quotes(instruments=['AMZN','SQ'])
 
 ### Authentication Workflow Support
 
-Automatically will handle the authentication workflow for new users, returning users, and users with expired tokens (refresh token or access token).
+Automatically will handle the authentication workflow for new users, returning users, and users
+with expired tokens (refresh token or access token).
 
 ### Request Validation
 
-For certain requests, in a limited fashion, it will help validate your request when possible. For example, when using the `get_movers` endpoint, it will automatically validate that the market you're requesting data from is one of the valid options.
+For certain requests, in a limited fashion, it will help validate your request when possible.
+For example, when using the `get_movers` endpoint, it will automatically validate that the
+market you're requesting data from is one of the valid options.
 
 ### Customized Objects for Watchlists, Orders, and Option Chains
 
-Requests for saved orders, regular orders, watchlists, and option chains can be a challenging process that has multiple opportunities to make mistakes. This library has built-in objects that will allow you to quickly build your request and then validate certain portions of your request when possible.
+Requests for saved orders, regular orders, watchlists, and option chains can be a challenging
+process that has multiple opportunities to make mistakes. This library has built-in objects
+that will allow you to quickly build your request and then validate certain portions of your
+request when possible.
 
 ### Library Requirements
 
 The following requirements must be met before being able to use the TD Ameritrade Python API library.
 
 - You must have a TD Ameritrade Account.
-- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources) for instructions on how to create a Developer account.
+- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources)
+  for instructions on how to create a Developer account.
 
 ## Documentation and Resources
 
@@ -137,7 +157,9 @@ The following requirements must be met before being able to use the TD Ameritrad
 ## Support these Projects
 
 **Patreon:**
-Help support this project and future projects by donating to my [Patreon Page](https://www.patreon.com/sigmacoding). I'm always looking to add more content for individuals like yourself, unfortuantely some of the APIs I would require me to pay monthly fees.
+Help support this project and future projects by donating to my [Patreon Page](https://www.patreon.com/sigmacoding).
+I'm always looking to add more content for individuals like yourself, unfortuantely some of the APIs I would require
+me to pay monthly fees.
 
 **YouTube:**
 If you'd like to watch more of my content, feel free to visit my YouTube channel [Sigma Coding](https://www.youtube.com/c/SigmaCoding).
@@ -149,7 +171,8 @@ If you have a project, you think I can help you with feel free to reach out at [
 
 **Step 1 - Start the Script:**
 
-While in Visual Studio Code, right click anywhere in the code editor while in the file that contains your code. The following dropdown will appear:
+While in Visual Studio Code, right click anywhere in the code editor while in the file that contains your code.
+The following dropdown will appear:
 
 ![Terminal Dropdown](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/terminal_dropdown.jpg "Terminal Dropdown")
 
@@ -157,13 +180,17 @@ From the dropdown, click `Run Python file in Terminal`, this will start the pyth
 
 **Step 2 - Go to Redirect URL:**
 
-The TD Library will automatically generate the redirect URL that will navigate you to the TD website for for you authentication. You can either copy the link and paste it into a browser manually or if you're using Visual Studio Code you can press `CTRL + Click` to have Visual Studio Code navigate you to the URL immeditately.
+The TD Library will automatically generate the redirect URL that will navigate you to the TD website for for
+you authentication. You can either copy the link and paste it into a browser manually or if you're using Visual
+Studio Code you can press `CTRL + Click` to have Visual Studio Code navigate you to the URL immeditately.
 
 ![Redirect URI](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/redirect_uri.jpg "Redirect URI")
 
 **Step 3 - Login to the TD API:**
 
-Once you've arrived at the login screen, you'll need to provide your credentials to authenticate the session. Please provide your Account Username and Account Password in the userform and then press enter. As a reminder these, are the same username/password combination you use to login to your regular TD Account.
+Once you've arrived at the login screen, you'll need to provide your credentials to authenticate the session.
+Please provide your Account Username and Account Password in the userform and then press enter. As a reminder
+these, are the same username/password combination you use to login to your regular TD Account.
 
 !["TD Login](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/td_login.jpg "TD Login")
 
@@ -175,14 +202,21 @@ Accept the Terms of the API by clicking `Allow`, this will redirect you.
 
 **Step 5 - Copy the Authorization Code:**
 
-After accepting the terms, you'll be taken to the URL that you provided as your `redirect URI`. However, at the end of that URL will be `authorization code`. To complete the authentication workflow, copy the URL as it appears below. Don't worry if the numbers don't match, as you will have a different code.
+After accepting the terms, you'll be taken to the URL that you provided as your `redirect URI`. However, at
+the end of that URL will be `authorization code`. To complete the authentication workflow, copy the URL as
+it appears below. Don't worry if the numbers don't match, as you will have a different code.
 
 ![Auth Code](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/auth_code.jpg "Auth Code")
 
 **Step 6 - Paste the Authorization Code in the Terminal:**
 
-Take the URL and copy it into the Terminal, after you have pasted it, press `Enter`. The authentication workflow will complete and the script will start running. At this stage, we are exchanging your authorization code for an access token. That access token is valid only for 30 minutes. However, a refresh token is also stored that will refresh your access token when it expires.
+Take the URL and copy it into the Terminal, after you have pasted it, press `Enter`. The authentication workflow
+will complete and the script will start running. At this stage, we are exchanging your authorization code for
+an access token. That access token is valid only for 30 minutes. However, a refresh token is also stored that
+will refresh your access token when it expires.
 
 ![Paste URL](https://raw.githubusercontent.com/areed1192/td-ameritrade-python-api/master/samples/instructions/photos/paste_url.jpg "Paste URL")
 
-After, that the script should run. Additionally, inside the `td` folder you'll notice a new JSON file called `td_state.json`. This file contains all the info used during a session. Please DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.
+After, that the script should run. Additionally, if you go to the location you specified in the `credentials_path`
+arugment you will now see `td_state.json` file. This file contains all the info used during a session. Please
+DO NOT DELETE THIS FILE OR ELSE YOU WILL NEED TO GO THROUGH THE STEPS ABOVE.
