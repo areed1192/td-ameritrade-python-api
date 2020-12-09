@@ -1,6 +1,7 @@
 import os
 import time
 import json
+import pprint
 import datetime
 import pathlib
 import requests
@@ -52,7 +53,7 @@ class TDClient():
         Initializes the session with default values and any user-provided overrides.The 
         following arguments MUST be specified at runtime or else initalization will fail.
 
-        Arguments:
+        ### Arguments:
         ----
         consumer_id {str} -- The Consumer ID assigned to you during the App registration. 
             This can be found at the app registration portal.
@@ -60,7 +61,7 @@ class TDClient():
         redirect_uri {str} -- This is the redirect URL that you specified when you created your
             TD Ameritrade Application.
 
-        Keyword Arguments:
+        Keyword ### Arguments:
         ----
         account_number {str} -- This is the account number for your main 
             TD Ameritrade Account. (default: {None})
@@ -71,7 +72,7 @@ class TDClient():
         auth_flow {str} -- Specifies is authentication is done through the command line (`default`) or 
             through the flask app `flask`. (default: {'default'})
 
-        Usage:
+        ### Usage:
         ----
             >>> # Credentials Path & Account Specified.
             >>> td_session = TDClient(
@@ -104,8 +105,6 @@ class TDClient():
         self.state = {
             'access_token': None,
             'refresh_token': None,
-            'access_token_expires_at': 0,
-            'refresh_token_expires_at': 0,
             'logged_in': False
         }
 
@@ -153,11 +152,11 @@ class TDClient():
         Returns a dictionary of default HTTP headers for calls to TD Ameritrade API,
         in the headers we defined the Authorization and access token.
 
-        Arguments:
+        ### Arguments:
         ----
         mode {str} -- Defines the content-type for the headers dictionary. (default: {None})
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- Dictionary with the Access token and content-type
             if specified
@@ -178,13 +177,13 @@ class TDClient():
     def _api_endpoint(self, endpoint: str, resource: str = None) -> str:
         """Convert relative endpoint (e.g., 'quotes') to full API endpoint.
 
-        Arguments:
+        ### Arguments:
         ----
         endpoint {str} -- The URL that needs conversion to a full endpoint URL.
 
         resource {str} -- The API resource URL that you want to request. (default: {None})
 
-        Returns:
+        ### Returns:
         ----
         {str} -- A full url that specifies a valid endpoint.
         """
@@ -205,7 +204,7 @@ class TDClient():
         the properties to their default value. Save will save the 
         current state if 'cache_state' is set to TRUE.
 
-        Arguments:
+        ### Arguments:
         ----
         action {str}: action argument must of one of the following:
             'init' -- Initalize State.
@@ -232,7 +231,7 @@ class TDClient():
         command window. Once the user is authenticated the API key is valide for 90 days, so refresh
         tokens may be used from this point, up to the 90 days.
 
-        Returns:
+        ### Returns:
         ----
         {bool} -- Specifies whether it was successful or not.
         """
@@ -259,8 +258,9 @@ class TDClient():
     def grab_access_token(self) -> dict:
         """Refreshes the current access token.
 
-        This takes a  valid refresh token and refreshes
-        an expired access token.
+        This takes a valid refresh token and refreshes
+        an expired access token. This is different from
+        exchanging a code for an access token.
 
         ### Returns:
         ----
@@ -289,12 +289,16 @@ class TDClient():
             )
 
     def grab_refresh_token(self) -> bool:
-        """Refreshes the current access token.
+        """Grabs a new refresh token if expired.
         
-        This takes a  valid refresh token and refreshes
-        an expired access token.
+        This takes a valid refresh token and requests
+        a new refresh token along with an access token.
+        This is similar to `grab_access_token` but it 
+        does not include the `access_type` argument.
+        Which specifies to return a new refresh token
+        along with an access token.
 
-        Returns:
+        ### Returns:
         ----
         {bool} -- `True` if successful, `False` otherwise.
         """
@@ -416,9 +420,9 @@ class TDClient():
         bool
             Returns `True` if the tokens were valid, `False` if
             the credentials file doesn't exist.
-        """        
+        """
 
-        if 'refresh_token_expires_at' in self.state:
+        if 'refresh_token_expires_at' in self.state and 'access_token_expires_at' in self.state:
 
             # Grab the Expire Times.
             refresh_token_exp = self.state['refresh_token_expires_at']
@@ -448,7 +452,14 @@ class TDClient():
             return True
 
         else:
-
+            
+            pprint.pprint(
+                {
+                    "credential_path": str(self.credentials_path),
+                    "message": "The credential file does not contain expiration times for your tokens, please go through the oAuth process."
+                }
+            )
+            
             return False
 
     def _silent_sso(self) -> bool:
@@ -459,7 +470,7 @@ class TDClient():
         access token is valid and/or attempting to refresh it. Returns
         True if we have successfully stored a valid access token.
 
-        Returns:
+        ### Returns:
         ----
         {bool} -- Specifies whether it was successful or not.
         """
@@ -478,12 +489,12 @@ class TDClient():
         in the state dictionary for future use. Additionally, it will store the
         expiration time and the refresh token.
 
-        Arguments:
+        ### Arguments:
         ----
         token_dict {dict} -- A response object recieved from the `grab_refresh_token` or
             `grab_access_token` methods.
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A token dictionary with the new added values.
         """
@@ -522,7 +533,7 @@ class TDClient():
         this function handles building the URL, defining Content-Type, passing
         through payloads, and handling any errors that may arise during the request.
 
-        Arguments:
+        ### Arguments:
         ----
         method: The Request method, can be one of the
             following: ['get','post','put','delete','patch']
@@ -538,7 +549,7 @@ class TDClient():
 
         json: A json data payload for a request
 
-        Returns:
+        ### Returns:
         ----
         A Dictionary object containing the JSON values.            
         """
@@ -621,7 +632,7 @@ class TDClient():
         This will validate an argument for the specified endpoint and raise an error if the argument
         is not valid. Can take both a list of arguments or a single argument.
 
-        Arguments:
+        ### Arguments:
         ----
         endpoint {str} -- This is the endpoint name, and should line up 
             exactly with the TD Ameritrade Client library.
@@ -634,7 +645,7 @@ class TDClient():
             particular parameter name. This can either be a single value or a list 
             of values.
 
-        Returns:
+        ### Returns:
         ----
         {bool} --- If all arguments are valid then `True`, `False` if any are invalid.
         
@@ -642,7 +653,7 @@ class TDClient():
         ----
         ValueError()
 
-        Usage:
+        ### Usage:
         ----
             >>> api_endpoint = 'get_market_hours'
             >>> para_name = 'markets'
@@ -681,12 +692,12 @@ class TDClient():
         used in an API request. The list can have either one index or
         multiple indexes.
 
-        Arguments:
+        ### Arguments:
         ----
         parameter_list: A list of paramater values 
             assigned to an argument.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client._prepare_arguments_list(parameter_list = ['MSFT', 'SQ'])
         """
@@ -700,15 +711,15 @@ class TDClient():
         If one item is provided a Get Quote request will be made and if more than one item
         is provided then a Get Quotes request will be made.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/quotes/apis
 
-        Arguments:
+        ### Arguments:
         ----
         instruments: A list of different financial instruments.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_quotes(instruments=['MSFT'])
             >>> td_client.get_quotes(instruments=['MSFT','SQ'])
@@ -735,11 +746,11 @@ class TDClient():
                           frequency_type: str = None, frequency: str = None, extended_hours: bool = True) -> Dict:
         """Gets historical candle data for a financial instrument.
         
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/price-history/apis
 
-        Arguments:
+        ### Arguments:
         ----
         symbol: The ticker symbol to request data for. 
 
@@ -804,11 +815,11 @@ class TDClient():
     def search_instruments(self, symbol: str, projection: str = None) -> Dict:
         """ Search or retrieve instrument data, including fundamental data.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/instruments/apis/get/instruments
 
-        Arguments:
+        ### Arguments:
         ----
         symbol: The symbol of the financial instrument you would 
             like to search.
@@ -816,34 +827,48 @@ class TDClient():
         projection: The type of request, default is "symbol-search". 
             The type of request include the following:
 
-                1. symbol-search
-                    Retrieve instrument data of a specific symbol or cusip
+            1. symbol-search
+                Retrieve instrument data of a specific symbol or cusip
 
-                2. symbol-regex
-                    Retrieve instrument data for all symbols matching regex. 
-                    Example: symbol=XYZ.* will return all symbols beginning with XYZ
+            2. symbol-regex
+                Retrieve instrument data for all symbols matching regex. 
+                Example: symbol=XYZ.* will return all symbols beginning with XYZ
 
-                3. desc-search
-                    Retrieve instrument data for instruments whose description contains 
-                    the word supplied. Example: symbol=FakeCompany will return all 
-                    instruments with FakeCompany in the description
+            3. desc-search
+                Retrieve instrument data for instruments whose description contains 
+                the word supplied. Example: symbol=FakeCompany will return all 
+                instruments with FakeCompany in the description
 
-                4. desc-regex
-                    Search description with full regex support. Example: symbol=XYZ.[A-C] 
-                    returns all instruments whose descriptions contain a word beginning 
-                    with XYZ followed by a character A through C
+            4. desc-regex
+                Search description with full regex support. Example: symbol=XYZ.[A-C] 
+                returns all instruments whose descriptions contain a word beginning 
+                with XYZ followed by a character A through C
 
-                5. fundamental
-                    Returns fundamental data for a single instrument specified by exact symbol.
+            5. fundamental
+                Returns fundamental data for a single instrument specified by exact symbol.
 
-        Usage:
+        ### Usage:
         ----
-            >>> td_client.search_instrument(symbol = 'XYZ', projection = 'symbol-search')
-            >>> td_client.search_instrument(symbol = 'XYZ.*', projection = 'symbol-regex')
-            >>> td_client.search_instrument(symbol = 'FakeCompany', projection = 'desc-search')
-            >>> td_client.search_instrument(symbol = 'XYZ.[A-C]', projection = 'desc-regex')
-            >>> td_client.search_instrument(symbol = 'XYZ.[A-C]', projection = 'fundamental')
-
+            >>> td_client.search_instrument(
+                    symbol='XYZ',
+                    projection='symbol-search'
+                )
+            >>> td_client.search_instrument(
+                    symbol='XYZ.*',
+                    projection='symbol-regex'
+                )
+            >>> td_client.search_instrument(
+                    symbol='FakeCompany',
+                    projection='desc-search'
+                )
+            >>> td_client.search_instrument(
+                    symbol='XYZ.[A-C]',
+                    projection='desc-regex'
+                )
+            >>> td_client.search_instrument(
+                    symbol='XYZ.[A-C]',
+                    projection='fundamental'
+                )
         """
 
         # validate argument
@@ -871,17 +896,19 @@ class TDClient():
         
         Get an instrument by CUSIP (Committee on Uniform Securities Identification Procedures) code.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/instruments/apis/get/instruments/%7Bcusip%7D
 
-        Arguments:
+        ### Arguments:
         ----
         cusip: The CUSIP code of a given financial instrument.
         
-        Usage:
+        ### Usage:
         ----
-            >>> td_client.get_instruments(cusip='SomeCUSIPNumber')
+            >>> td_client.get_instruments(
+                cusip='SomeCUSIPNumber'
+            )
 
         """
 
@@ -904,11 +931,11 @@ class TDClient():
         request will be made and if more than one item is provided then a "Get Hours for Multiple Markets" 
         request will be made.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/market-hours/apis
         
-        Arguments:
+        ### Arguments:
         ----
         markets: The markets for which you're requesting market hours, 
             comma-separated. Valid markets are:
@@ -917,7 +944,7 @@ class TDClient():
         date: The date you wish to recieve market hours for. 
             Valid ISO-8601 formats are: yyyy-MM-dd and yyyy-MM-dd'T'HH:mm:ssz
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_market_hours(markets = ['EQUITY'], date = '2019-10-19')
             >>> td_client.get_market_hours(markets = ['EQUITY','FOREX'], date = '2019-10-19')
@@ -951,11 +978,12 @@ class TDClient():
         """Gets Active movers for a specific Index.
         
         Top 10 (up or down) movers by value or percent for a particular market.
-        Documentation:
+
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/movers/apis/get/marketdata
 
-        Arguments:
+        ### Arguments:
         ----
         market: The index symbol to get movers for. 
             Can be $DJI, $COMPX, or $SPX.X.
@@ -968,10 +996,18 @@ class TDClient():
             types of percent or value. Valid values are `percent`
             or `value`.   
 
-        Usage:
+        ### Usage:
         ----
-            >>> td_client.get_movers(market='$DJI', direction='up', change='value')
-            >>> td_client.get_movers(market='$COMPX', direction='down', change='percent')
+            >>> td_client.get_movers(
+                    market='$DJI',
+                    direction='up',
+                    change='value'
+                )
+            >>> td_client.get_movers(
+                    market='$COMPX',
+                    direction='down',
+                    change='percent'
+                )
         """
 
         # grabs a dictionary representation of our arguments and their inputs.
@@ -1009,16 +1045,16 @@ class TDClient():
         of the POST request. Otherwise, can pass through a dictionary of all the 
         arguments needed.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains
 
-        Arguments:
+        ### Arguments:
         ----
         option_chain: Represents a dicitonary containing values to
             query.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_options_chain(option_chain={'key1':'value1'})
         """
@@ -1057,11 +1093,11 @@ class TDClient():
         If one account is provided a "Get Account" request will be made and if more than one account 
         is provided then a "Get Accounts" request will be made.
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/account-access/apis
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number you wish to recieve data on. Default value is 'all'
                 which will return all accounts of the user.
@@ -1069,11 +1105,16 @@ class TDClient():
         fields {List[str]} -- Balances displayed by default, additional fields can be added here by 
                 adding positions or orders.
 
-        Usage:
+        ### Usage:
         ----
-            >>> td_client.get_accounts(account='all', fields=['orders'])
-            >>> td_client.get_accounts(account='MyAccountNumber', fields=['orders','positions'])
-
+            >>> td_client.get_accounts(
+                    account='all',
+                    fields=['orders']
+                )
+            >>> td_client.get_accounts(
+                    account='MyAccountNumber',
+                    fields=['orders','positions']
+                )
         """
 
         # because we have a list argument, prep it for the request.
@@ -1104,11 +1145,11 @@ class TDClient():
         If one `transaction_id` is provided a "Get Transaction" request will be made and if it is not provided
         then a "Get Transactions" request will be made.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/transaction-history/apis
 
-        Arguments:
+        ### Arguments:
         ----
 
         account {str} -- The account number you wish to recieve
@@ -1143,7 +1184,7 @@ class TDClient():
             specifed a "Get Transaction" request is made. Should only be
             used if you wish to return one transaction.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_transactions(account = 'MyAccountNumber', transaction_type = 'ALL', start_date = '2019-01-31', end_date = '2019-04-28')
             >>> td_client.get_transactions(account = 'MyAccountNumber', transaction_type = 'ALL', start_date = '2019-01-31')
@@ -1208,20 +1249,20 @@ class TDClient():
     def get_preferences(self, account: str) -> Dict:
         """Get's User Preferences for a specific account.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/user-principal/apis/get/accounts/%7BaccountId%7D/preferences-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number you wish to 
             recieve preference data for.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_preferences(account='MyAccountNumber')
         
-        Returns:
+        ### Returns:
         ----
             Perferences dictionary
         """
@@ -1235,16 +1276,16 @@ class TDClient():
     def get_streamer_subscription_keys(self, accounts: List[str]) -> Dict:
         """SubscriptionKey for provided accounts or default accounts.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/user-principal/apis/get/userprincipals/streamersubscriptionkeys-0
 
-        Arguments:
+        ### Arguments:
         ----
         account:A list of account numbers you wish to recieve a 
             streamer key for.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_streamer_subscription_keys(account=['MyAccountNumber'])
             >>> td_client.get_streamer_subscription_keys(account=['MyAccountNumber1', 'MyAccountNumber2'])
@@ -1268,11 +1309,11 @@ class TDClient():
     def get_user_principals(self, fields: List[str]) -> Dict:
         """Returns User Principal details.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/user-principal/apis/get/userprincipals-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         fields: A comma separated String which allows one to specify additional fields to return. None of 
@@ -1283,7 +1324,7 @@ class TDClient():
                 3. preferences
                 4. surrogateIds
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_user_principals(fields=['preferences'])
             >>> td_client.get_user_principals(fields=['preferences','streamerConnectionInfo'])
@@ -1319,11 +1360,11 @@ class TDClient():
         `directOptionsRouting` and `directEquityRouting` values cannot be modified
         via this operation.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/user-principal/apis/put/accounts/%7BaccountId%7D/preferences-0
 
-        Arguments:
+        ### Arguments:
         ----        
 
         account: The account number you wish to update preferences for.
@@ -1346,7 +1387,7 @@ class TDClient():
                 13. defaultAdvancedToolLaunch
                 14. authTokenTimeout
         
-        Usage:
+        ### Usage:
         ----
             >>> td_client.update_preferences(account='MyAccountNumer', dataPayload=<Dictionary>)
 
@@ -1374,11 +1415,11 @@ class TDClient():
         Create watchlist for specific account. This method does not verify that the 
         symbol or asset type are valid.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/watchlist/apis/post/accounts/%7BaccountId%7D/watchlists-0
 
-        Arguments:
+        ### Arguments:
         ----        
 
         account: The account number you wish to create the watchlist for.
@@ -1387,7 +1428,7 @@ class TDClient():
 
         watchlistItems: A list of WatchListItems object.
 
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.create_watchlist(
@@ -1418,16 +1459,16 @@ class TDClient():
         "Get Watchlist for Single Account" request will be made and if 'all' is provided then a 
         "Get Watchlist for Multiple Accounts" request will be made.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/watchlist/apis
 
-        Arguments:
+        ### Arguments:
         ----
 
         account: The account number you wish to pull watchlists from. Default value is 'all'
 
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.get_watchlist_accounts(account='all')
@@ -1450,18 +1491,18 @@ class TDClient():
         Returns a specific watchlist for a specific account designated by the
         watchlist ID.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/watchlist/apis/get/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         account:The account number you wish to pull watchlists from.
 
         watchlist_id: The ID of the watchlist you wish to return.
 
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.get_watchlist(
@@ -1482,18 +1523,18 @@ class TDClient():
 
         Deletes a specific watchlist for a specific account.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/watchlist/apis/delete/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         account: The account number you wish to delete the watchlist from.
 
         watchlist_id: The ID of the watchlist you wish to delete.
 
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.delete_watchlist(
@@ -1517,11 +1558,11 @@ class TDClient():
         watchlist, update or delete items in a watchlist. This method does not verify that the symbol or asset 
         type are valid.
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/watchlist/apis/patch/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         account: The account number that contains the watchlist you wish to update.
@@ -1530,7 +1571,7 @@ class TDClient():
 
         watchlistItems: A list of the original watchlist items you wish to update and their modified keys.
          
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.update_watchlist(
@@ -1559,11 +1600,11 @@ class TDClient():
         Replace watchlist for a specific account. This method does not verify that 
         the symbol or asset type are valid.
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/watchlist/apis/put/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         account: The account number that contains the watchlist you wish to replace.
@@ -1576,7 +1617,7 @@ class TDClient():
 
         watchlistItems_New: The new watchlist items you wish to add to the watchlist.
          
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.replace_watchlist(
@@ -1616,11 +1657,11 @@ class TDClient():
                             str = None, to_entered_time: str = None, status: str = None) -> Dict:
         """Returns the orders for a specific account.
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/orders-0
 
-        Arguments:
+        ### Arguments:
         ----
         account: The account number that you want to query for orders.
 
@@ -1652,7 +1693,7 @@ class TDClient():
                 14. FILLED
                 15. EXPIRED
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_orders_path(
                 account='MyAccountID',
@@ -1699,11 +1740,11 @@ class TDClient():
 
         All orders for a specific account or, if account ID isn't specified, orders will be returned for all linked accounts
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/get/orders-0
 
-        Arguments:
+        ### Arguments:
         ----
 
         account: The account number that you want to query for orders, or if none provided will query all.
@@ -1736,7 +1777,7 @@ class TDClient():
             >>> 14. FILLED
             >>> 15. EXPIRED
                   
-        Usage:
+        ### Usage:
         ----
 
             >>> td_client.get_orders_query(
@@ -1784,23 +1825,23 @@ class TDClient():
         isn't specified, orders will be returned for all linked
         accounts.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/get/orders-0
         
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that you want to query orders for.
         
-        Keyword Arguments:
+        Keyword ### Arguments:
         ----
         order_id {str} -- The ID of the order you want to delete. (default: {None})
         
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_order(account='MyAccountID', order_id='MyOrderID')
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -1818,21 +1859,21 @@ class TDClient():
     def cancel_order(self, account: str, order_id: str) -> Dict:
         """Cancel a specific order for a specific account.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that the order was made for.
 
         order_id {str} -- The ID of the order you want to delete.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.cancel_order(account='MyAccountID', order_id='MyOrderID')
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -1847,21 +1888,21 @@ class TDClient():
     def place_order(self, account: str, order: dict) -> dict:
         """Places an order for a specific account.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that you want to place the order for.
 
         order {dict} -- The order payload.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.place_order(account='MyAccountID', order={'orderKey':'OrderValue'})
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -1879,11 +1920,11 @@ class TDClient():
     def modify_order(self, account: str, order: dict, order_id: str) -> dict:
         """Modifies an exisiting order.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that the order was place for.
 
@@ -1891,11 +1932,11 @@ class TDClient():
 
         order_id {str} -- The ID of the exisitng order.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.place_order(account='MyAccountID', order={'orderKey':'OrderValue'})
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -1926,21 +1967,21 @@ class TDClient():
         Grabs all the saved orders for a specific account or, if account 
         ID isn't specified, orders will be returned for all linked accounts
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/account-access/apis/get/orders-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that you want to place the order for.
 
         saved_order_id {str} --  The saved order id.
         
-        Usage:
+        ### Usage:
         ----
             >>> td_client.get_order(account='MyAccountID', saved_order_id='MyOrderID')
 
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.   
         """
@@ -1955,21 +1996,21 @@ class TDClient():
         Using a saved order ID and account number, will delete the order from
         the specified account.
 
-        Documentation:
+        ### Documentation:
         ---- 
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that you want to place the order for.
 
         saved_order_id {str} --  The saved order id.
         
-        Usage:
+        ### Usage:
         ----
             >>> td_client.cancel_order(account = 'MyAccountID', saved_order_id = 'MyOrderID')
 
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -1984,21 +2025,21 @@ class TDClient():
 
         Creates a saved order for the specified account.
 
-        Documentation:
+        ### Documentation:
         ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
-        Arguments:
+        ### Arguments:
         ----
         account {str} -- The account number that you want to place the order for.
 
         saved_order {dict} -- The order payload.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_client.place_order(account='MyAccountID', saved_order={'orderKey':'OrderValue'})
         
-        Returns:
+        ### Returns:
         ----
         {dict} -- A response dicitonary.
         """
@@ -2016,11 +2057,11 @@ class TDClient():
     def _create_token_timestamp(self, token_timestamp: str) -> int:
         """Parses the token and converts it to a timestamp.
         
-        Arguments:
+        ### Arguments:
         ----
         token_timestamp {str} -- The timestamp returned from the get_user_principals endpoint.
         
-        Returns:
+        ### Returns:
         ----
         int -- the token timestamp as an integer.
         """
@@ -2037,7 +2078,7 @@ class TDClient():
         the credentials payload, and initalizes a new instance
         of the TDStream client.
 
-        Usage:
+        ### Usage:
         ----
             >>> td_session = TDClient(
                 client_id='<CLIENT_ID>',
@@ -2047,7 +2088,7 @@ class TDClient():
             >>> td_session.login()
             >>> td_stream_session = td_session.create_streaming_session()
 
-        Returns:
+        ### Returns:
         ----
         TDStreamerClient -- A new instance of a Stream Client that can be
             used to subscribe to different streaming services.
