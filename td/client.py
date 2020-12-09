@@ -112,8 +112,8 @@ class TDClient():
         self.client_id = client_id
         self.redirect_uri = redirect_uri
         self.account_number = account_number
+        
         self.credentials_path = pathlib.Path(credentials_path)
-        self._redirect_code = None
         self._td_utilities = TDUtilities()
 
         if self.auth_flow == 'flask':
@@ -236,8 +236,8 @@ class TDClient():
         {bool} -- Specifies whether it was successful or not.
         """
 
-        # if caching is enabled then attempt silent authentication.
-        if self._silent_sso():
+        # Only attempt silent SSO if the credential file exists.
+        if self.credentials_path.exists() and self._silent_sso():
             self.authstate = True
             return True
         else:
@@ -382,7 +382,7 @@ class TDClient():
         """
 
         # Parse the URL
-        url_dict = urllib.parse.parse_qs(self._redirect_code)
+        url_dict = urllib.parse.parse_qs(self.code)
 
         # Grab the Code.
         url_code = list(url_dict.values())[0][0]
@@ -391,10 +391,12 @@ class TDClient():
         data = {
             'grant_type': 'authorization_code',
             'client_id': self.client_id + '@AMER.OAUTHAP',
-            'access_type': 'offline',
             'code': url_code,
             'redirect_uri': self.redirect_uri
         }
+
+        if return_refresh_token:
+            data['access_type'] = 'offline'
 
         # Make the request.
         response = requests.post(
@@ -459,7 +461,7 @@ class TDClient():
                     "message": "The credential file does not contain expiration times for your tokens, please go through the oAuth process."
                 }
             )
-            
+
             return False
 
     def _silent_sso(self) -> bool:
@@ -699,7 +701,9 @@ class TDClient():
 
         ### Usage:
         ----
-            >>> td_client._prepare_arguments_list(parameter_list = ['MSFT', 'SQ'])
+            >>> td_client._prepare_arguments_list(
+                    parameter_list=['MSFT', 'SQ']
+                )
         """
 
         return ','.join(parameter_list)
@@ -909,7 +913,6 @@ class TDClient():
             >>> td_client.get_instruments(
                 cusip='SomeCUSIPNumber'
             )
-
         """
 
         # build the params dictionary
@@ -946,9 +949,8 @@ class TDClient():
 
         ### Usage:
         ----
-            >>> td_client.get_market_hours(markets = ['EQUITY'], date = '2019-10-19')
-            >>> td_client.get_market_hours(markets = ['EQUITY','FOREX'], date = '2019-10-19')
-
+            >>> td_client.get_market_hours(markets=['EQUITY'], date='2019-10-19')
+            >>> td_client.get_market_hours(markets=['EQUITY','FOREX'], date='2019-10-19')
         """
 
         # validate argument
