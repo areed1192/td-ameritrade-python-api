@@ -219,7 +219,7 @@ class TDClient():
                 self.state.update(json.load(json_file))
 
         # if they want to save it and have allowed for caching then load the file.
-        elif action == 'save' and self.config['cache_state']:            
+        elif action == 'save':            
             with open(file=self.credentials_path, mode='w+') as json_file:
                 json.dump(obj=self.state, fp=json_file, indent=4)
 

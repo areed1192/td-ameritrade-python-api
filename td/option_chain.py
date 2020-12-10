@@ -12,7 +12,7 @@ class OptionChain():
     """
     TD Ameritrade API `OptionChain` Class.
 
-    Overview:
+    ### Overview:
     ----
     Implements the OptionChain object for helping users build,
     validate, and modify requests made to the `Get Option Chains`
@@ -30,7 +30,7 @@ class OptionChain():
                  option_type: str = 'all') -> None:
         """Initializes the `OptionChain` object.
 
-        Overview:
+        ### Overview:
         ----
         Initalizes the Option Chain Object and override any default 
         values that are passed through.
@@ -220,7 +220,7 @@ class OptionChain():
     def _get_query_parameters(self) -> dict:
         """Returns only paramters needing to be validated.
 
-        Overview:
+        ### Overview:
         ----
         This will create a new dictionary, that only contains the 
         items that have a value not equal to None in the 

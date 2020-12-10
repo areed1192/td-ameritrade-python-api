@@ -1,7 +1,7 @@
 class TknExpError(Exception):
     """Raise exception when refresh or access token is expired.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -18,7 +18,7 @@ class TknExpError(Exception):
 class ExdLmtError(Exception):
     """Raise exception when exceeding query limit of the server.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -35,7 +35,7 @@ class ExdLmtError(Exception):
 class NotNulError(Exception):
     """Raise exception when a null value is passed into non-null field.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -53,7 +53,7 @@ class ForbidError(Exception):
     """Raise forbidden exception. This usually occurs when the app does
     not have access to the account.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -70,7 +70,7 @@ class ForbidError(Exception):
 class NotFndError(Exception):
     """Raise exception when criteria is not found.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -88,7 +88,7 @@ class ServerError(Exception):
     """Raise exception when there is an error with the service or the server
     cannot provide response.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
@@ -106,7 +106,7 @@ class GeneralError(Exception):
     """Raise exception for all other status code >400 errors which are not
     defined above.
 
-    Arguments:
+    ### Arguments:
     ----
     Exception (Exception): The base python exception class
     """
