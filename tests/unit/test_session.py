@@ -341,7 +341,7 @@ class TDSession(TestCase):
             fields=['preferences', 'surrogateIds'])
 
         self.assertIsInstance(user_principals, dict)
-        self.assertIn('authToken', user_principals)
+        self.assertIn('userId', user_principals)
 
         # Save the data.
         if SAVE_FLAG:
