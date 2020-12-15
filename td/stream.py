@@ -635,10 +635,20 @@ class TDStreamerClient():
 
         # If we are connected then login.
         if is_connected:
+
             await self._send_message(login_request)
+
             while True:
+                
+                # Grab the Response.
                 response = await self._receive_message(return_value=True)
                 responses = response.get('response')
+
+                # If we get a code 3, we had a login error.
+                if responses[0]['content']['code'] == 3:
+                    raise ValueError('LOGIN ERROR: ' + responses[0]['content']['msg'])
+                
+                # see if we had a login response.
                 for r in responses:
                     if r.get('service') == 'ADMIN' and r.get('command') == 'LOGIN':
                         return self.connection

@@ -17,7 +17,7 @@ setup(
 
     # Set the version.
     # For the next one do 3.4!!!
-    version='0.3.2',
+    version='0.3.4',
 
     # here is a simple description of the library, this will appear when
     # someone searches for the library on https://pypi.org/search
