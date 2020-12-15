@@ -409,8 +409,11 @@ class Order():
 
         # Add the cancel time.
         if cancel_time is not None:
+            
             self.template['cancelTime'] = {
-                'date': cancel_time, 'shortFormat': False}
+                'date': cancel_time, 
+                'shortFormat': False
+            }
 
     def complex_order_type(self, complex_order_strategy_type=None):
         '''

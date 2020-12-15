@@ -2054,7 +2054,7 @@ class TDClient():
 
         # make the request
         endpoint = 'accounts/{}/savedorders'.format(account)
-        return self._make_request(method='post', endpoint=endpoint, mode='json', data=saved_order, order_details=True)
+        return self._make_request(method='post', endpoint=endpoint, mode='json', json=saved_order, order_details=True)
 
     def _create_token_timestamp(self, token_timestamp: str) -> int:
         """Parses the token and converts it to a timestamp.
