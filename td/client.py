@@ -1917,7 +1917,10 @@ class TDClient():
 
         # make the request
         endpoint = 'accounts/{}/orders'.format(account)
-        return self._make_request(method='post', endpoint=endpoint, mode='json', json=order, order_details=True)
+        try:
+            return self._make_request(method='post', endpoint=endpoint, mode='json', json=order, order_details=True)
+        except Exception as e:
+            raise e
     
     def modify_order(self, account: str, order: dict, order_id: str) -> dict:
         """Modifies an exisiting order.
