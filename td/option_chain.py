@@ -24,10 +24,25 @@ class OptionChain():
     built and provide feedback to the user on how fix them if possible.
     """
 
-    def __init__(self, symbol: str = None, contract_type: str = 'all', strike_count: int = None, include_quotes: bool = False, strategy: str = 'single',
-                 interval: str = None, strike: float = None, opt_range: str = 'all', from_date: Union[str, datetime] = None, to_date: Union[str, datetime] = None,
-                 volatility: str = None, underlying_price: str = None, interest_rate: str = None, days_to_expiration: str = None, exp_month: str = 'all',
-                 option_type: str = 'all') -> None:
+    def __init__(
+        self,
+        symbol: str = None,
+        contract_type: str = 'all',
+        strike_count: int = None,
+        include_quotes: bool = False,
+        strategy: str = 'single',
+        interval: str = None,
+        strike: float = None,
+        opt_range: str = 'all',
+        from_date: Union[str, datetime] = None,
+        to_date: Union[str, datetime] = None,
+        volatility: str = None,
+        underlying_price: str = None,
+        interest_rate: str = None,
+        days_to_expiration: str = None,
+        exp_month: str = 'all',
+        option_type: str = 'all'
+    ) -> None:
         """Initializes the `OptionChain` object.
 
         ### Overview:
@@ -265,26 +280,22 @@ class OptionChain():
 
         # validate the key can be used.
         if key_name not in self.query_parameters:
-            raise KeyError(incorrect_key_msg.format(
-                incorrect_val=key_name,
-                correct_val=correct_vals
-            )
+            raise KeyError(
+                incorrect_key_msg.format(
+                    incorrect_val=key_name,
+                    correct_val=correct_vals
+                )
             )
 
         # If possible, validate that the value can be used.
         if key_name in self.argument_types.keys() and key_value not in self.argument_types[key_name]:
-            raise ValueError(incorrect_val_msg.format(
-                incorrect_val=key_value,
-                incorrect_key=key_name,
-                correct_val=', '.join(self.argument_types[key_name])
-            )
+            raise ValueError(
+                incorrect_val_msg.format(
+                    incorrect_val=key_value,
+                    incorrect_key=key_name,
+                    correct_val=', '.join(self.argument_types[key_name])
+                )
             )
 
         # Otherwise, add the key and the value to the query parameter dictionary.
         self.query_parameters[key_name] = key_value
-
-    # def add_chain_enum(self, item=None):
-
-    #     # for any Enum member
-    #     if isinstance(item, Enum):
-    #         item = item.name

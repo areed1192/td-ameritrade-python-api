@@ -616,7 +616,10 @@ class TDClient():
             if response.status_code == 400:
                 raise NotNulError(message=response.text)
             elif response.status_code == 401:
-                raise TknExpError(message=response.text)
+                try:
+                    self.grab_access_token()
+                except:
+                    raise TknExpError(message=response.text)
             elif response.status_code == 403:
                 raise ForbidError(message=response.text)
             elif response.status_code == 404:
