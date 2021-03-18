@@ -1061,7 +1061,9 @@ class TDClient():
 
         ### Usage:
         ----
-            >>> td_client.get_options_chain(option_chain={'key1':'value1'})
+            >>> td_client.get_options_chain(
+                option_chain={'key1':'value1'}
+            )
         """
 
         # First check if it's an `OptionChain` object.
