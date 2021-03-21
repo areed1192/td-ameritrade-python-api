@@ -599,10 +599,10 @@ class TDClient():
         """
 
         url = self._api_endpoint(endpoint=endpoint)
-        headers = self._headers(mode=mode)
 
         # Make sure the token is valid if it's not a Token API call.
         self.validate_token()
+        headers = self._headers(mode=mode)
 
         # Define a new session.
         request_session = requests.Session()
