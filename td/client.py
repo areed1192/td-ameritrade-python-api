@@ -44,10 +44,15 @@ class TDClient():
     Implements OAuth 2.0 Authorization Code Grant workflow, handles configuration
     and state management, adds token for authenticated calls, and performs request 
     to the TD Ameritrade API.
+
+    _multiprocessing_safe flag = True makes a single instance of this client safe to pass to multiple threads / processes,
+    as it will check a shared token cache first upon token expiration rather than each thread invalidating each others tokens.
+    Only the first thread to see a token has expired will actually request a new one, the other threads / processes will pull
+    from cache.
     """
 
     def __init__(self, client_id: str, redirect_uri: str, account_number: str = None, credentials_path: str = None, 
-                       auth_flow: str = 'default', _do_init: bool = True) -> None:     
+                       auth_flow: str = 'default', _do_init: bool = True, _multiprocessing_safe = False) -> None:
         """Creates a new instance of the TDClient Object.
 
         Initializes the session with default values and any user-provided overrides.The 
@@ -107,6 +112,18 @@ class TDClient():
             'refresh_token': None,
             'logged_in': False
         }
+        self._cached_state = None
+        self._multiprocessing_safe = _multiprocessing_safe
+        self._multiprocessing_lock = None
+        if self._multiprocessing_safe:
+            import multiprocessing as mp
+            self._cached_state = mp.Manager().dict()
+            self._multiprocessing_lock = mp.Lock()
+            self._cached_state.update({
+                'access_token': None,
+                'refresh_token': None,
+                'logged_in': False
+            })
 
         self.auth_flow = auth_flow
         self.client_id = client_id
@@ -217,11 +234,16 @@ class TDClient():
         if action == 'init' and credentials_file_exists:
             with open(file=self.credentials_path, mode='r') as json_file:
                 self.state.update(json.load(json_file))
+                if self._multiprocessing_safe:
+                    self._cached_state.update(self.state)
 
         # if they want to save it and have allowed for caching then load the file.
         elif action == 'save':     
             with open(file=self.credentials_path, mode='w+') as json_file:
-                json.dump(obj=self.state, fp=json_file, indent=4)
+                if self._multiprocessing_safe:
+                    json.dump(obj=dict(self._cached_state), fp=json_file, indent=4)
+                else:
+                    json.dump(obj=self.state, fp=json_file, indent=4)
 
     def login(self) -> bool:
         """Logs the user into the TD Ameritrade API.
@@ -414,7 +436,7 @@ class TDClient():
 
             return True
 
-    def validate_token(self) -> bool:
+    def validate_token(self, already_updated_from_cache=False) -> bool:
         """Validates whether the tokens are valid or not.
 
         ### Returns
@@ -443,13 +465,31 @@ class TDClient():
 
             # See if we need a new Refresh Token.
             if datetime.datetime.now().timestamp() > refresh_token_exp_threshold:
-                print("Grabbing new refresh token...")
-                self.grab_refresh_token()
+                if self._multiprocessing_safe and not already_updated_from_cache:
+                    # ONLY ONE PROCESS / THREAD CAN GET A NEW TOKEN AT THE SAME TIME! Update from cache then revalidate!
+                    # Only using the multiprocessing cache here prevents added latency checking cross process values
+                    #  except when the token has expired, which should only be once every 30 minutes. Better than making
+                    #  state a full MP dict.
+                    with self._multiprocessing_lock:
+                        self.state.update(dict(self._cached_state))
+                        self.validate_token(already_updated_from_cache=True)
+                else:
+                    print("Grabbing new refresh token...")
+                    self.grab_refresh_token()
 
             # See if we need a new Access Token.
             if datetime.datetime.now().timestamp() > access_token_exp_threshold:
-                print("Grabbing new access token...")
-                self.grab_access_token()
+                if self._multiprocessing_safe and not already_updated_from_cache:
+                    # ONLY ONE PROCESS / THREAD CAN GET A NEW TOKEN AT THE SAME TIME! Update from cache then revalidate!
+                    # Only using the multiprocessing cache here prevents added latency checking cross process values
+                    #  except when the token has expired, which should only be once every 30 minutes. Better than making
+                    #  state a full MP dict.
+                    with self._multiprocessing_lock:
+                        self.state.update(dict(self._cached_state))
+                        self.validate_token(already_updated_from_cache=True)
+                else:
+                    print("Grabbing new access token...")
+                    self.grab_access_token()
 
             return True
 
@@ -523,6 +563,8 @@ class TDClient():
             self.state['refresh_token_expires_at_date'] = ref_timestamp
 
         self.state['logged_in'] = True
+        if self._multiprocessing_safe:
+            self._cached_state.update(self.state)
         self._state_manager('save')
 
         return self.state
@@ -557,10 +599,10 @@ class TDClient():
         """
 
         url = self._api_endpoint(endpoint=endpoint)
-        headers = self._headers(mode=mode)
 
         # Make sure the token is valid if it's not a Token API call.
         self.validate_token()
+        headers = self._headers(mode=mode)
 
         # Define a new session.
         request_session = requests.Session()
