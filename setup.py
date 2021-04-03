@@ -1,68 +1,68 @@
 from setuptools import setup
-from setuptools import find_namespace_packages
+from setuptools import find_packages
 
-# Open the README file.
+# load the README file.
 with open(file="README.md", mode="r") as fh:
     long_description = fh.read()
 
 setup(
+    # this will be my Library name.
+    name='td-ameritrade-api',
 
-    name='',
-
-    # Define Author Info.
+    # Want to make sure people know who made it.
     author='Alex Reed',
+
+    # also an email they can use to reach out.
     author_email='coding.sigma@gmail.com',
 
-    # Define Version Info.
+    # Set the version.
     version='0.1.0',
 
-    # Define descriptions.
-    description='',
+    # here is a simple description of the library, this will appear when
+    # someone searches for the library on https://pypi.org/search
+    description='A python client lirbary for the TD Ameritrade API.',
+
+    # I have a long description but that will just be my README file, note the
+    # variable up above where I read the file.
     long_description=long_description,
+
+    # want to make sure that I specify the long description as MARKDOWN.
     long_description_content_type="text/markdown",
 
-    # Define repo location.
-    url='',
+    # here is the URL you can find the code, this is just the GitHub URL.
+    url='https://github.com/areed1192/td-ameritrade-api',
 
-    # Define dependencies.
-    install_requires=[],
+    # there are some dependencies to use the library, so let's list them out.
+    install_requires=[
+        'websockets',
+        'requests',
+        'flask',
+        'requests-oauthlib',
+        'pyopenssl'
+    ],
 
-    # Specify folder content.
-    packages=find_namespace_packages(
-        include=[]
+    # some keywords for my library.
+    keywords='finance, td ameritrade, api',
+
+    # here are the packages I want "build."
+    packages=find_packages(
+        include=['td']
     ),
 
-    # Define the python version.
-    python_requires='>3.7',
+    # I also have some package data, like photos and JSON files, so I want to
+    # include those too.
+    include_package_data=True,
 
-    # Define our classifiers.
+    # additional classifiers that give some characteristics about the package.
     classifiers=[
-
-        # Phase of development my library is in.
         'Development Status :: 3 - Alpha',
-
-        # Audience this library is intended for.
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
         'Intended Audience :: Financial and Insurance Industry',
-
-        # License that guides my library.
         'License :: OSI Approved :: MIT License',
-
-        # Package was written in English.
         'Natural Language :: English',
-
-        # Operating systems.
         'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3'
+    ],
 
-        # Programming Languages Used..
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-
-        # Topics.
-        'Topic :: Database',
-        'Topic :: Education',
-        'Topic :: Office/Business'
-    ]
-
+    # you will need python 3.7 to use this libary.
+    python_requires='>=3.7'
 )

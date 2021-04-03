@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run TD OAuth",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_oauth.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}
