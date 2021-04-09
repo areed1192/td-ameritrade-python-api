@@ -1,10 +1,8 @@
-from typing import List
-from typing import Dict
-from typing import Union
-
 from td.session import TdAmeritradeSession
 from td.credentials import TdCredentials
 from td.quotes import Quotes
+from td.movers import Movers
+
 
 class TdAmeritradeClient():
 
@@ -23,7 +21,7 @@ class TdAmeritradeClient():
 
     def __repr__(self):
         pass
-    
+
     def quotes(self) -> Quotes:
         """Used to access the `Quotes` Services and metadata.
 
@@ -34,9 +32,7 @@ class TdAmeritradeClient():
 
         ### Usage
         ----
-            >>> td_client = TdAmeritradeClient(
-                    credentials=td_credentials
-                )
+            >>> td_client = TdAmeritradeClient()
             >>> quotes_service = td_client.quotes()
         """
 
@@ -44,3 +40,20 @@ class TdAmeritradeClient():
 
         return object
 
+    def movers(self) -> Movers:
+        """Used to access the `Movers` Services and metadata.
+
+        ### Returns
+        ---
+        Movers:
+            The `Movers` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> movers_service = td_client.movers()
+        """
+
+        object: Movers = Movers(session=self.td_session)
+
+        return object

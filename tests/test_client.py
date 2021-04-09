@@ -6,6 +6,7 @@ from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
 from td.quotes import Quotes
+from td.movers import Movers
 
 
 class TestTdClient(TestCase):
@@ -47,6 +48,11 @@ class TestTdClient(TestCase):
         """Create an instance and make sure it's a `Quotes` object."""
 
         self.assertIsInstance(self.td_client.quotes(), Quotes)
+
+    def test_creates_instance_of_mover(self):
+        """Create an instance and make sure it's a `Movers` object."""
+
+        self.assertIsInstance(self.td_client.movers(), Movers)
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""

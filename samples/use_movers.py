@@ -1,6 +1,8 @@
+from pprint import pprint
+from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from configparser import ConfigParser
+
 
 # Initialize the Parser.
 config = ConfigParser()
@@ -16,10 +18,22 @@ redirect_uri = config.get('main', 'redirect_uri')
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.jsonc'
+    credential_file='config/td_credentials.json'
 )
 
 # Initalize the `TdAmeritradeClient`
 td_client = TdAmeritradeClient(
     credentials=td_credentials
+)
+
+# Initialize the Movers service.
+movers_service = td_client.movers()
+
+# Grab the top 10 percentage up movers.
+pprint(
+    movers_service.get_movers(
+        index='$DJI',
+        direction='up',
+        change='percent'
+    )
 )
