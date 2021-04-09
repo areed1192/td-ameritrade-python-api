@@ -5,7 +5,7 @@
       "name": "Python: Run TD OAuth",
       "type": "python",
       "request": "launch",
-      "program": "${cwd}/samples/use_oauth.py",
+      "program": "${cwd}/samples/use_quotes.py",
       "console": "integratedTerminal"
     }
   ]

@@ -3,7 +3,8 @@ from typing import Dict
 from typing import Union
 
 from td.session import TdAmeritradeSession
-from td.oauth import TdAmeritradeOauth
+from td.credentials import TdCredentials
+from td.quotes import Quotes
 
 class TdAmeritradeClient():
 
@@ -15,12 +16,31 @@ class TdAmeritradeClient():
     to the TD Ameritrade API.
     """
 
-    def __init__(self, client_id: str, redirect_url: str) -> None:
+    def __init__(self, credentials: TdCredentials) -> None:
 
-        self.client_id = client_id
-        self.redirect_uri = redirect_url
-        self._td_session = TdAmeritradeSession(td_client=self)
-        # self.oauth_client = TdAmeritradeOauth(td_client=self)
+        self.td_credentials = credentials
+        self.td_session = TdAmeritradeSession(td_client=self)
 
     def __repr__(self):
         pass
+    
+    def quotes(self) -> Quotes:
+        """Used to access the `Quotes` Services and metadata.
+
+        ### Returns
+        ---
+        Quotes:
+            The `Quotes` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient(
+                    credentials=td_credentials
+                )
+            >>> quotes_service = td_client.quotes()
+        """
+
+        object: Quotes = Quotes(session=self.td_session)
+
+        return object
+

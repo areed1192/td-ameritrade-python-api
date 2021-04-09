@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 import requests
 import logging
 import pathlib
@@ -64,7 +65,7 @@ class TdAmeritradeSession():
 
         # Fake the headers.
         headers = {
-            "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
+            "Authorization": "Bearer {access_token}".format(access_token=self.client.td_credentials.access_token),
             "Content-Type": "application/json"
         }
 
@@ -129,6 +130,8 @@ class TdAmeritradeSession():
             A Dictionary object containing the 
             JSON values.
         """
+
+        self.client.td_credentials._validate_token()
 
         # Build the URL.
         url = self.build_url(endpoint=endpoint)
