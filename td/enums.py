@@ -1,0 +1,52 @@
+from enum import Enum
+
+
+class Direction(Enum):
+    """Represents the direction options for the
+    `Movers` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import Directions
+        >>> Directions.Up.value
+    """
+
+    Up = 'up'
+    Down = 'down'
+
+
+class Change(Enum):
+    """Represents the change options for the
+    `Movers` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import Change
+        >>> Change.Percent.value
+    """
+
+    Percent = 'percent'
+    Value = 'value'
+
+
+class TransactionTypes(Enum):
+    """Represents the types of transaction you
+    can query from TD Ameritrade using the `Accounts`
+    services.
+
+    ### Usage:
+    ----
+        >>> from td.enums import TransactionTypes
+        >>> TransactionTypes.Trade.value
+    """
+
+    All = 'ALL'
+    Trade = 'TRADE'
+    BuyOnly = 'BUY_ONLY'
+    SellOnly = 'SELL_ONLY'
+    CashInOrCashOut = 'CASH_IN_OR_CASH_OUT'
+    Checking = 'CHECKING'
+    Dividend = 'DIVIDEND'
+    Interest = 'INTEREST'
+    Other = 'OTHER'
+    AdvisorFees = 'ADVISOR_FEES'

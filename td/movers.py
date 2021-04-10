@@ -48,7 +48,11 @@ class Movers():
         ### Usage
         ----
             >>> movers_service = td_client.movers()
-            >>> movers_service.get_movers(instrument='AAPL')
+            >>> movers_service.get_movers(
+                index='$DJI',
+                direction='up',
+                change='percent'
+            )
         """
 
         if isinstance(direction, Enum):

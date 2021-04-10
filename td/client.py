@@ -2,6 +2,7 @@ from td.session import TdAmeritradeSession
 from td.credentials import TdCredentials
 from td.quotes import Quotes
 from td.movers import Movers
+from td.accounts import Accounts
 
 
 class TdAmeritradeClient():
@@ -55,5 +56,23 @@ class TdAmeritradeClient():
         """
 
         object: Movers = Movers(session=self.td_session)
+
+        return object
+
+    def accounts(self) -> Accounts:
+        """Used to access the `Accounts` Services and metadata.
+
+        ### Returns
+        ---
+        Accounts:
+            The `Accounts` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> accounts_service = td_client.accounts()
+        """
+
+        object: Accounts = Accounts(session=self.td_session)
 
         return object

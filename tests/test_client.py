@@ -1,3 +1,4 @@
+from td.accounts import Accounts
 import unittest
 
 from unittest import TestCase
@@ -53,6 +54,11 @@ class TestTdClient(TestCase):
         """Create an instance and make sure it's a `Movers` object."""
 
         self.assertIsInstance(self.td_client.movers(), Movers)
+
+    def test_creates_instance_of_accounts(self):
+        """Create an instance and make sure it's a `Accounts` object."""
+
+        self.assertIsInstance(self.td_client.accounts(), Accounts)
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""
