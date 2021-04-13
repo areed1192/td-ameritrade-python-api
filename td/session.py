@@ -130,7 +130,7 @@ class TdAmeritradeSession():
             JSON values.
         """
 
-        self.client.td_credentials._validate_token()
+        self.client.td_credentials.validate_token()
 
         # Build the URL.
         url = self.build_url(endpoint=endpoint)

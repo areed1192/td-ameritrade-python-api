@@ -236,7 +236,7 @@ class TdCredentials():
                 expiration_secs=self._expires_in,
             )
 
-        self._validate_token()
+        self.validate_token()
 
     def to_token_dict(self) -> dict:
         """Converts the TdCredential object
@@ -350,7 +350,7 @@ class TdCredentials():
             >>> td_credentials.from_workflow()
         """
 
-        self._grab_authorization_code()
+        self.grab_authorization_code()
         token_dict = self.exchange_code_for_token(return_refresh_token=True)
         self.from_token_dict(token_dict=token_dict)
 
@@ -360,7 +360,7 @@ class TdCredentials():
             token_dict = json.load(fp=token_file)
             self.from_token_dict(token_dict=token_dict)
 
-    def to_token_file(self, file_path: Union[str, pathlib.Path]) -> None:
+    def to_credential_file(self, file_path: Union[str, pathlib.Path]) -> None:
         """Takes the token dictionary and saves it to a JSON file.
 
         ### Parameters
@@ -392,15 +392,49 @@ class TdCredentials():
 
         ### Usage
         ----
+
+        ### Example 1
+        ----
+        You don't necessairly need the `refresh_token_expiration_time` or the
+        `access_token_expiration_time` because they can be calculated using the
+        `access_token` key and `refresh_token`.
+        
             >>> td_credentials.from_credential_dict(
-                    file_path='config/td_credentials.json'
+                    token_dict={
+                        "access_token": "YOUR_ACCESS_TOKEN",
+                        "refresh_token": "YOUR_REFRESH_TOKEN"
+                        "scope": "PlaceTrades AccountAccess MoveMoney",
+                        "expires_in": 1800,
+                        "refresh_token_expires_in": 7776000,
+                        "token_type": "Bearer",
+                        "refresh_token_expiration_time": "2021-07-08T17:38:07.973982",
+                        "access_token_expiration_time": "2021-04-09T18:08:07.973982"
+                    }
+                )
+        
+        ### Example 2
+        ----
+        You don't necessairly need the `refresh_token_expiration_time` or the
+        `access_token_expiration_time` because they can be calculated using the
+        `access_token` key and `refresh_token`.
+        
+            >>> # This just is another way of sending it through.
+            >>> td_credentials.from_credential_dict(
+                    token_dict={
+                        "access_token": "YOUR_ACCESS_TOKEN",
+                        "refresh_token": "YOUR_REFRESH_TOKEN"
+                        "scope": "PlaceTrades AccountAccess MoveMoney",
+                        "expires_in": 1800,
+                        "refresh_token_expires_in": 7776000,
+                        "token_type": "Bearer"
+                    }
                 )
         """
 
         self.from_token_dict(token_dict=token_dict)
-        self._validate_token()
+        self.validate_token()
 
-    def _grab_authorization_code(self) -> None:
+    def grab_authorization_code(self) -> None:
         """Generates the URL to grab the authorization code."""
 
         data = {
@@ -507,7 +541,7 @@ class TdCredentials():
         else:
             raise requests.HTTPError()
 
-    def _validate_token(self) -> None:
+    def validate_token(self) -> None:
         """Validates the access token and refresh token.
 
         ### Overview
@@ -529,4 +563,4 @@ class TdCredentials():
             self.from_token_dict(token_dict=token_dict)
 
             if self._loaded_from_file:
-                self.to_token_file(file_path=self._file_path)
+                self.to_credential_file(file_path=self._file_path)

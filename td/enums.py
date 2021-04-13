@@ -50,3 +50,19 @@ class TransactionTypes(Enum):
     Interest = 'INTEREST'
     Other = 'OTHER'
     AdvisorFees = 'ADVISOR_FEES'
+
+class Markets(Enum):
+    """Represents the different markets you can request
+    hours for in the `MarketHours` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import Markets
+        >>> Markets.Bond.Value
+    """
+
+    Bond = 'BOND'
+    Equity = 'EQUITY'
+    Option = 'OPTION'
+    Forex = 'FOREX'
+    Futures = 'FUTURES'

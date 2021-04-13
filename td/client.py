@@ -3,6 +3,8 @@ from td.credentials import TdCredentials
 from td.quotes import Quotes
 from td.movers import Movers
 from td.accounts import Accounts
+from td.market_hours import MarketHours
+
 
 
 class TdAmeritradeClient():
@@ -74,5 +76,23 @@ class TdAmeritradeClient():
         """
 
         object: Accounts = Accounts(session=self.td_session)
+
+        return object
+
+    def market_hours(self) -> MarketHours:
+        """Used to access the `MarketHours` Services and metadata.
+
+        ### Returns
+        ---
+        MarketHours:
+            The `MarketHours` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> market_hours_service = td_client.market_hours()
+        """
+
+        object: MarketHours = MarketHours(session=self.td_session)
 
         return object
