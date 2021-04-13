@@ -9,6 +9,7 @@ from td.client import TdAmeritradeClient
 from td.quotes import Quotes
 from td.movers import Movers
 from td.market_hours import MarketHours
+from td.instruments import Instruments
 
 
 class TestTdClient(TestCase):
@@ -65,6 +66,11 @@ class TestTdClient(TestCase):
         """Create an instance and make sure it's a `MarketHours` object."""
 
         self.assertIsInstance(self.td_client.market_hours(), MarketHours)
+
+    def test_creates_instance_of_instruments(self):
+        """Create an instance and make sure it's a `Instruments` object."""
+
+        self.assertIsInstance(self.td_client.instruments(), Instruments)
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""

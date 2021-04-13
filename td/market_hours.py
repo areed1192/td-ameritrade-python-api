@@ -39,7 +39,7 @@ class MarketHours():
             Valid ISO-8601 formats are: yyyy-MM-dd and 
             yyyy-MM-dd'T'HH:mm:ssz
 
-        ### Usage:
+        ### Usage
         ----
             >>> from td.enums import Markets
             >>> market_hours_service = td_client.market_hours()
@@ -88,7 +88,7 @@ class MarketHours():
             Valid ISO-8601 formats are: yyyy-MM-dd and 
             yyyy-MM-dd'T'HH:mm:ssz
 
-        ### Usage:
+        ### Usage
         ----
             >>> from td.enums import Markets
             >>> market_hours_service = td_client.market_hours()

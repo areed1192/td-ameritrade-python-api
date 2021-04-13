@@ -51,9 +51,10 @@ class TransactionTypes(Enum):
     Other = 'OTHER'
     AdvisorFees = 'ADVISOR_FEES'
 
+
 class Markets(Enum):
     """Represents the different markets you can request
-    hours for in the `MarketHours` service.
+    hours for the `MarketHours` service.
 
     ### Usage:
     ----
@@ -66,3 +67,20 @@ class Markets(Enum):
     Option = 'OPTION'
     Forex = 'FOREX'
     Futures = 'FUTURES'
+
+
+class Projections(Enum):
+    """Represents the different search types you can use for
+    the `Instruments` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import Projections
+        >>> Projections.Bond.Value
+    """
+
+    SymbolSearch = 'symbol-search'
+    SymbolRegex = 'symbol-regex'
+    DescriptionSearch = 'desc-search'
+    DescriptionRegex = 'desc-regex'
+    Fundamental = 'fundamental'

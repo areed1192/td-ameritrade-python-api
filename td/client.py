@@ -4,7 +4,7 @@ from td.quotes import Quotes
 from td.movers import Movers
 from td.accounts import Accounts
 from td.market_hours import MarketHours
-
+from td.instruments import Instruments
 
 
 class TdAmeritradeClient():
@@ -94,5 +94,23 @@ class TdAmeritradeClient():
         """
 
         object: MarketHours = MarketHours(session=self.td_session)
+
+        return object
+
+    def instruments(self) -> Instruments:
+        """Used to access the `Instruments` Services and metadata.
+
+        ### Returns
+        ---
+        Instruments:
+            The `Instruments` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> instruments_service = td_client.instruments()
+        """
+
+        object: Instruments = Instruments(session=self.td_session)
 
         return object
