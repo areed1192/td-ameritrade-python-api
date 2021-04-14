@@ -5,6 +5,7 @@ from td.movers import Movers
 from td.accounts import Accounts
 from td.market_hours import MarketHours
 from td.instruments import Instruments
+from td.user_info import UserInfo
 
 
 class TdAmeritradeClient():
@@ -112,5 +113,23 @@ class TdAmeritradeClient():
         """
 
         object: Instruments = Instruments(session=self.td_session)
+
+        return object
+
+    def user_info(self) -> UserInfo:
+        """Used to access the `UserInfo` Services and metadata.
+
+        ### Returns
+        ---
+        UserInfo:
+            The `UserInfo` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> user_info_service = td_client.user_info()
+        """
+
+        object: UserInfo = UserInfo(session=self.td_session)
 
         return object
