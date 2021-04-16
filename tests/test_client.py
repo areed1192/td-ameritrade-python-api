@@ -1,6 +1,4 @@
-from td.accounts import Accounts
 import unittest
-
 from unittest import TestCase
 from configparser import ConfigParser
 
@@ -8,9 +6,11 @@ from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
 from td.quotes import Quotes
 from td.movers import Movers
+from td.accounts import Accounts
 from td.market_hours import MarketHours
 from td.instruments import Instruments
 from td.user_info import UserInfo
+from td.price_history import PriceHistory
 
 
 class TestTdClient(TestCase):
@@ -73,10 +73,15 @@ class TestTdClient(TestCase):
 
         self.assertIsInstance(self.td_client.instruments(), Instruments)
 
-    def test_creates_instance_of_user_ifno(self):
+    def test_creates_instance_of_user_info(self):
         """Create an instance and make sure it's a `UserInfo` object."""
 
         self.assertIsInstance(self.td_client.user_info(), UserInfo)
+
+    def test_creates_instance_of_price_history(self):
+        """Create an instance and make sure it's a `PriceHistory` object."""
+
+        self.assertIsInstance(self.td_client.price_history(), PriceHistory)
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""

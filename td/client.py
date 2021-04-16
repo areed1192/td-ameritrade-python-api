@@ -6,6 +6,7 @@ from td.accounts import Accounts
 from td.market_hours import MarketHours
 from td.instruments import Instruments
 from td.user_info import UserInfo
+from td.price_history import PriceHistory
 
 
 class TdAmeritradeClient():
@@ -131,5 +132,23 @@ class TdAmeritradeClient():
         """
 
         object: UserInfo = UserInfo(session=self.td_session)
+
+        return object
+
+    def price_history(self) -> PriceHistory:
+        """Used to access the `PriceHistory` Services and metadata.
+
+        ### Returns
+        ---
+        PriceHistory:
+            The `PriceHistory` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> price_history_service = td_client.price_history()
+        """
+
+        object: PriceHistory = PriceHistory(session=self.td_session)
 
         return object

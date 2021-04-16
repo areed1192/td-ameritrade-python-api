@@ -220,3 +220,35 @@ class AuthTokenTimeout(Enum):
     TwoHours = 'TWO_HOURS'
     FourHours = 'FOUR_HOURS'
     EightHours = 'EIGHT_HOURS'
+
+
+class FrequencyType(Enum):
+    """Represents the different chart frequencies
+    for the `PriceHistory` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import PriceFrequency
+        >>> PriceFrequency.Daily.Value
+    """
+
+    Minute = 'minute'
+    Daily = 'daily'
+    Weekly = 'weekly'
+    Monthly = 'monthly'
+
+
+class PeriodType(Enum):
+    """Represents the different chart periods
+    for the `PriceHistory` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import PriceFrequency
+        >>> PeriodType.Daily.Value
+    """
+
+    Day = 'day'
+    Month = 'month'
+    Year = 'year'
+    YearToDate = 'ytd'
