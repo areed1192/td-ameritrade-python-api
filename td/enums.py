@@ -84,3 +84,139 @@ class Projections(Enum):
     DescriptionSearch = 'desc-search'
     DescriptionRegex = 'desc-regex'
     Fundamental = 'fundamental'
+
+
+class DefaultOrderLegInstruction(Enum):
+    """Represents the different Default Order Leg Instructions
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultOrderLegInstruction
+        >>> DefaultOrderLegInstruction.Sell.Value
+    """
+
+    Buy = 'BUY'
+    Sell = 'SELL'
+    BuyToCover = 'BUY_TO_COVER'
+    SellShort = 'SELL_SHORT'
+    NoneSpecified = 'NONE'
+
+
+class DefaultOrderType(Enum):
+    """Represents the different Default Order Type
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultOrderType
+        >>> DefaultOrderType.Market.Value
+    """
+
+    Market = 'MARKET'
+    Limit = 'LIMIT'
+    Stop = 'STOP'
+    StopLimit = 'STOP_LIMIT'
+    TrailingStop = 'TRAILING_STOP'
+    MarketOnClose = 'MARKET_ON_CLOSE'
+    NoneSpecified = 'NONE'
+
+
+class DefaultOrderPriceLinkType(Enum):
+    """Represents the different Default Order Price Link Type
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultOrderPriceLinkType
+        >>> DefaultOrderPriceLinkType.Value.Value
+    """
+
+    Value = 'VALUE'
+    Percent = 'PERCENT'
+    NoneSpecified = 'NONE'
+
+
+class DefaultOrderDuration(Enum):
+    """Represents the different Default Order Duration
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultOrderDuration
+        >>> DefaultOrderDuration.Day.Value
+    """
+
+    Day = 'DAY'
+    GoodTillCancel = 'GOOD_TILL_CANCEL'
+    NoneSpecified = 'NONE'
+
+
+class DefaultOrderMarketSession(Enum):
+    """Represents the different Default Order Market Session
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultOrderMarketSession
+        >>> DefaultOrderMarketSession.Day.Value
+    """
+
+    Am = 'AM'
+    Pm = 'PM'
+    Normal = 'NORMAL'
+    Seamless = 'SEAMLESS'
+    NoneSpecified = 'NONE'
+
+
+class TaxLotMethod(Enum):
+    """Represents the different Tax Lot Methods
+    for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import MutualFundTaxLotMethod
+        >>> MutualFundTaxLotMethod.Day.Value
+    """
+
+    Fifo = 'FIFO'
+    Lifo = 'LIFO'
+    HighCost = 'HIGH_COST'
+    LowCost = 'LOW_COST'
+    MinimumTax = 'MINIMUM_TAX'
+    AverageCost = 'AVERAGE_COST'
+    NoneSpecified = 'NONE'
+
+
+class DefaultAdvancedToolLaunch(Enum):
+    """Represents the different Default Advanced Tool
+    Lauch for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import DefaultAdvancedToolLaunch
+        >>> DefaultAdvancedToolLaunch.Tos.Value
+    """
+
+    Ta = 'Ta'
+    No = 'N'
+    Yes = 'Y'
+    Tos = 'TOS'
+    Cc2 = 'CC2'
+    NoneSpecified = 'NONE'
+
+
+class AuthTokenTimeout(Enum):
+    """Represents the different Auth Token Timeout
+    properties for the `UserInfo` service.
+
+    ### Usage:
+    ----
+        >>> from td.enums import AuthTokenTimeout
+        >>> AuthTokenTimeout.FiftyFiveMinutes.Value
+    """
+
+    FiftyFiveMinutes = 'FIFTY_FIVE_MINUTES'
+    TwoHours = 'TWO_HOURS'
+    FourHours = 'FOUR_HOURS'
+    EightHours = 'EIGHT_HOURS'
