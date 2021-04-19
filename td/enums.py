@@ -5,7 +5,7 @@ class Direction(Enum):
     """Represents the direction options for the
     `Movers` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import Directions
         >>> Directions.Up.value
@@ -19,7 +19,7 @@ class Change(Enum):
     """Represents the change options for the
     `Movers` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import Change
         >>> Change.Percent.value
@@ -34,7 +34,7 @@ class TransactionTypes(Enum):
     can query from TD Ameritrade using the `Accounts`
     services.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import TransactionTypes
         >>> TransactionTypes.Trade.value
@@ -56,7 +56,7 @@ class Markets(Enum):
     """Represents the different markets you can request
     hours for the `MarketHours` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import Markets
         >>> Markets.Bond.Value
@@ -73,7 +73,7 @@ class Projections(Enum):
     """Represents the different search types you can use for
     the `Instruments` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import Projections
         >>> Projections.Bond.Value
@@ -90,7 +90,7 @@ class DefaultOrderLegInstruction(Enum):
     """Represents the different Default Order Leg Instructions
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultOrderLegInstruction
         >>> DefaultOrderLegInstruction.Sell.Value
@@ -107,7 +107,7 @@ class DefaultOrderType(Enum):
     """Represents the different Default Order Type
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultOrderType
         >>> DefaultOrderType.Market.Value
@@ -126,7 +126,7 @@ class DefaultOrderPriceLinkType(Enum):
     """Represents the different Default Order Price Link Type
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultOrderPriceLinkType
         >>> DefaultOrderPriceLinkType.Value.Value
@@ -141,7 +141,7 @@ class DefaultOrderDuration(Enum):
     """Represents the different Default Order Duration
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultOrderDuration
         >>> DefaultOrderDuration.Day.Value
@@ -156,7 +156,7 @@ class DefaultOrderMarketSession(Enum):
     """Represents the different Default Order Market Session
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultOrderMarketSession
         >>> DefaultOrderMarketSession.Day.Value
@@ -173,7 +173,7 @@ class TaxLotMethod(Enum):
     """Represents the different Tax Lot Methods
     for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import MutualFundTaxLotMethod
         >>> MutualFundTaxLotMethod.Day.Value
@@ -192,7 +192,7 @@ class DefaultAdvancedToolLaunch(Enum):
     """Represents the different Default Advanced Tool
     Lauch for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import DefaultAdvancedToolLaunch
         >>> DefaultAdvancedToolLaunch.Tos.Value
@@ -210,7 +210,7 @@ class AuthTokenTimeout(Enum):
     """Represents the different Auth Token Timeout
     properties for the `UserInfo` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import AuthTokenTimeout
         >>> AuthTokenTimeout.FiftyFiveMinutes.Value
@@ -226,7 +226,7 @@ class FrequencyType(Enum):
     """Represents the different chart frequencies
     for the `PriceHistory` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import PriceFrequency
         >>> PriceFrequency.Daily.Value
@@ -242,7 +242,7 @@ class PeriodType(Enum):
     """Represents the different chart periods
     for the `PriceHistory` service.
 
-    ### Usage:
+    ### Usage
     ----
         >>> from td.enums import PriceFrequency
         >>> PeriodType.Daily.Value
@@ -252,3 +252,101 @@ class PeriodType(Enum):
     Month = 'month'
     Year = 'year'
     YearToDate = 'ytd'
+
+
+class StrategyType(Enum):
+    """Represents the different strategy types
+    when querying the `OptionChain` service.
+
+    ### Usage
+    ----
+        >>> from td.enums import StrategyType
+        >>> StrategyType.Analytical.Value
+    """
+
+    Analytical = 'ANALYTICAL'
+    Butterfly = 'BUTTERFLY'
+    Calendar = 'CALENDAR'
+    Collar = 'COLLAR'
+    Condor = 'CONDOR'
+    Covered = 'COVERED'
+    Diagonal = 'DIAGONAL'
+    Roll = 'ROLL'
+    Single = 'SINGLE'
+    Straddle = 'STRADDLE'
+    Strangle = 'STRANGLE'
+    Vertical = 'VERTICAL'
+
+
+class OptionaRange(Enum):
+    """Represents the different option range types
+    when querying the `OptionChain` service.
+
+    ### Usage
+    ----
+        >>> from td.enums import OptionaRange
+        >>> OptionaRange.InTheMoney.Value
+    """
+
+    All = 'ALL'
+    InTheMoney = 'ITM'
+    NearTheMoney = 'NTM'
+    OutTheMoney = 'OTM'
+    StrikesAboveMarket = 'SAK'
+    StrikesBelowMarket = 'SBK'
+    StrikesNearMarket = 'SNK'
+
+
+class ExpirationMonth(Enum):
+    """Represents the different option expiration months
+    when querying the `OptionChain` service.
+
+    ### Usage
+    ----
+        >>> from td.enums import ExpirationMonth
+        >>> ExpirationMonth.Janurary.Value
+    """
+
+    All = 'ALL'
+    Janurary = 'JAN'
+    Feburary = 'FEB'
+    March = 'MAR'
+    April = 'April'
+    May = 'MAY'
+    June = 'JUN'
+    July = 'JUL'
+    August = 'AUG'
+    September = 'SEP'
+    October = 'OCT'
+    November = 'NOV'
+    December = 'DEC'
+
+
+class ContractType(Enum):
+    """Represents the different option contract types
+    when querying the `OptionChain` service.
+
+    ### Usage
+    ----
+        >>> from td.enums import ContractType
+        >>> ContractType.Call.Value
+    """
+
+    All = 'ALL'
+    Call = 'CALL'
+    Put = 'PUT'
+
+
+class OptionType(Enum):
+    """Represents the different option types
+    when querying the `OptionChain` service.
+
+    ### Usage
+    ----
+        >>> from td.enums import OptionType
+        >>> OptionType.Call.Value
+    """
+
+    All = 'ALL'
+    StandardContracts = 'S'
+    NonStandardContracts = 'NS'
