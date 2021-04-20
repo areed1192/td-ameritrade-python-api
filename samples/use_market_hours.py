@@ -28,7 +28,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the Market Hours service.
+# Initialize the `MarketHours` service.
 market_hours_service = td_client.market_hours()
 
 # Grab the market hours

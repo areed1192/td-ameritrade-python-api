@@ -31,7 +31,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the OptionChain service.
+# Initialize the `OptionsChain` service.
 options_chain_service = td_client.options_chain()
 
 # Method 1: Build a Query using the `OptionChainQuery` object.

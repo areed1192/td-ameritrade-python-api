@@ -27,7 +27,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the Instruments service.
+# Initialize the `Instruments` service.
 instruments_service = td_client.instruments()
 
 # Search for a symbol.

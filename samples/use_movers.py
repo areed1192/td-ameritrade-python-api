@@ -25,7 +25,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the Movers service.
+# Initialize the `Movers` service.
 movers_service = td_client.movers()
 
 # Grab the top 10 percentage up movers.

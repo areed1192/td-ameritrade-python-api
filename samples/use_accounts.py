@@ -27,7 +27,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the Accounts service.
+# Initialize the `Accounts` service.
 accounts_service = td_client.accounts()
 
 # Grab all the Positions and Orders for a specific account.

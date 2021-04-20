@@ -35,7 +35,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the UserInfo service.
+# Initialize the `UserInfo` service.
 user_info_service = td_client.user_info()
 
 # Grab the preferences for a specific account.

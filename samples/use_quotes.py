@@ -25,7 +25,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the Quotes service.
+# Initialize the `Quotes` service.
 quote_service = td_client.quotes()
 
 # Grab a single quote.

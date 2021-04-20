@@ -29,7 +29,7 @@ td_client = TdAmeritradeClient(
     credentials=td_credentials
 )
 
-# Initialize the PriceHistory service.
+# Initialize the `PriceHistory` service.
 price_history_service = td_client.price_history()
 
 # Grab the Price History, with enums.
