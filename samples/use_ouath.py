@@ -18,7 +18,7 @@ td_credentials = TdCredentials(
     redirect_uri=redirect_uri
 )
 
-td_credentials.to_token_file(
+td_credentials.to_credential_file(
     file_path='config/td_credentials.json'
 )
 

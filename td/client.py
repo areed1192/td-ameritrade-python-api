@@ -7,6 +7,7 @@ from td.market_hours import MarketHours
 from td.instruments import Instruments
 from td.user_info import UserInfo
 from td.price_history import PriceHistory
+from td.options_chain import OptionsChain
 
 
 class TdAmeritradeClient():
@@ -150,5 +151,23 @@ class TdAmeritradeClient():
         """
 
         object: PriceHistory = PriceHistory(session=self.td_session)
+
+        return object
+
+    def options_chain(self) -> OptionsChain:
+        """Used to access the `OptionsChain` Services and metadata.
+
+        ### Returns
+        ---
+        OptionsChain:
+            The `OptionsChain` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> options_chain_service = td_client.options_chain()
+        """
+
+        object: OptionsChain = OptionsChain(session=self.td_session)
 
         return object

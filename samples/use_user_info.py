@@ -10,7 +10,7 @@ from td.enums import DefaultOrderPriceLinkType
 from td.enums import DefaultOrderType
 from td.enums import TaxLotMethod
 from td.enums import AuthTokenTimeout
-from td.utils_user_info import UserPreferences
+from td.utils import UserPreferences
 
 # Initialize the Parser.
 config = ConfigParser()

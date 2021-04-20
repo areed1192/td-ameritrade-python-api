@@ -2,7 +2,7 @@ from typing import List
 from typing import Union
 from td.session import TdAmeritradeSession
 from enum import Enum
-from td.utils_user_info import UserPreferences
+from td.utils import UserPreferences
 
 
 class UserInfo():
