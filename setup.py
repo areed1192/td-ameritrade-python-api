@@ -61,5 +61,5 @@ setup(
     ],
 
     # you will need python 3.7 to use this libary.
-    python_requires='>=3.7'
+    python_requires='>=3.8'
 )
