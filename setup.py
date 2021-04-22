@@ -35,7 +35,7 @@ setup(
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
         'requests==2.24.0',
-        'dataclasses==0.8'
+        'dataclasses'
     ],
 
     # some keywords for my library.
