@@ -34,11 +34,8 @@ setup(
 
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
-        'websockets',
-        'requests',
-        'flask',
-        'requests-oauthlib',
-        'pyopenssl'
+        'requests==2.24.0',
+        'dataclasses==0.8'
     ],
 
     # some keywords for my library.
