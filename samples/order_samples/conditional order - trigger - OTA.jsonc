@@ -1,0 +1,38 @@
+{
+  // This is my buy order, this will trigger the other one.
+  "orderStrategyType": "TRIGGER",
+  "session": "NORMAL",
+  "orderType": "LIMIT",
+  "price": 50.0,
+  "orderLegCollection": [
+    {
+      "instruction": "BUY",
+      "quantity": 1,
+      "instrument": {
+        "assetType": "EQUITY",
+        "symbol": "MSFT"
+      }
+    }
+  ],
+  // These are the child orders, these will take effect when the buy order is filled.
+  "childOrderStrategies": [
+    {
+      // This is the order that locks my profit, note the price here is higher than my original buy order and I switch instructions.
+      "orderStrategyType": "SINGLE",
+      "session": "NORMAL",
+      "duration": "DAY",
+      "orderType": "LIMIT",
+      "price": 80.0,
+      "orderLegCollection": [
+        {
+          "instruction": "SELL",
+          "quantity": 1,
+          "instrument": {
+            "assetType": "EQUITY",
+            "symbol": "MSFT"
+          }
+        }
+      ]
+    }
+  ]
+}

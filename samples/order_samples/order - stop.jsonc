@@ -1,0 +1,38 @@
+[
+  {
+    //REPRESENTS A STOP MARKET ORDER FOR SELLING A POSITION I ALREADY OWN. STOP PRICE MUST BE BELOW THE CURRENT MARKET PRICE.
+    "orderType": "STOP",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "stopPrice": 9.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    //REPRESENTS A STOP MARKET ORDER FOR BUYING A POSITION I ALREADY DON'T OWN. STOP PRICE MUST BE ABOVE THE CURRENT MARKET PRICE.
+    "orderType": "STOP",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "stopPrice": 20.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  }
+]

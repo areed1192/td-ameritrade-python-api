@@ -1,0 +1,17 @@
+{
+  "session": "NORMAL",
+  "duration": "GOOD_TILL_CANCEL",
+  "orderStrategyType": "SINGLE",
+  "orderType": "LIMIT",
+  "price": 12.0,
+  "orderLegCollection": [
+    {
+      "instruction": "BUY_TO_OPEN",
+      "quantity": 1,
+      "instrument": {
+        "assetType": "OPTION",
+        "symbol": "MSFT_031320C155"
+      }
+    }
+  ]
+}

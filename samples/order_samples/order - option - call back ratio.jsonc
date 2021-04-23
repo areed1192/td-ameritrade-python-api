@@ -1,0 +1,25 @@
+{
+  "orderType": "NET_DEBIT",
+  "session": "NORMAL",
+  "price": 4.13,
+  "duration": "DAY",
+  "orderStrategyType": "SINGLE",
+  "orderLegCollection": [
+    {
+      "instruction": "BUY_TO_OPEN",
+      "quantity": 20,
+      "instrument": {
+        "symbol": "XYZ_011516C45",
+        "assetType": "OPTION"
+      }
+    },
+    {
+      "instruction": "SELL_TO_OPEN",
+      "quantity": 10,
+      "instrument": {
+        "symbol": "XYZ_011516C42",
+        "assetType": "OPTION"
+      }
+    }
+  ]
+}

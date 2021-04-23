@@ -1,0 +1,40 @@
+[
+  {
+    // REPRESENTS A STOP LIMIT, WILL ACTIVATE AT $19.00 BUT WE WON'T PAY MORE THAN $20.00". USED GOING LONG.
+    "orderType": "STOP_LIMIT",
+    "session": "NORMAL",
+    "price": 20.0,
+    "stopPrice": 19.0,
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    // REPRESENTS A STOP LIMIT, WILL ACTIVATE AT $18.00 BUT WE WON'T SELL BELOW THAN $15.00". USED GOING SHORT.
+    "orderType": "STOP_LIMIT",
+    "session": "NORMAL",
+    "price": 18.0,
+    "stopPrice": 15.0,
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,64 @@
+{
+  // This is my buy order, this will trigger the other one.
+  "orderStrategyType": "TRIGGER",
+  "session": "NORMAL",
+  "duration": "DAY",
+  "cancelTime": "2020-04-15",
+  "orderType": "LIMIT",
+  "price": 50.0,
+  "orderLegCollection": [
+    {
+      "instruction": "BUY",
+      "quantity": 1,
+      "instrument": {
+        "assetType": "EQUITY",
+        "symbol": "MSFT"
+      }
+    }
+  ],
+  // These are the child orders, these will take effect when the buy order is filled.
+  "childOrderStrategies": [
+    {
+      // Important to note this is a OCO order. ONE CANCELS OTHER, that means if one is filled the other is cancelled.
+      "orderStrategyType": "OCO",
+      "childOrderStrategies": [
+        {
+          // This is the order that locks my profit, note the price here is higher than my original buy order.
+          "orderStrategyType": "SINGLE",
+          "session": "NORMAL",
+          "duration": "DAY",
+          "orderType": "LIMIT",
+          "price": 60.0,
+          "orderLegCollection": [
+            {
+              "instruction": "SELL",
+              "quantity": 1,
+              "instrument": {
+                "assetType": "EQUITY",
+                "symbol": "MSFT"
+              }
+            }
+          ]
+        },
+        {
+          // The is my order that stops my loss, note the price is here is lower than my original buy order.
+          "orderStrategyType": "STOP",
+          "session": "NORMAL",
+          "duration": "DAY",
+          "orderType": "LIMIT",
+          "stopPrice": 40.0,
+          "orderLegCollection": [
+            {
+              "instruction": "SELL",
+              "quantity": 1,
+              "instrument": {
+                "assetType": "EQUITY",
+                "symbol": "MSFT"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

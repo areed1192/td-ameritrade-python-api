@@ -1,0 +1,16 @@
+{
+  "orderType": "LIMIT",
+  "session": "NORMAL",
+  "orderStrategyType": "SINGLE",
+  "price": 2.0,
+  "orderLegCollection": [
+    {
+      "instrument": {
+        "assetType": "OPTION",
+        "symbol": "MU_020720C57"
+      },
+      "instruction": "SELL_TO_CLOSE",
+      "quantity": 1
+    }
+  ]
+}
