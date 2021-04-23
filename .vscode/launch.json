@@ -7,6 +7,13 @@
       "request": "launch",
       "program": "${cwd}/samples/use_quotes.py",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: Run TD Saved Orders",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_saved_orders.py",
+      "console": "integratedTerminal"
     }
   ]
 }

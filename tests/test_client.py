@@ -14,6 +14,7 @@ from td.price_history import PriceHistory
 from td.options_chain import OptionsChain
 from td.watchlists import Watchlists
 from td.orders import Orders
+from td.saved_orders import SavedOrders
 
 
 class TestTdClient(TestCase):
@@ -100,6 +101,11 @@ class TestTdClient(TestCase):
         """Create an instance and make sure it's a `Orders` object."""
 
         self.assertIsInstance(self.td_client.orders(), Orders)
+
+    def test_creates_instance_of_saved_orders(self):
+        """Create an instance and make sure it's a `SavedOrders` object."""
+
+        self.assertIsInstance(self.td_client.saved_orders(), SavedOrders)
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""

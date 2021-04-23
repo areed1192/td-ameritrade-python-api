@@ -337,7 +337,7 @@ class Orders():
         endpoint = f'accounts/{account_id}/orders/{order_id}'
 
         content = self.session.make_request(
-            method='post',
+            method='put',
             endpoint=endpoint,
             json_payload=order
         )
