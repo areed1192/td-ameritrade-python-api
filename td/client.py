@@ -9,6 +9,8 @@ from td.user_info import UserInfo
 from td.price_history import PriceHistory
 from td.options_chain import OptionsChain
 from td.watchlists import Watchlists
+from td.orders import Orders
+
 
 class TdAmeritradeClient():
 
@@ -183,9 +185,27 @@ class TdAmeritradeClient():
         ### Usage
         ----
             >>> td_client = TdAmeritradeClient()
-            >>> watchlists_service = td_client.watchlists_service()
+            >>> watchlists_service = td_client.watchlists()
         """
 
         object: Watchlists = Watchlists(session=self.td_session)
+
+        return object
+
+    def orders(self) -> Orders:
+        """Used to access the `Orders` Services and metadata.
+
+        ### Returns
+        ---
+        Orders:
+            The `Orders` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> orders_service = td_client.orders()
+        """
+
+        object: Orders = Orders(session=self.td_session)
 
         return object
