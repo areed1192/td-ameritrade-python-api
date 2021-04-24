@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses import fields
 from typing import Union
 from enum import Enum
 
@@ -9,165 +10,137 @@ from collections import OrderedDict
 @dataclass
 class OrderLegInstrument():
 
-    assetType: Union[str, Enum]
+    asset_type: Union[str, Enum]
     symbol: str
+
+    def to_dict(self) -> dict:
+        """Generates a dictionary containing all the field
+        names and values.
+
+        ### Returns
+        ----
+        dict
+            The Field Name and Values.
+
+        ### Usage
+        ----
+            >>> my_order_leg_instrument = {
+                'asset_type': 'EQUITY',
+                'symbol': 'SQ',
+            }
+            >>> my_order_leg_instrument = OrderLegInstrument(**my_order_leg_instrument)
+            >>> my_order_leg_instrument.to_dict()
+        """
+
+        class_dict = {}
+
+        # Loop through each field and grab the value and key.
+        for field in fields(self):
+
+            key = field.name
+            value = getattr(self, field.name)
+
+            # Handle values that could be Enums.
+            if isinstance(value, Enum):
+                value = value.value
+
+            # Generate the API Key.
+            key_parts = key.split("_")
+            key = "".join(
+                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
+            )
+
+            class_dict[key] = value
+
+        return class_dict
 
 
 @dataclass
 class OrderLeg():
 
-    OrderLegType: Union[str, Enum] = None
-    legId: int = 0
-    instrument: str = None
+    """
+    Represents an OrderLeg object that is used to specify instructions
+    about the order.
+    """
+
+    order_leg_type: Union[str, Enum] = None
+    leg_id: int = 0
+    instrument: Union[dict, OrderLegInstrument] = None
     instruction: Union[str, Enum] = None
     position_effect: Union[str, Enum] = None
     quantity: int = None
     quantity_type: str = None
 
-    """Represents an OrderLeg object that is used to specify instructions
-    about the order.
-    """
+    def _to_dict(self, dict: str) -> dict:
 
-    def __init__(self, **kwargs):
-        """Initalizes the `OrderLeg` object."""
+        class_dict = {}
 
-        # Define the order Leg arguments used for validation.
-        self.order_leg_arguments = {
-            'instruction': ['BUY', 'SELL', 'BUY_TO_COVER', 'SELL_SHORT', 'BUY_TO_OPEN', 'BUY_TO_CLOSE', 'SELL_TO_OPEN', 'SELL_TO_CLOSE', 'EXCHANGE'],
-            'assetType': ['EQUITY', 'OPTION', 'INDEX', 'MUTUAL_FUND', 'CASH_EQUIVALENT', 'FIXED_INCOME', 'CURRENCY'],
-            'quantityType': ['ALL_SHARES', 'DOLLARS', 'SHARES']
-        }
+        for key, value in dict.items():
 
-        # If the user provides a template use that otherwise create a blank template.
-        if 'template' in kwargs.keys():
-            self.template = kwargs['template']
-        else:
-            self.template = {}
+            # Handle values that could be Enums.
+            if isinstance(value, Enum):
+                value = value.value
+                
+            # Generate the API Key.
+            key_parts = key.split("_")
+            key = "".join(
+                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
+            )
 
-    def order_leg_instruction(self, instruction: Union[str, Enum]) -> None:
-        """Defines the Instruction argument for the order leg. 
+            class_dict[key] = value
 
-        ### Parameters
-        ----
-        instruction: Union[str, Enum]
-            The order's instruction for the current leg.
-        """
+        return class_dict
 
-        # Grab the instruction
-        if isinstance(instruction, Enum):
-            instruction = instruction.value
-
-        # Add it to the OrderLeg.
-        if instruction in self.order_leg_arguments['instruction']:
-            self.template['instruction'] = instruction
-        else:
-            raise ValueError('Incorrect Value for the Instruction paramater')
-
-    def order_leg_asset(self, asset_type: Union[str, Enum], symbol: str) -> None:
-        """Defines the asset that is to be purchased/sold in the order.
-
-        ### Overview
-        ----
-        To define an asset you need a symbol and an asset
-        type value.
-
-        ### Parameters
-        ----
-        asset_type: Union[str, Enum]
-            The type of asset to be traded.
-
-        symbol: str     
-            The symbol of the asset to be traded.
-        """
-
-        # initalize the asset dictionary.
-        asset_dict = {
-            'assetType': '',
-            'symbol': ''
-        }
-
-        # Grab the enumeration value if an Enum object was passed through.
-        if isinstance(asset_type, Enum):
-            asset_type = asset_type.name
-
-        # Add the values to the asset dictionary and then add that to the template.
-        if asset_type in self.order_leg_arguments['assetType']:
-            asset_dict['assetType'] = asset_type
-            asset_dict['symbol'] = symbol
-            self.template['instrument'] = asset_dict
-        else:
-            raise ValueError('Incorrect Value for the asset type paramater')
-
-    def order_leg_quantity(self, quantity: int = 0) -> None:
-        """Specifies the quantity of the asset to purchase or sell.
-
-        ### Parameters
-        ----
-        quantity: int (optional, Default=0)
-            The quantity to be purchased.
-        """
-
-        # make sure it's an Int before adding it.
-        if isinstance(quantity, int):
-            self.template['quantity'] = quantity
-        else:
-            raise ValueError('Quantity must be the data type <INT>.')
-
-    def order_leg_price(self, price: float = 0.0000) -> None:
-        """Defines the price of the order to be made.
-
-        ### Overview
-        ----
-        Will be rounded 4 decimal places.
-
-        ### Parameters
-        ----
-        price: float (optional, default=0.0)
-            The price at which to execute the order, and will be
-            rounded 4 decimal places in order to ensure errors
-            won't be returned back.
-        """
-
-        # make sure it's a float before adding it.
-        if isinstance(price, float):
-            self.template['price'] = round(price, 4)
-        else:
-            raise ValueError('Price must be of data type `float`.')
-
-    def order_leg_quantity_type(self, quantity_type: Union[str, Enum] = None):
-        """Defines the Order Leg Quantity Type. 
-
-        ### Parameters
-        ----
-        order_leg_quantity_type: Union[str, Enum] (optional, Default=None)
-            Orders can be sepcified as either by the number
-            of shares you want to buy (SHARES) or the dollar
-            ammount you want to buy (DOLLARS).
-        """
-
-        if isinstance(quantity_type, Enum):
-            quantity_type = quantity_type.value
-
-        # Add it to the template.
-        if quantity_type in self.order_leg_arguments['quantityType']:
-            self.template['quantityType'] = quantity_type
-        else:
-            raise ValueError('Incorrect Value for the Quantity Type paramater')
-
-    def copy(self):
-        """Returns a copy of the Order Leg so that users can 
-        easily build another one using the copy.
-
+    def to_dict(self) -> dict:
+        """Generates a dictionary containing all the field
+        names and values.
 
         ### Returns
         ----
-        OrderLeg:
-            A copied version of this OrderLeg.
+        dict
+            The Field Name and Values.
+
+        ### Usage
+        ----
+            >>> my_order_leg = {
+                'instruction': 'BUY',
+                'instrument':{
+                    'asset_type': 'EQUITY',
+                    'symbol': 'SQ'
+                },
+                'quantity': 2
+            }
+            >>> my_order_leg = OrderLeg(**my_order_leg)
+            >>> my_order_leg.to_dict()
         """
 
-        # copy it and return a new OrderLeg Object.
-        template_copy = self.template.copy()
-        return OrderLeg(template=template_copy)
+        class_dict = {}
+
+        # Loop through each field and grab the value and key.
+        for field in fields(self):
+
+            key = field.name
+            value = getattr(self, field.name)
+
+            # Handle values that could be Enums.
+            if isinstance(value, Enum):
+                value = value.value
+
+            if isinstance(value, OrderLegInstrument):
+                value = value.to_dict()
+            
+            if isinstance(value, dict):
+                value = self._to_dict(dict=value)
+
+            # Generate the API Key.
+            key_parts = key.split("_")
+            key = "".join(
+                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
+            )
+
+            class_dict[key] = value
+
+        return class_dict
 
 
 class Order():
