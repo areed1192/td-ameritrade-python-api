@@ -1,10 +1,71 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, is_dataclass
+from dataclasses import is_dataclass
 from dataclasses import fields
 from typing import Union
+from typing import List
+from typing import Dict
 from enum import Enum
 
 import json
 from collections import OrderedDict
+
+def _to_dict(data_class_obj: Union[dataclass, dict]) -> dict:
+
+    class_dict = {}
+
+    if is_dataclass(data_class_obj):
+
+        # Loop through each field and grab the value and key.
+        for field in fields(data_class_obj):
+
+            key = field.name
+            value = getattr(data_class_obj, field.name)
+
+            # Handle values that could be Enums.
+            if isinstance(value, Enum):
+                value = value.value
+            
+            if isinstance(value, dict):
+                value = _to_dict(data_class_obj=value)
+            
+            if isinstance(value, list):
+                value = [_to_dict(data_class_obj=item) for item in value]
+
+            # Generate the API Key.
+            key_parts = key.split("_")
+            key = "".join(
+                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
+            )
+
+            if value is not None:
+                class_dict[key] = value
+
+        return class_dict
+
+    elif isinstance(data_class_obj, dict):
+
+        for key, value in data_class_obj.items():
+
+            # Handle values that could be Enums.
+            if isinstance(value, Enum):
+                value = value.value
+            
+            if isinstance(value, dict):
+                value = _to_dict(data_class_obj=value)
+
+            if isinstance(value, list):
+                value = [_to_dict(data_class_obj=item) for item in value]
+
+            # Generate the API Key.
+            key_parts = key.split("_")
+            key = "".join(
+                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
+            )
+
+            if value is not None:
+                class_dict[key] = value
+
+        return class_dict
 
 
 @dataclass
@@ -32,27 +93,7 @@ class OrderLegInstrument():
             >>> my_order_leg_instrument.to_dict()
         """
 
-        class_dict = {}
-
-        # Loop through each field and grab the value and key.
-        for field in fields(self):
-
-            key = field.name
-            value = getattr(self, field.name)
-
-            # Handle values that could be Enums.
-            if isinstance(value, Enum):
-                value = value.value
-
-            # Generate the API Key.
-            key_parts = key.split("_")
-            key = "".join(
-                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
-            )
-
-            class_dict[key] = value
-
-        return class_dict
+        return _to_dict(data_class_obj=self)
 
 
 @dataclass
@@ -70,26 +111,6 @@ class OrderLeg():
     position_effect: Union[str, Enum] = None
     quantity: int = None
     quantity_type: str = None
-
-    def _to_dict(self, dict: str) -> dict:
-
-        class_dict = {}
-
-        for key, value in dict.items():
-
-            # Handle values that could be Enums.
-            if isinstance(value, Enum):
-                value = value.value
-                
-            # Generate the API Key.
-            key_parts = key.split("_")
-            key = "".join(
-                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
-            )
-
-            class_dict[key] = value
-
-        return class_dict
 
     def to_dict(self) -> dict:
         """Generates a dictionary containing all the field
@@ -114,36 +135,56 @@ class OrderLeg():
             >>> my_order_leg.to_dict()
         """
 
-        class_dict = {}
-
-        # Loop through each field and grab the value and key.
-        for field in fields(self):
-
-            key = field.name
-            value = getattr(self, field.name)
-
-            # Handle values that could be Enums.
-            if isinstance(value, Enum):
-                value = value.value
-
-            if isinstance(value, OrderLegInstrument):
-                value = value.to_dict()
-            
-            if isinstance(value, dict):
-                value = self._to_dict(dict=value)
-
-            # Generate the API Key.
-            key_parts = key.split("_")
-            key = "".join(
-                [key_parts[0]] + [key.capitalize() for key in key_parts[1:]]
-            )
-
-            class_dict[key] = value
-
-        return class_dict
+        return _to_dict(data_class_obj=self)
 
 
+@dataclass
 class Order():
+
+    order_leg_collection: List
+    child_order_strategies: List
+    
+    price: float = 0.00
+    session: Union[str, Enum] = None
+    duration: Union[str, Enum] = None
+    requested_destination: Union[str, Enum] = None
+    complex_order_strategy_type: Union[str, Enum] = None
+    stop_price_link_basis: Union[str, Enum] = None
+    stop_price_link_type: Union[str, Enum] = None
+    stop_type: Union[str, Enum] = None
+    price_link_basis: Union[str, Enum] = None
+    price_link_type: Union[str, Enum] = None
+    order_type: Union[str, Enum] = None
+    order_strategy_type: Union[str, Enum] = None
+
+    def to_dict(self) -> dict:
+        """Generates a dictionary containing all the field
+        names and values.
+
+        ### Returns
+        ----
+        dict
+            The Field Name and Values.
+
+        ### Usage
+        ----
+            >>> my_order_leg = {
+                'instruction': 'BUY',
+                'instrument':{
+                    'asset_type': 'EQUITY',
+                    'symbol': 'SQ'
+                },
+                'quantity': 2
+            }
+            >>> my_order_leg = OrderLeg(**my_order_leg)
+            >>> my_order_leg.to_dict()
+        """
+
+        return _to_dict(data_class_obj=self)
+
+
+
+class OrderOther():
 
     def __init__(self, **kwargs):
         """Initalizes the SavedOrder Object and override any default values that are
