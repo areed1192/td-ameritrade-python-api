@@ -149,6 +149,7 @@ class DefaultOrderDuration(Enum):
 
     Day = 'DAY'
     GoodTillCancel = 'GOOD_TILL_CANCEL'
+    FillOrKill = 'FILL_OR_KILL'
     NoneSpecified = 'NONE'
 
 
@@ -377,3 +378,289 @@ class OrderStatus(Enum):
     Replaced = 'REPLACED'
     Filled = 'FILLED'
     Expired = 'EXPIRED'
+
+
+class OrderStrategyType(Enum):
+    """Represents the different order strategy types
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import OrderStrategyType
+        >>> OrderStrategyType.Single.Value
+    """
+
+    Single = 'SINGLE'
+    Oco = 'OCO'
+    Trigger = 'TRIGGER'
+
+
+class QuantityType(Enum):
+    """Represents the different order quantity types
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import QuantityType
+        >>> QuantityType.Dollars.Value
+    """
+
+    AllShares = 'ALL_SHARES'
+    Dollars = 'DOLLARS'
+    Shares = 'SHARES'
+
+
+class AssetType(Enum):
+    """Represents the different order Asset types
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import AssetType
+        >>> AssetType.Equity.Value
+    """
+
+    Equity = 'EQUITY'
+    Option = 'OPTION'
+    Index = 'INDEX'
+    MutualFund = 'MUTUAL_FUND'
+    CashEquivalent = 'CASH_EQUIVALENT'
+    FixedIncome = 'FIXED_INCOME'
+    Currency = 'CURRENCY'
+
+
+class ComplexOrderStrategyType(Enum):
+    """Represents the different order Asset types
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import ComplexOrderStrategyType
+        >>> ComplexOrderStrategyType.IronCondor.Value
+    """
+
+    NoneProvided = 'NONE'
+    Covered = 'COVERED'
+    Vertical = 'VERTICAL'
+    BackRatio = 'BACK_RATIO'
+    Calendar = 'CALENDAR'
+    Diagonal = 'DIAGONAL'
+    Straddle = 'STRADDLE'
+    Strangle = 'STRANGLE'
+    CollarSynthetic = 'COLLAR_SYNTHETIC'
+    Butterfly = 'BUTTERFLY'
+    Condor = 'CONDOR'
+    IronCondor = 'IRON_CONDOR'
+    VerticalRoll = 'VERTICAL_ROLL'
+    CollarWithStock = 'COLLAR_WITH_STOCK'
+    DoubleDiagonal = 'DOUBLE_DIAGONAL'
+    UnbalancedButterfly = 'UNBALANCED_BUTTERFLY'
+    UnbalancedCondor = 'UNBALANCED_CONDOR'
+    UnbalancedIronCondor = 'UNBALANCED_IRON_CONDOR'
+    UnbalancedVerticalRoll = 'UNBALANCED_VERTICAL_ROLL'
+    Custom = 'CUSTOM'
+
+
+class OrderInstructions(Enum):
+    """Represents the different order instructions
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import OrderInstructions
+        >>> OrderInstructions.SellShort.Value
+    """
+
+    Buy = 'BUY'
+    Sell = 'SELL'
+    BuyToCover = 'BUY_TO_COVER'
+    SellShort = 'SELL_SHORT'
+    BuyToOpen = 'BUY_TO_OPEN'
+    BuyToClose = 'BUY_TO_CLOSE'
+    SellToOpen = 'SELL_TO_OPEN'
+    SellToClose = 'SELL_TO_CLOSE'
+    Exchange = 'EXCHANGE'
+
+
+class RequestedDestination(Enum):
+    """Represents the different order requested
+    destinations when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import RequestedDestination
+        >>> RequestedDestination.Cboe.Value
+    """
+
+    Inet = 'INET'
+    EcnArca = 'ECN_ARCA'
+    Cboe = 'CBOE'
+    Amex = 'AMEX'
+    Phlx = 'PHLX'
+    Ise = 'ISE'
+    Box = 'BOX'
+    Nyse = 'NYSE'
+    Nasdaq = 'NASDAQ'
+    Bats = 'BATS'
+    C2 = 'C2'
+    Auto = 'AUTO'
+
+
+class StopPriceLinkBasis(Enum):
+    """Represents the different stop price link basis 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import StopPriceLinkBasis
+        >>> StopPriceLinkBasis.Trigger.Value
+    """
+
+    Manual = 'MANUAL'
+    Base = 'BASE'
+    Trigger = 'TRIGGER'
+    Last = 'LAST'
+    Bid = 'BID'
+    Ask = 'ASK'
+    AskBid = 'ASK_BID'
+    Mark = 'MARK'
+    Average = 'AVERAGE'
+
+
+class StopPriceLinkType(Enum):
+    """Represents the different stop price link type 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import StopPriceLinkType
+        >>> StopPriceLinkType.Trigger.Value
+    """
+
+    Value = 'VALUE'
+    Percent = 'PERCENT'
+    Tick = 'TICK'
+
+
+class StopType(Enum):
+    """Represents the different stop type 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import StopType
+        >>> StopType.Standard.Value
+    """
+
+    Standard = 'STANDARD'
+    Bid = 'BID'
+    Ask = 'ASK'
+    Last = 'LAST'
+    Mark = 'MARK'
+
+
+class PriceLinkBasis(Enum):
+    """Represents the different price link basis 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import PriceLinkBasis
+        >>> PriceLinkBasis.Manual.Value
+    """
+
+    Manual = 'MANUAL'
+    Base = 'BASE'
+    Trigger = 'TRIGGER'
+    Last = 'LAST'
+    Bid = 'BID'
+    Ask = 'ASK'
+    AskBid = 'ASK_BID'
+    Mark = 'MARK'
+    Average = 'AVERAGE'
+
+
+class PriceLinkType(Enum):
+    """Represents the different price link type 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import PriceLinkType
+        >>> PriceLinkType.Trigger.Value
+    """
+
+    Value = 'VALUE'
+    Percent = 'PERCENT'
+    Tick = 'TICK'
+
+
+class OrderType(Enum):
+    """Represents the different order type 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import OrderType
+        >>> OrderType.Market.Value
+    """
+
+    Market = 'MARKET'
+    Limit = 'LIMIT'
+    Stop = 'STOP'
+    StopLimit = 'STOP_LIMIT'
+    TrailingStop = 'TRAILING_STOP'
+    MarketOnClose = 'MARKET_ON_CLOSE'
+    Exercise = 'EXERCISE'
+    TrailingStopLimit = 'TRAILING_STOP_LIMIT'
+    NetDebit = 'NET_DEBIT'
+    NetCredit = 'NET_CREDIT'
+    NetZero = 'NET_ZERO'
+
+
+class PositionEffect(Enum):
+    """Represents the different position effects 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import PositionEffect
+        >>> PositionEffect.Opening.Value
+    """
+
+    Opening = 'OPENING'
+    Closing = 'CLOSING'
+    Automatic = 'AUTOMATIC'
+
+
+class OrderTaxLotMethod(Enum):
+    """Represents the different order tax lot methods 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import OrderTaxLotMethod
+        >>> OrderTaxLotMethod.Fifo.Value
+    """
+
+    Fifo = 'FIFO'
+    Lifo = 'LIFO'
+    HighCost = 'HIGH_COST'
+    LowCost = 'LOW_COST'
+    AverageCost = 'AVERAGE_COST'
+    SpecificLot = 'SPECIFIC_LOT'
+
+
+class SpecialInstructions(Enum):
+    """Represents the different order special instructions 
+    when constructing and `Order` object.
+
+    ### Usage
+    ----
+        >>> from td.enums import SpecialInstructions
+        >>> SpecialInstructions.AllOrNone.Value
+    """
+
+    AllOrNone = 'ALL_OR_NONE'
+    DoNotReduce = 'DO_NOT_REDUCE'
+    AllOrNoneDoNotReduce = 'ALL_OR_NONE_DO_NOT_REDUCE'

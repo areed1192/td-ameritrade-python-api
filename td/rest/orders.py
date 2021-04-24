@@ -4,7 +4,7 @@ from datetime import datetime
 from datetime import date
 from td.session import TdAmeritradeSession
 from enum import Enum
-from td.utils import Order
+from td.utils.utils import Order
 
 
 class Orders():

@@ -1,14 +1,13 @@
-from datetime import date, datetime
 import json
-import requests
-import webbrowser
 import urllib
 import pathlib
-
-from urllib.parse import parse_qs
-from urllib.parse import urlparse
+import requests
+import webbrowser
 
 from typing import Union
+from datetime import datetime
+from urllib.parse import parse_qs
+from urllib.parse import urlparse
 
 
 class TdCredentials():

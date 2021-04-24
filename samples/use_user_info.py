@@ -2,15 +2,15 @@ from pprint import pprint
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.enums import DefaultOrderDuration
-from td.enums import DefaultAdvancedToolLaunch
-from td.enums import DefaultOrderLegInstruction
-from td.enums import DefaultOrderMarketSession
-from td.enums import DefaultOrderPriceLinkType
-from td.enums import DefaultOrderType
-from td.enums import TaxLotMethod
-from td.enums import AuthTokenTimeout
-from td.utils import UserPreferences
+from td.utils.enums import DefaultOrderDuration
+from td.utils.enums import DefaultAdvancedToolLaunch
+from td.utils.enums import DefaultOrderLegInstruction
+from td.utils.enums import DefaultOrderMarketSession
+from td.utils.enums import DefaultOrderPriceLinkType
+from td.utils.enums import DefaultOrderType
+from td.utils.enums import TaxLotMethod
+from td.utils.enums import AuthTokenTimeout
+from td.utils.utils import UserPreferences
 
 # Initialize the Parser.
 config = ConfigParser()

@@ -2,7 +2,7 @@ from pprint import pprint
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.enums import TransactionTypes
+from td.utils.enums import TransactionTypes
 
 # Initialize the Parser.
 config = ConfigParser()

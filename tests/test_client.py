@@ -4,17 +4,17 @@ from configparser import ConfigParser
 
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.quotes import Quotes
-from td.movers import Movers
-from td.accounts import Accounts
-from td.market_hours import MarketHours
-from td.instruments import Instruments
-from td.user_info import UserInfo
-from td.price_history import PriceHistory
-from td.options_chain import OptionsChain
-from td.watchlists import Watchlists
-from td.orders import Orders
-from td.saved_orders import SavedOrders
+from td.rest.quotes import Quotes
+from td.rest.movers import Movers
+from td.rest.accounts import Accounts
+from td.rest.market_hours import MarketHours
+from td.rest.instruments import Instruments
+from td.rest.user_info import UserInfo
+from td.rest.price_history import PriceHistory
+from td.rest.options_chain import OptionsChain
+from td.rest.watchlists import Watchlists
+from td.rest.orders import Orders
+from td.rest.saved_orders import SavedOrders
 
 
 class TestTdClient(TestCase):

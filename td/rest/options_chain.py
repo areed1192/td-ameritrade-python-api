@@ -1,6 +1,6 @@
 from typing import List
 from td.session import TdAmeritradeSession
-from td.utils import OptionChainQuery
+from td.utils.utils import OptionChainQuery
 
 
 class OptionsChain():

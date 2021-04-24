@@ -1,10 +1,13 @@
 [
   {
-    //REPRESENTS A LIMIT ORDER FOR SELLING A POSITION I OWN. LOWEST PRICE I'M WILLING TO SELL IT AT.
+    // Represents a Limit Order for selling a postion I own. In this situation, I would sell 1 share
+    // of American Airlines (AA) at a price of $9.00 or higher. For example, if the price the order
+    // got filled at is $9.02 it would still go through because the price is higher than the desired
+    // sale price.
     "orderType": "LIMIT",
     "session": "NORMAL",
     "duration": "DAY",
-    "activationPrice": 9.0,
+    "price": 9.0,
     "orderStrategyType": "SINGLE",
     "orderLegCollection": [
       {

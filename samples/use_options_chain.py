@@ -2,12 +2,11 @@ from pprint import pprint
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.enums import StrategyType
-from td.enums import OptionaRange
-from td.enums import OptionType
-from td.enums import ContractType
-from td.enums import ExpirationMonth
-from td.utils import OptionChainQuery
+from td.utils.enums import OptionaRange
+from td.utils.enums import OptionType
+from td.utils.enums import ContractType
+from td.utils.enums import ExpirationMonth
+from td.utils.utils import OptionChainQuery
 
 # Initialize the Parser.
 config = ConfigParser()

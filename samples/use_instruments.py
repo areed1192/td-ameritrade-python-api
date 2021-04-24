@@ -2,7 +2,7 @@ from pprint import pprint
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.enums import Projections
+from td.utils.enums import Projections
 from datetime import datetime
 
 # Initialize the Parser.

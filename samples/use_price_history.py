@@ -2,8 +2,8 @@ from pprint import pprint
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from td.enums import PeriodType
-from td.enums import FrequencyType
+from td.utils.enums import PeriodType
+from td.utils.enums import FrequencyType
 from datetime import datetime
 from datetime import timedelta
 

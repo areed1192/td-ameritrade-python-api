@@ -5,12 +5,15 @@ from typing import Union
 from enum import Enum
 from datetime import datetime
 from datetime import date
-from td.enums import ContractType
-from td.enums import StrategyType
-from td.enums import OptionaRange
-from td.enums import OptionType
-from td.enums import ContractType
-from td.enums import ExpirationMonth
+from td.utils.enums import ContractType
+from td.utils.enums import StrategyType
+from td.utils.enums import OptionaRange
+from td.utils.enums import OptionType
+from td.utils.enums import ContractType
+from td.utils.enums import ExpirationMonth
+
+import json
+from collections import OrderedDict
 
 
 @dataclass
@@ -280,24 +283,31 @@ class OptionChainQuery():
                 else:
                     delattr(self, value)
 
+@dataclass
+class OrderLegInstrument():
 
-import json
-from enum import Enum
-from collections import OrderedDict
+    assetType: Union[str, Enum]
+    symbol: str
 
 
+@dataclass
 class OrderLeg():
 
-    '''
-        Represents an OrderLeg object that is used to specify instructions
-        about the order.
-    '''
+    OrderLegType: Union[str, Enum] = None
+    legId: int = 0
+    instrument: str = None
+    instruction: Union[str, Enum] = None
+    position_effect: Union[str, Enum] = None
+    quantity: int = None
+    quantity_type: str = None
+
+
+    """Represents an OrderLeg object that is used to specify instructions
+    about the order.
+    """
 
     def __init__(self, **kwargs):
-        '''
-            Initalizes the OrderLeg Object and override any default values that are
-            passed through.
-        '''
+        """Initalizes the `OrderLeg` object."""
 
         # Define the order Leg arguments used for validation.
         self.order_leg_arguments = {
@@ -312,19 +322,18 @@ class OrderLeg():
         else:
             self.template = {}
 
-    def order_leg_instruction(self, instruction=None):
-        '''
-            Defines the Instruction argument for the order leg. Can be either
-            a string or enum.
+    def order_leg_instruction(self, instruction: Union[str, Enum]) -> None:
+        """Defines the Instruction argument for the order leg. 
 
-            NAME: instruction
-            DESC: A the order instruction value.
-            TYPE: String | Enum
-        '''
+        ### Parameters
+        ----
+        instruction: Union[str, Enum]
+            The order's instruction for the current leg.
+        """
 
-        # Grab the enumeration value if an Enum object was passed through.
+        # Grab the instruction
         if isinstance(instruction, Enum):
-            instruction = instruction.name
+            instruction = instruction.value
 
         # Add it to the OrderLeg.
         if instruction in self.order_leg_arguments['instruction']:
@@ -332,22 +341,28 @@ class OrderLeg():
         else:
             raise ValueError('Incorrect Value for the Instruction paramater')
 
-    def order_leg_asset(self, asset_type=None, symbol=None):
-        '''
-            Defines the asset that is to be purchased/sold in the order. To define an asset
-            you need a symbol and an asset type value.
+    def order_leg_asset(self, asset_type: Union[str, Enum], symbol: str) -> None:
+        """Defines the asset that is to be purchased/sold in the order.
+        
+        ### Overview
+        ----
+        To define an asset you need a symbol and an asset
+        type value.
 
-            NAME: asset_type
-            DESC: The type of asset to be traded.
-            TYPE: String | Enum       
+        ### Parameters
+        ----
+        asset_type: Union[str, Enum]
+            The type of asset to be traded.
 
-            NAME: symbol
-            DESC: The symbol of the asset to be traded.
-            TYPE: String
-        '''
+        symbol: str     
+            The symbol of the asset to be traded.
+        """
 
         # initalize the asset dictionary.
-        asset_dict = {'assetType': '', 'symbol': ''}
+        asset_dict = {
+            'assetType': '',
+            'symbol': ''
+        }
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(asset_type, Enum):
@@ -361,14 +376,14 @@ class OrderLeg():
         else:
             raise ValueError('Incorrect Value for the asset type paramater')
 
-    def order_leg_quantity(self, quantity=None):
-        '''
-            Specifies the quantity of the asset to purchase/sell. Must be an integer.
+    def order_leg_quantity(self, quantity: int = 0) -> None:
+        """Specifies the quantity of the asset to purchase or sell.
 
-            NAME: quantity
-            DESC: The quantity to be purchased.
-            TYPE: Int
-        '''
+        ### Parameters
+        ----
+        quantity: int (optional, Default=0)
+            The quantity to be purchased.
+        """
 
         # make sure it's an Int before adding it.
         if isinstance(quantity, int):
@@ -376,32 +391,40 @@ class OrderLeg():
         else:
             raise ValueError('Quantity must be the data type <INT>.')
 
-    def order_leg_price(self, price=None):
-        '''
-            Defines the price of the order to be made.
+    def order_leg_price(self, price: float = 0.0000) -> None:
+        """Defines the price of the order to be made.
 
-            NAME: price
-            DESC: The price at which to execute the order.
-            TYPE: Float
-        '''
+        ### Overview
+        ----
+        Will be rounded 4 decimal places.
+
+        ### Parameters
+        ----
+        price: float (optional, default=0.0)
+            The price at which to execute the order, and will be
+            rounded 4 decimal places in order to ensure errors
+            won't be returned back.
+        """
 
         # make sure it's a float before adding it.
         if isinstance(price, float):
-            self.template['price'] = price
+            self.template['price'] = round(price, 4)
         else:
-            raise ValueError('Price must be the data type <FLOAT>.')
+            raise ValueError('Price must be of data type `float`.')
 
-    def order_leg_quantity_type(self, quantity_type=None):
-        '''
-            Defines the Order Leg Quantity TYPE. Orders can be
-            sepcified as either by the number of shares you want to buy
-            or the dollar amount you want to buy. This argument defines
-            how you want to specify the quantity.
-        '''
+    def order_leg_quantity_type(self, quantity_type: Union[str, Enum] = None):
+        """Defines the Order Leg Quantity Type. 
+        
+        ### Parameters
+        ----
+        order_leg_quantity_type: Union[str, Enum] (optional, Default=None)
+            Orders can be sepcified as either by the number
+            of shares you want to buy (SHARES) or the dollar
+            ammount you want to buy (DOLLARS).
+        """
 
-        # Grab the enumeration value if an Enum object was passed through.
         if isinstance(quantity_type, Enum):
-            quantity_type = quantity_type.name
+            quantity_type = quantity_type.value
 
         # Add it to the template.
         if quantity_type in self.order_leg_arguments['quantityType']:
@@ -410,12 +433,15 @@ class OrderLeg():
             raise ValueError('Incorrect Value for the Quantity Type paramater')
 
     def copy(self):
-        '''
-            Returns a copy of the Order Leg so that users can easily build another
-            one using the copy.
+        """Returns a copy of the Order Leg so that users can 
+        easily build another one using the copy.
 
-            RTYPE: OrderLeg Object.
-        '''
+
+        ### Returns
+        ----
+        OrderLeg:
+            A copied version of this OrderLeg.
+        """
 
         # copy it and return a new OrderLeg Object.
         template_copy = self.template.copy()
@@ -425,10 +451,9 @@ class OrderLeg():
 class Order():
 
     def __init__(self, **kwargs):
-        '''
-            Initalizes the SavedOrder Object and override any default values that are
-            passed through.
-        '''
+        """Initalizes the SavedOrder Object and override any default values that are
+        passed through.
+        """
 
         self.saved_order_arguments = {
 
@@ -501,27 +526,12 @@ class Order():
         self.order_legs_count = 0
         self.child_order_count = 0
 
-    '''
-        ALEX'S NOTE
-
-        Every trade should need a session. The logic is that if no session is given, then how would we know when
-        to execute it?
-
-        Every trade should need a duration. Again, how do we know when to cancel it if at all? Do we just add a 
-        default value?
-
-        Every order doesn't need a complex order strategy type. For example, it could be just a simple limit order.
-        However, if you do give a complex order strategy type could we use this to determine other arguments that we
-        would need? 
-        
-    '''
-
     def _grab_value(self, item=None):
-        '''
-            Standardizes the process of grabbing values passed through to the order Object.
-            This will maintain a single entry point for testing the object type and returning
-            the correct value.
-        '''
+        """Standardizes the process of grabbing values
+        passed through to the order Object. This will
+        maintain a single entry point for testing the
+        object type and returning the correct value.
+        """
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(item, Enum):
@@ -531,14 +541,13 @@ class Order():
 
         return item_value
 
-    def order_price(self, price=None):
-        '''
-            Defines the price of the order to be made.
+    def order_price(self, price: float = None) -> None:
+        """Sets the orders price.
 
             NAME: price
             DESC: The price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         # make sure it's a float before adding it.
         if isinstance(price, float):
@@ -547,7 +556,7 @@ class Order():
             raise ValueError('Price must be the data type <FLOAT>.')
 
     def order_type(self, order_type=None):
-        '''
+        """
             Defines the Order type for the Order Object. Order Type can either be
             a string or an Enum object from the `enums` file.
 
@@ -555,7 +564,7 @@ class Order():
             DESC: A valid order type value that is to be associated with the Order
                   object.
             TYPE: String | Enum
-        '''
+        """
 
         # Grab the value.
         order_type = self._grab_value(item=order_type)
@@ -566,24 +575,24 @@ class Order():
             raise ValueError('Incorrect Value for the OrderType paramater')
 
     def stop_price_offset(self, stop_price_offset= None):
-        '''
+        """
             Defines the stop price of the order to be made.
 
             NAME: stop_price
             DESC: The stop price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         self.template['stopPriceOffset'] = stop_price_offset
 
     def stop_type(self, stop_type = None):
-        '''
+        """
             Defines the stop price of the order to be made.
 
             NAME: stop_price
             DESC: The stop price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         # Grab the value.
         stop_type = self._grab_value(item = stop_type)
@@ -596,13 +605,13 @@ class Order():
         
 
     def stop_price_link_type(self, stop_price_link_type = None):
-        '''
+        """
             Defines the stop price of the order to be made.
 
             NAME: stop_price
             DESC: The stop price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         # Grab the value.
         stop_price_link_type = self._grab_value(item = stop_price_link_type)
@@ -615,13 +624,13 @@ class Order():
 
 
     def stop_price_link_basis(self, stop_price_link_basis = None):
-        '''
+        """
             Defines the stop price of the order to be made.
 
             NAME: stop_price
             DESC: The stop price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         # Grab the value.
         stop_price_link_basis = self._grab_value(item = stop_price_link_basis)
@@ -633,13 +642,13 @@ class Order():
             raise ValueError('Incorrect Value for the stopPriceLinkBasis paramater')
 
     def stop_price(self, stop_price = None):
-        '''
+        """
             Defines the stop price of the order to be made.
             
             NAME: stop_price
             DESC: The stop price at which to execute the order.
             TYPE: Float
-        '''
+        """
 
         # make sure it's a float before adding it.
         if isinstance(stop_price, float):
@@ -648,13 +657,13 @@ class Order():
             raise ValueError('Stop Price must be the data type FLOAT.')
 
     def order_session(self, session=None):
-        '''
+        """
             Define the session for the trade.
 
             NAME: session
             DESC: A valid session type for the Order Object.
             TYPE: String | Enum
-        '''
+        """
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(session, Enum):
@@ -667,7 +676,7 @@ class Order():
             raise ValueError('Incorrect Value for the Session paramater')
 
     def order_duration(self, duration=None, cancel_time=None):
-        '''
+        """
             Defines the order duration for the Order Object. Additionally,
             it will add the cancel time if passed through.
 
@@ -678,7 +687,7 @@ class Order():
             NAME: cancel_time
             DESC: The time that the order will be canceled.
             TYPE: String      
-        '''
+        """
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(duration, Enum):
@@ -699,13 +708,13 @@ class Order():
             }
 
     def complex_order_type(self, complex_order_strategy_type=None):
-        '''
+        """
             Defines the complex order type for the Order Object. 
 
             NAME: complex_order_strategy_type
             DESC: The Complex order strategy type for the order.
             TYPE: String | Enum           
-        '''
+        """
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(complex_order_strategy_type, Enum):
@@ -719,13 +728,13 @@ class Order():
                 'Incorrect Value for the complexOrderStrategyType paramater')
 
     def order_strategy_type(self, order_strategy_type=None):
-        '''
+        """
             Defines the order strategy type for the Order Object. 
 
             NAME: order_strategy_type
             DESC: The order strategy type for the order.
             TYPE: String | Enum 
-        '''
+        """
 
         # Grab the enumeration value if an Enum object was passed through.
         if isinstance(order_strategy_type, Enum):
@@ -739,13 +748,13 @@ class Order():
                 'Incorrect Value for the orderStrategyType paramater')
 
     def _grab_order(self):
-        '''
+        """
             Grabs all the info passed through to the order object, creates an Ordered Dicitonary,
             checks for OrderLegCollection and grabs their values, and checks for ChildOrderStartegies
             and grabs their values.
 
             RTYPE: OrderedDict
-        '''
+        """
 
         # Create an OrderedDict
         data = OrderedDict(self.template.items())
@@ -767,13 +776,13 @@ class Order():
         return data
 
     def add_order_leg(self, order_leg=None):
-        '''
+        """
             Adds a blank OrderLeg Object to the OrderLegs Collection.
 
             NAME: order_leg
             DESC: A order leg that contains infor about the order purchase.
             TYPE: OrderLeg
-        '''
+        """
 
         # First define the key.
         key_id = "order_leg_" + str(len(self.order_legs_collection) + 1)
@@ -785,7 +794,7 @@ class Order():
         self.order_legs_count = self.order_legs_count + 1
 
     def delete_order_leg(self, key=None, index=None):
-        '''
+        """
             Deletes a specific OrderLeg from the OrderLeg Collection using
             either it's index (Position) or Key.
 
@@ -796,7 +805,7 @@ class Order():
             NAME: Key
             DESC: The unique key value for the OrderLeg object you wish to remove.
             TYPE: String.
-        '''
+        """
 
         # sorted_orders_collection = OrderedDict(sorted(self.order_legs_collection.items(), key=lambda t: t[0]))
 
@@ -822,29 +831,29 @@ class Order():
         self.order_legs_count = self.order_legs_count - 1
 
     def _saved_order_to_json(self):
-        '''
+        """
             Converts the order to a valid JSON string
             to be submitted to the TD API.
-        '''
+        """
         return json.dumps(self._grab_order())
 
     def create_child_order_strategy(self):
-        '''
+        """
             Creates a new Order Object that will represent a Child Order Strategy.
 
             RTYPE: Order Object
-        '''
+        """
         return Order()
 
     def add_child_order_strategy(self, child_order_strategy=None):
-        '''
+        """
             Adds the ChildOrderStrategy Object to the main PARENT Order object. Additionally,
             it will create a key for that ChildOrder.
 
             NAME: child_order_strategy
             DESC: The ChildOrderStrategy Object to be added to the main (PARENT) Order Object.
             TYPE: Order Object
-        '''
+        """
 
         # Create the key.
         key_id = "child_order_strategy_" + \
@@ -858,7 +867,7 @@ class Order():
         self.child_order_count = self.child_order_count + 1
 
     def delete_child_order_strategy(self, key=None, index=None):
-        '''
+        """
             Deletes a specific ChildOrderStrategy from the ChildOrderStrategy Collection using
             either it's index (Position) or Key.
 
@@ -869,7 +878,7 @@ class Order():
             NAME: Key
             DESC: The unique key value for the child order strategy object you wish to remove.
             TYPE: String.
-        '''
+        """
 
         # If the key exists, then delete it.
         if key is not None and key in self.child_order_strategies.keys():
