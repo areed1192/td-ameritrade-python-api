@@ -3,7 +3,6 @@ from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
 from td.utils.enums import Markets
-from datetime import date
 from datetime import datetime
 
 # Initialize the Parser.

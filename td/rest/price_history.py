@@ -1,7 +1,6 @@
 from typing import Union
 from td.session import TdAmeritradeSession
 from enum import Enum
-from datetime import date
 from datetime import datetime
 
 

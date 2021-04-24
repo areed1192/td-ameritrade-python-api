@@ -6,7 +6,7 @@ from td.utils.enums import OptionaRange
 from td.utils.enums import OptionType
 from td.utils.enums import ContractType
 from td.utils.enums import ExpirationMonth
-from td.utils.utils import OptionChainQuery
+from td.utils.option_chain import OptionChainQuery
 
 # Initialize the Parser.
 config = ConfigParser()
