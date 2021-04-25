@@ -11,6 +11,7 @@ from td.rest.options_chain import OptionsChain
 from td.rest.watchlists import Watchlists
 from td.rest.orders import Orders
 from td.rest.saved_orders import SavedOrders
+from td.streaming.client import StreamingApiClient
 
 
 class TdAmeritradeClient():
@@ -226,5 +227,25 @@ class TdAmeritradeClient():
         """
 
         object: SavedOrders = SavedOrders(session=self.td_session)
+
+        return object
+
+    def streaming_api_client(self) -> StreamingApiClient:
+        """Used to access the `StreamingApiClient` Services and metadata.
+
+        ### Returns
+        ---
+        StreamingApiClient:
+            The `StreamingApiClient` services Object.
+
+        ### Usage
+        ----
+            >>> td_client = TdAmeritradeClient()
+            >>> streaming_api_service = td_client.streaming_api_client()
+        """
+
+        object: StreamingApiClient = StreamingApiClient(
+            session=self.td_session
+        )
 
         return object

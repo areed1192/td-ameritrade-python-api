@@ -664,3 +664,173 @@ class SpecialInstructions(Enum):
     AllOrNone = 'ALL_OR_NONE'
     DoNotReduce = 'DO_NOT_REDUCE'
     AllOrNoneDoNotReduce = 'ALL_OR_NONE_DO_NOT_REDUCE'
+
+
+class LevelOneQuotes(Enum):
+    """Represents the different fields for the Level One
+    Quotes Feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelOneQuotes
+        >>> LevelOneQuotes.All.Value
+    """
+
+    All = [str(item) for item in range(0, 53)]
+    Symbol = 0
+    BidPrice = 1
+    AskPrice = 2
+    LastPrice = 3
+    BidSize = 4
+    AskSize = 5
+    AskId = 6
+    BidId = 7
+    TotalVolume = 8
+    LastSize = 9
+    TradeTime = 10
+    QuoteTime = 11
+    HighPrice = 12
+    LowPrice = 13
+    BidTick = 14
+    ClosePrice = 15
+    ExchangeId = 16
+    Marginable = 17
+    Shortable = 18
+    IslandBid = 19
+    IslandAsk = 20
+    IslandVolume = 21
+    QuoteDay = 22
+    TradeDay = 23
+    Volatility = 24
+    Description = 25
+    LastId = 26
+    Digits = 27
+    OpenPrice = 28
+    NetChange = 29
+    FiftyTwoWeekHigh = 30
+    FiftyTwoWeekLow = 31
+    PeRatio = 32
+    DividendAmount = 33
+    DividendYield = 34
+    IslandBidSize = 35
+    IslandAskSize = 36
+    Nav = 37
+    FundPrice = 38
+    ExchangeName = 39
+    DividendDate = 40
+    RegularMarketQuote = 41
+    RegularMarketTrade = 42
+    RegularMarketLastPrice = 43
+    RegularMarketLastSize = 44
+    RegularMarketTradeTime = 45
+    RegularMarketTradeDay = 46
+    RegularMarketNetChange = 47
+    SecurityStatus = 48
+    Mark = 49
+    QuoteTimeInLong = 50
+    TradeTimeInLong = 51
+    RegularMarketTradeTimeInLong = 52
+
+
+class LevelOneOptions(Enum):
+    """Represents the different fields for the Level One
+    Options Feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelOneOptions
+        >>> LevelOneOptions.All.Value
+    """
+
+    All = [str(item) for item in range(0, 42)]
+    Symbol = 0
+    Description = 1
+    BidPrice = 2
+    AskPrice = 3
+    LastPrice = 4
+    HighPrice = 5
+    LowPrice = 6
+    ClosePrice = 7
+    TotalVolume = 8
+    OpenInterest = 9
+    Volatility = 10
+    QuoteTime = 11
+    TradeTime = 12
+    MoneyIntrinsicValue = 13
+    QuoteDay = 14
+    TradeDay = 15
+    ExpirationYear = 16
+    Multiplier = 17
+    Digits = 18
+    OpenPrice = 19
+    BidSize = 20
+    AskSize = 21
+    LastSize = 22
+    NetChange = 23
+    StrikePrice = 24
+    ContractType = 25
+    Underlying = 26
+    ExpirationMonth = 27
+    Deliverables = 28
+    TimeValue = 29
+    ExpirationDay = 30
+    DaysToExpiration = 31
+    Delta = 32
+    Gamma = 33
+    Theta = 34
+    Vega = 35
+    Rho = 36
+    SecurityStatus = 37
+    TheoreticalOptionValue = 38
+    UnderlyingPrice = 39
+    UvExpirationType = 40
+    Mark = 41
+
+
+class LevelOneFutures(Enum):
+    """Represents the different fields for the Level One
+    Futures Feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelOneFutures
+        >>> LevelOneFutures.All.Value
+    """
+
+    All = [str(item) for item in range(0, 36)]
+    Symbol = 0
+    BidPrice = 1
+    AskPrice = 2
+    LastPrice = 3
+    BidSize = 4
+    AskSize = 5
+    AskId = 6
+    BidId = 7
+    TotalVolume = 8
+    LastSize = 9
+    QuoteTime = 10
+    TradeTime = 11
+    HighPrice = 12
+    LowPrice = 13
+    ClosePrice = 14
+    ExchangeId = 15
+    Description = 16
+    LastId = 17
+    OpenPrice = 18
+    NetChange = 19
+    FuturePercentChange = 20
+    ExhangeName = 21
+    SecurityStatus = 22
+    OpenInterest = 23
+    Mark = 24
+    Tick = 25
+    TickAmount = 26
+    Product = 27
+    FuturePriceFormat = 28
+    FutureTradingHours = 29
+    FutureIsTradable = 30
+    FutureMultiplier = 31
+    FutureIsActive = 32
+    FutureSettlementPrice = 33
+    FutureActiveSymbol = 34
+    FutureExpirationDate = 35
