@@ -5,6 +5,13 @@ from td.client import TdAmeritradeClient
 from td.utils.enums import LevelOneQuotes
 from td.utils.enums import LevelOneOptions
 from td.utils.enums import LevelOneFutures
+from td.utils.enums import LevelOneForex
+from td.utils.enums import LevelOneFuturesOptions
+from td.utils.enums import NewsHeadlines
+from td.utils.enums import ChartServices
+from td.utils.enums import ChartEquity
+from td.utils.enums import TimesaleServices
+from td.utils.enums import Timesale
 
 # Initialize the Parser.
 config = ConfigParser()
@@ -56,6 +63,38 @@ streaming_services.level_one_options(
 streaming_services.level_one_futures(
     symbols=['/ESM4', '/ES'],
     fields=LevelOneFutures.All
+)
+
+# Grab level one forex quotes.
+streaming_services.level_one_forex(
+    symbols=['EUR/USD'],
+    fields=LevelOneForex.All
+)
+
+# Stream News Headlines.
+streaming_services.news_headline(
+    symbols=['MSFT', 'GOOG', 'AAPL'],
+    fields=NewsHeadlines.All
+)
+
+# Stream Level One Futures Options.
+streaming_services.level_one_futures_options(
+    symbols=['./CLM21P625'],
+    fields=LevelOneFuturesOptions.All
+)
+
+# Stream equity bars.
+streaming_services.chart(
+    service=ChartServices.ChartEquity,
+    symbols=['MSFT', 'GOOG', 'AAPL'],
+    fields=ChartEquity.All
+)
+
+# Stream Time & Sales data.
+streaming_services.timesale(
+    service=TimesaleServices.TimesaleEquity,
+    symbols=['MSFT', 'GOOG', 'AAPL'],
+    fields=Timesale.All
 )
 
 # Start Streaming.

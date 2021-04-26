@@ -215,131 +215,266 @@ class StreamingServices():
 
         self.streaming_api_client.data_requests['requests'].append(request)
 
-    # def _validate_argument(self, argument: Union[str, int], endpoint: str) -> Union[List[str], str]:
-    #     """Validate field arguments before submitting request.
+    def level_one_futures_options(self, symbols: List[str], fields: Union[List[Enum], List[str], Enum]) -> None:
+        """Provides access to level one streaming futures options quotes.
 
-    #     Arguments:
-    #     ---
-    #     argument {Union[str, int]} -- Either a single argument or a list of arguments that are
-    #         fields to be requested.
+        ### Parameters
+        ----
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #     endpoint {str} -- The subscription service the request will be sent to. For example,
-    #         "level_one_quote".
+        fields: Union[List[Enum], List[str]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
 
-    #     Returns:
-    #     ----
-    #     Union[List[str], str] -- The field or fields that have been validated.
-    #     """
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.level_one_futures(
+                symbols=['./EW2J20C2675'],
+                fields=LevelOneFutures.All
+            )
+        """
 
-    #     # initalize a new list.
-    #     arg_list = []
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
 
-    #     # see if the argument is a list or not.
-    #     if isinstance(argument, list):
+        if isinstance(fields, Enum):
+            fields = fields.value
 
-    #         for arg in argument:
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LEVELONE_FUTURES_OPTIONS'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
 
-    #             arg_str = str(arg)
-    #             key_list = list(self.fields_ids_dictionary[endpoint].keys())
-    #             val_list = list(self.fields_ids_dictionary[endpoint].values())
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #             if arg_str in key_list:
-    #                 arg_list.append(arg_str)
-    #             elif arg_str in val_list:
-    #                 key_value = key_list[val_list.index(arg_str)]
-    #                 arg_list.append(key_value)
+    def level_one_forex(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
+        """Provides access to level one streaming forex quotes.
 
-    #         return arg_list
+        ### Parameters
+        ----
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #     else:
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
 
-    #         arg_str = str(argument)
-    #         key_list = list(self.fields_ids_dictionary[endpoint].keys())
-    #         val_list = list(self.fields_ids_dictionary[endpoint].values())
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.level_one_forex(
+                symbols=['EUR/USD'],
+                fields=LevelOneForex.All
+            )
+        """
 
-    #         if arg_str in key_list:
-    #             return arg_str
-    #         elif arg_str in val_list:
-    #             key_value = key_list[val_list.index(arg_str)]
-    #             return key_value
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
 
-    # def chart(self, service: str, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """Subscribes to the Chart Service.
+        if isinstance(fields, Enum):
+            fields = fields.value
 
-    #     Represents the CHART_EQUITY, CHART_FUTRUES, and CHART_OPTIONS endpoint that can
-    #     be used to stream info needed to recreate charts.
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LEVELONE_FOREX'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
 
-    #     Arguments:
-    #     ---
-    #     service {str} -- The type of Chart Service you wish to recieve. Can be either
-    #         `CHART_EQUITY`, `CHART_FUTURES` or `CHART_OPTIONS`
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #     symbols {List[str]} -- The symbol you wish to get chart data for.
+    def account_activity(self) -> None:
+        """
+        ### Overview
+        ----
+        Represents the ACCOUNT_ACTIVITY endpoint of the TD
+        Streaming API. This service is used to request streaming
+        updates for one or more accounts associated with
+        the logged in User ID. Common usage would involve issuing
+        the OrderStatus API request to get all transactions for an
+        account, and subscribing to ACCT_ACTIVITY to get any updates.
+        """
 
-    #     fields {Union[List[str], List[int]]} -- The fields for the request. Can either be a list of
-    #         keys ['key 1','key 2'] or a list of ints [1, 2, 3]
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'ACCT_ACTIVITY'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = self.streaming_api_client.user_principal_data['streamerSubscriptionKeys']['keys'][0]['key']
+        request['parameters']['fields'] = '0,1,2,3'
 
-    #     Raises:
-    #     ----
-    #     ValueError: Error if no field is passed through.
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #     Usage:
-    #     ----
-    #         >>> td_session = TDClient(
-    #             client_id='<CLIENT_ID>',
-    #             redirect_uri='<REDIRECT_URI>',
-    #             credentials_path='<CREDENTIALS_PATH>'
-    #         )
+    def news_headline(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
+        """Provides access to streaming News Articles.
 
-    #         >>> td_session.login()
-    #         >>> td_stream_session = td_session.create_streaming_session()
+        ### Parameters
+        ----
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #         >>> td_stream_session.charts(
-    #             service='CHART_EQUITY',
-    #             symbols=['AAPL','MSFT'],
-    #             fields=[0,1,2,3,4,5,6,7]
-    #         )
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
 
-    #         >>> td_stream_session.charts(
-    #             service='CHART_OPTIONS',
-    #             symbols=['AAPL_040920C115'],
-    #             fields=[0,1,2,3,4,5,6,7]
-    #         )
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.news_headline(
+                symbols=['MSFT', 'GOOG', 'AAPL'],
+                fields=NewsHeadlines.All
+            )
+        """
 
-    #         >>> td_stream_session.charts(
-    #             service='CHART_FUTURES',
-    #             symbols=['/ES','/CL'],
-    #             fields=[0,1,2,3,4,5,6,7]
-    #         )
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
 
-    #         >>> td_stream_session.stream()
-    #     """
+        if isinstance(fields, Enum):
+            fields = fields.value
 
-    #     # check to make sure it's a valid Chart Service.
-    #     service_flag = service in [
-    #         'CHART_EQUITY',
-    #         'CHART_FUTURES',
-    #         'CHART_OPTIONS'
-    #     ]
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'NEWS_HEADLINE'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
 
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields,
-    #         endpoint=service.lower()
-    #     )
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #     if service_flag and fields is not None:
+    def chart(self, service: Union[str, Enum], symbols: List[str], fields: Union[List[str], List[int]]) -> None:
+        """Subscribes to the Chart Service.
 
-    #         # Build the request
-    #         request = request = self._new_request_template()
-    #         request['service'] = service
-    #         request['command'] = 'SUBS'
-    #         request['parameters']['keys'] = ','.join(symbols)
-    #         request['parameters']['fields'] = ','.join(fields)
-    #         self.streaming_api_client.data_requests['requests'].append(request)
+        ### Overview
+        ----
+        Represents the CHART_EQUITY, CHART_FUTRUES, and CHART_OPTIONS endpoint that can
+        be used to stream info needed to recreate charts.
 
-    #     else:
-    #         raise ValueError('ERROR!')
+        ### Parameters
+        ---
+        service: Union[str, Enum]
+            The type of Chart Service you wish to recieve. Can be either
+            `CHART_EQUITY`, `CHART_FUTURES` or `CHART_OPTIONS`
+
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
+
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
+
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.chart(
+                service=ChartServices.ChartEquity,
+                symbols=['MSFT', 'GOOG', 'AAPL'],
+                fields=ChartEquity.All
+            )
+        """
+
+        if isinstance(service, Enum):
+            service = service.value
+
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
+
+        if isinstance(fields, Enum):
+            fields = fields.value
+
+        # Build the request
+        request = request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
+        self.streaming_api_client.data_requests['requests'].append(request)
+
+    def timesale(self, service: str, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
+        """Stream Time & Sales Data.
+
+        ### Parameters
+        ---
+        service: Union[str, Enum]
+            The different timesale services, can be `TIMESALE_EQUITY`,
+            `TIMESALE_OPTIONS`, `TIMESALE_FUTURES`.
+
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
+
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
+
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.timesale(
+                service=TimesaleServices.TimesaleEquity,
+                symbols=['MSFT', 'GOOG', 'AAPL'],
+                fields=Timesale.All
+            )
+        """
+
+        if isinstance(service, Enum):
+            service = service.value
+
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
+
+        if isinstance(fields, Enum):
+            fields = fields.value
+
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
+
+        self.streaming_api_client.data_requests['requests'].append(request)
 
     # def actives(self, service: str, venue: str, duration: str) -> None:
     #     """
@@ -388,23 +523,6 @@ class StreamingServices():
 
     #     else:
     #         raise ValueError('ERROR!')
-
-    # def account_activity(self):
-    #     """
-    #         Represents the ACCOUNT_ACTIVITY endpoint of the TD Streaming API. This service is used to
-    #         request streaming updates for one or more accounts associated with the logged in User ID.
-    #         Common usage would involve issuing the OrderStatus API request to get all transactions
-    #         for an account, and subscribing to ACCT_ACTIVITY to get any updates.
-    #     """
-
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'ACCT_ACTIVITY'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = self.streaming_api_client.user_principal_data['streamerSubscriptionKeys']['keys'][0]['key']
-    #     request['parameters']['fields'] = '0,1,2,3'
-
-    #     self.streaming_api_client.data_requests['requests'].append(request)
 
     # def chart_history_futures(self, symbol: str, frequency: str, start_time: str = None, end_time: str = None, period: str = None) -> None:
     #     """Represents the CHART HISTORY FUTURES endpoint for the TD Streaming API. Only Futures
@@ -467,117 +585,6 @@ class StreamingServices():
     #     del request['parameters']['fields']
 
     #     request['requestid'] = str(request['requestid'])
-
-    #     self.streaming_api_client.data_requests['requests'].append(request)
-
-    # def level_one_forex(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         Represents the LEVEL ONE FOREX endpoint for the TD Streaming API. This
-    #         will return quotes for a given list of forex symbols along with specified field information.
-
-    #         NAME: symbols
-    #         DESC: A List of forex symbols you wish to stream quotes for.
-    #         TYPE: List<String>
-
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
-    #     """
-
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields, endpoint='level_one_forex')
-
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'LEVELONE_FOREX'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
-
-    #     self.streaming_api_client.data_requests['requests'].append(request)
-
-    # def level_one_futures_options(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         Represents the LEVEL ONE FUTURES OPTIONS endpoint for the TD Streaming API. This
-    #         will return quotes for a given list of forex symbols along with specified field information.
-
-    #         NAME: symbols
-    #         DESC: A List of forex symbols you wish to stream quotes for.
-    #         TYPE: List<String>
-
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
-    #     """
-
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields, endpoint='level_one_futures_options')
-
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'LEVELONE_FUTURES_OPTIONS'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
-
-    #     self.streaming_api_client.data_requests['requests'].append(request)
-
-    # def news_headline(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         Represents the NEWS_HEADLINE endpoint for the TD Streaming API. This endpoint
-    #         is used to stream news headlines for different instruments.
-
-    #         NAME: symbols
-    #         DESC: A List of symbols you wish to stream news for.
-    #         TYPE: List<String>
-
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
-    #     """
-
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields, endpoint='news_headline')
-
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'NEWS_HEADLINE'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
-
-    #     self.streaming_api_client.data_requests['requests'].append(request)
-
-    # def timesale(self, service: str, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         Represents the TIMESALE endpoint for the TD Streaming API. The TIMESALE server ID is used to
-    #         request Time & Sales data for all supported symbols
-
-    #         NAME: symbols
-    #         DESC: A List of symbols you wish to stream time and sales data for.
-    #         TYPE: List<String>
-
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
-    #     """
-
-    #     # valdiate argument.
-    #     fields = self._validate_argument(argument=fields, endpoint='timesale')
-
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = service
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
 
     #     self.streaming_api_client.data_requests['requests'].append(request)
 

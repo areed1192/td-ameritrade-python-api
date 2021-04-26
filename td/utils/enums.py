@@ -834,3 +834,210 @@ class LevelOneFutures(Enum):
     FutureSettlementPrice = 33
     FutureActiveSymbol = 34
     FutureExpirationDate = 35
+
+
+class LevelOneForex(Enum):
+    """Represents the different fields for the Level One
+    Forex Feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelOneForex
+        >>> LevelOneForex.All.Value
+    """
+
+    All = [str(item) for item in range(0, 30)]
+    Symbol = 0
+    BidPrice = 1
+    AskPrice = 2
+    LastPrice = 3
+    BidSize = 4
+    AskSize = 5
+    TotalVolume = 6
+    LastSize = 7
+    QuoteTime = 8
+    TradeTime = 9
+    HighPrice = 10
+    LowPrice = 11
+    ClosePrice = 12
+    ExchangeId = 13
+    Description = 14
+    OpenPrice = 15
+    NetChange = 16
+    PercentChange = 17
+    ExchangeName = 18
+    Digits = 19
+    SecurityStatus = 20
+    Tick = 21
+    TickAmount = 22
+    Product = 23
+    TradingHours = 24
+    IsTradable = 25
+    MarketMaker = 26
+    FiftyTwoWeekHigh = 27
+    FiftyTwoWeekLow = 28
+    Mark = 29
+
+
+class NewsHeadlines(Enum):
+    """Represents the different fields for the News
+    Headline Feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import NewsHeadlines
+        >>> NewsHeadlines.All.Value
+    """
+
+    All = [str(item) for item in range(0, 11)]
+    Symbol = 0
+    ErrorCode = 1
+    StoryDatetime = 2
+    HeadlineId = 3
+    Status = 4
+    Headline = 5
+    StoryId = 6
+    CountForKeyword = 7
+    KeywordArray = 8
+    IsHot = 9
+    StorySource = 10
+
+
+class LevelOneFuturesOptions(Enum):
+    """Represents the different fields for the Level
+    One Futures Options feed.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelOneFuturesOptions
+        >>> LevelOneFuturesOptions.All.Value
+    """
+
+    All = [str(item) for item in range(0, 36)]
+    Symbol = 0
+    BidPrice = 1
+    AskPrice = 2
+    LastPrice = 3
+    BidSize = 4
+    AskSize = 5
+    AskId = 6
+    BidId = 7
+    TotalVolume = 8
+    LastSize = 9
+    QuoteTime = 10
+    TradeTime = 11
+    HighPrice = 12
+    LowPrice = 13
+    ClosePrice = 14
+    ExchangeId = 15
+    Description = 16
+    LastId = 17
+    OpenPrice = 18
+    NetChange = 19
+    FuturePercentChange = 20
+    ExhangeName = 21
+    SecurityStatus = 22
+    OpenInterest = 23
+    Mark = 24
+    Tick = 25
+    TickAmount = 26
+    Product = 27
+    FuturePriceFormat = 28
+    FutureTradingHours = 29
+    FutureIsTradable = 30
+    FutureMultiplier = 31
+    FutureIsActive = 32
+    FutureSettlementPrice = 33
+    FutureActiveSymbol = 34
+    FutureExpirationDate = 35
+
+
+class ChartServices(Enum):
+    """Represents the different streaming chart
+    services.
+
+    ### Usage
+    ----
+        >>> from td.enums import ChartServices
+        >>> ChartServices.ChartEquity.Value
+    """
+
+    ChartEquity = "CHART_EQUITY"
+    _ChartFutures = "CHART_FUTURES"
+    ChartOptions = "CHART_OPTIONS"
+
+
+class ChartEquity(Enum):
+    """Represents the different streaming chart
+    equity fields.
+
+    ### Usage
+    ----
+        >>> from td.enums import ChartEquity
+        >>> ChartEquity.All.Value
+    """
+
+    All = [str(item) for item in range(0, 9)]
+    Symbol = 0
+    OpenPrice = 1
+    HighPrice = 2
+    LowPrice = 3
+    Close_Price = 4
+    Volume = 5
+    Sequence = 6
+    Chart_Time = 7
+    Chart_Day = 8
+
+
+class ChartFutures(Enum):
+    """Represents the different streaming chart
+    futures fields.
+
+    ### Usage
+    ----
+        >>> from td.enums import ChartFutures
+        >>> ChartFutures.All.Value
+    """
+
+    All = [str(item) for item in range(0, 7)]
+    Symbol = 0
+    ChartTime = 1
+    OpenPrice = 2
+    HighPrice = 3
+    LowPrice = 4
+    ClosePrice = 5
+    Volume = 6
+
+
+class TimesaleServices(Enum):
+    """Represents the different streaming timesale
+    services.
+
+    ### Usage
+    ----
+        >>> from td.enums import TimesaleServices
+        >>> TimesaleServices.TimesaleEquity.Value
+    """
+
+    TimesaleEquity = 'TIMESALE_EQUITY'
+    TimesaleForex = 'TIMESALE_FOREX'
+    TimesaleFutures = 'TIMESALE_FUTURES'
+    TimesaleOptions = 'TIMESALE_OPTIONS'
+
+
+class Timesale(Enum):
+    """Represents the different streaming timesale
+    fields.
+
+    ### Usage
+    ----
+        >>> from td.enums import Timesale
+        >>> Timesale.All.Value
+    """
+
+    All = [str(item) for item in range(0, 5)]
+    Symbol = 0
+    TradeTime = 1
+    LastPrice = 2
+    LastSize = 3
+    LastSequence = 4
