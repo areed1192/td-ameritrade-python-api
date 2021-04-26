@@ -93,7 +93,7 @@ config.read('config/config.ini')
 client_id = config.get('main', 'client_id')
 redirect_uri = config.get('main', 'redirect_uri')
 
-# Intialize our `Crednetials` object.
+# Intialize our `Credentials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
