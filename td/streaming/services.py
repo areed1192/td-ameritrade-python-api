@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Union
 from typing import List
+from datetime import datetime
 
 
 class StreamingServices():
@@ -476,189 +477,228 @@ class StreamingServices():
 
         self.streaming_api_client.data_requests['requests'].append(request)
 
-    # def actives(self, service: str, venue: str, duration: str) -> None:
-    #     """
-    #         Represents the ACTIVES endpoint for the TD Streaming API where
-    #         you can get the most actively traded stocks for a specific exchange.
+    def actives(self, service: Union[str, Enum], venue: Union[str, Enum], duration: Union[str, Enum]) -> None:
+        """Stream most actively traded stocks for a specific exchange.
 
-    #         NAME: service
-    #         DESC: The type of Active Service you wish to recieve. Can be one of the following:
-    #               [NASDAQ, NYSE, OTCBB, CALLS, OPTS, PUTS, CALLS-DESC, OPTS-DESC, PUTS-DESC]
-    #         TYPE: String
+        ### Parameters
+        ---
+        service: Union[str, Enum]
+            One of the different actives services. For a full
+            list please refer to the `enums` file.
 
-    #         NAME: venue
-    #         DESC: The symbol you wish to get chart data for.
-    #         TYPE: String
+        service: Union[str, Enum]
+            One of the exchanges. For a full
+            list please refer to the `enums` file.
 
-    #         NAME: duration
-    #         DESC: Specifies the look back period for collecting most actively traded instrument. Can be either
-    #               ['ALL', '60', '300', '600', '1800', '3600'] where the integrers represent number of seconds.
-    #         TYPE: String
-    #     """
+        duration: Union[str, Enum]
+            Specifies the look back period for collecting most
+            actively traded instrument. For a full list please
+            refer to the `enums` file. 
 
-    #     # check to make sure it's a valid active service.
-    #     service_flag = service in [
-    #         'ACTIVES_NASDAQ', 'ACTIVES_NYSE', 'ACTIVES_OPTIONS', 'ACTIVES_OTCBB'
-    #     ]
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.actives(
+                service=ActivesServices.ActivesNasdaq,
+                venue=ActivesVenues.NasdaqExchange,
+                duration=ActivesDurations.All                
+            )
+        """
 
-    #     # check to make sure it's a valid active service venue.
-    #     venue_flag = venue in [
-    #         'NASDAQ', 'NYSE', 'OTCBB', 'CALLS', 'OPTS', 'PUTS', 'CALLS-DESC', 'OPTS-DESC', 'PUTS-DESC'
-    #     ]
+        if isinstance(service, Enum):
+            service = service.value
 
-    #     # check to make sure it's a valid duration
-    #     duration_flag = duration in [
-    #         'ALL', '60', '300', '600', '1800', '3600'
-    #     ]
+        if isinstance(venue, Enum):
+            venue = venue.value
 
-    #     if service_flag and venue_flag and duration_flag:
+        if isinstance(duration, Enum):
+            duration = duration.value
 
-    #         # Build the request
-    #         request = self._new_request_template()
-    #         request['service'] = service
-    #         request['command'] = 'SUBS'
-    #         request['parameters']['keys'] = venue + '-' + duration
-    #         request['parameters']['fields'] = '1'
-    #         self.streaming_api_client.data_requests['requests'].append(request)
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = service
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = venue + '-' + duration
+        request['parameters']['fields'] = '1'
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #     else:
-    #         raise ValueError('ERROR!')
+    def chart_history_futures(
+        self,
+        symbols: List[str],
+        frequency: Union[str, Enum],
+        period: Union[str, Enum] = None,
+        start_time: Union[str, datetime] = None,
+        end_time: Union[str, datetime] = None
+    ) -> None:
+        """Stream historical futures prices for charting. For normal equity charts, please use the
+        the `get_historical_prices` method.
 
-    # def chart_history_futures(self, symbol: str, frequency: str, start_time: str = None, end_time: str = None, period: str = None) -> None:
-    #     """Represents the CHART HISTORY FUTURES endpoint for the TD Streaming API. Only Futures
-    #     chart history is available via Streamer Server.
+        ### Parameters
+        ---
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #         NAME: symbol
-    #         DESC: A single futures symbol that you wish to get chart data for.
-    #         TYPE: String
+        frequency: Union[str, Enum]
+            The frequency at which you want the data to appear.
 
-    #         NAME: frequency
-    #         DESC: The frequency at which you want the data to appear. Can be one of the following options:
-    #               [m1, m5, m10, m30, h1, d1, w1, n1] where [m=minute, h=hour, d=day, w=week, n=month]
-    #         TYPE: String
+        period: Union[str, Enum] (optional, Default=None)
+            The period you wish to return historical data for. Not
+            required if `start_time` or `end_time` is set.
 
-    #         NAME: period
-    #         DESC: The period you wish to return historical data for. Can be one of the following options:
-    #               [d5, w4, n10, y1, y10] where [d=day, w=week, n=month, y=year]
-    #         TYPE: String
+        start_time: Union[str, datetime] (optional, Default=None)
+            Start time of chart in milliseconds since Epoch.
 
-    #         NAME: start_time
-    #         DESC: Start time of chart in milliseconds since Epoch. OPTIONAL
-    #         TYPE: String
+        end_time: Union[str, datetime] (optional, Default=None)
+            End time of chart in milliseconds since Epoch.
 
-    #         NAME: end_time
-    #         DESC: End time of chart in milliseconds since Epoch. OPTIONAL
-    #         TYPE: String
-    #     """
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.chart_history_futures(
+                symbols=['/ES', '/CL'],
+                frequency=ChartFuturesFrequencies.OneMinute,
+                period=ChartFuturesPeriods.OneDay
+            )
+        """
 
-    #     # define the valid inputs.
-    #     valid_frequencies = ['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']
-    #     valid_periods = ['d1', 'd5', 'w4', 'n10', 'y1', 'y10']
+        # Handle datetimes.
+        if isinstance(start_time, datetime):
+            start_time = int(start_time.timestamp() * 1000)
 
-    #     # validate the frequency input.
-    #     if frequency not in valid_frequencies:
-    #         raise ValueError(
-    #             "The FREQUENCY you have chosen is not correct please choose a valid option:['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']"
-    #         )
+        if isinstance(end_time, datetime):
+            end_time = int(end_time.timestamp() * 1000)
 
-    #     # validate the period input.
-    #     if period not in valid_periods and start_time is None and end_time is None:
-    #         raise ValueError(
-    #             "The PERIOD you have chosen is not correct please choose a valid option:['d5', 'w4', 'n10', 'y1', 'y10']"
-    #         )
+        if isinstance(frequency, Enum):
+            frequency = frequency.value
 
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'CHART_HISTORY_FUTURES'
-    #     request['command'] = 'GET'
-    #     request['parameters']['symbol'] = symbol[0]
-    #     request['parameters']['frequency'] = frequency
+        if isinstance(period, Enum):
+            period = period.value
 
-    #     # handle the case where we get a start time or end time. DO FURTHER VALIDATION.
-    #     if start_time is not None or end_time is not None:
-    #         request['parameters']['END_TIME'] = end_time
-    #         request['parameters']['START_TIME'] = start_time
-    #     else:
-    #         request['parameters']['period'] = period
+        # define the valid inputs.
+        valid_frequencies = ['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']
+        valid_periods = ['d1', 'd5', 'w4', 'n10', 'y1', 'y10']
 
-    #     del request['parameters']['keys']
-    #     del request['parameters']['fields']
+        # validate the frequency input.
+        if frequency not in valid_frequencies:
+            raise ValueError(
+                "The FREQUENCY you have chosen is not correct please choose a valid option:['m1', 'm5', 'm10', 'm30', 'h1', 'd1', 'w1', 'n1']"
+            )
 
-    #     request['requestid'] = str(request['requestid'])
+        # validate the period input.
+        if period not in valid_periods and start_time is None and end_time is None:
+            raise ValueError(
+                "The PERIOD you have chosen is not correct please choose a valid option:['d5', 'w4', 'n10', 'y1', 'y10']"
+            )
 
-    #     self.streaming_api_client.data_requests['requests'].append(request)
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'CHART_HISTORY_FUTURES'
+        request['command'] = 'GET'
+        request['parameters']['symbol'] = ','.join(symbols)
+        request['parameters']['frequency'] = frequency
 
-    # """
-    #     EXPERIMENTATION SECTION
+        # handle the case where we get a start time or end time. DO FURTHER VALIDATION.
+        if start_time is not None or end_time is not None:
+            request['parameters']['END_TIME'] = end_time
+            request['parameters']['START_TIME'] = start_time
+        else:
+            request['parameters']['period'] = period
 
-    #     NO GUARANTEE THESE WILL WORK.
-    # """
+        del request['parameters']['keys']
+        del request['parameters']['fields']
 
-    # def level_two_quotes(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         EXPERIMENTAL: USE WITH CAUTION!
+        request['requestid'] = str(request['requestid'])
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #         Represents the LEVEL_TWO_QUOTES endpoint for the streaming API. Documentation on this
-    #         service does not exist, but it appears that we can pass through 1 of 3 fields.
+    def level_two_quotes(self, symbols: List[str], fields: Union[Enum, List[str], List[int]]) -> None:
+        """Stream Level Two Equity Quotes.
 
-    #         NAME: symbols
-    #         DESC: A List of symbols you wish to stream time level two quotes for.
-    #         TYPE: List<String>
+        ### Parameters
+        ---
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
 
-    #     """
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.level_two_quotes(
+                symbols=['MSFT', 'PINS'],
+                fields=LevelTwoQuotes.All
+            )
+        """
 
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields,
-    #         endpoint='level_two_quotes'
-    #     )
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
 
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'LISTED_BOOK'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
+        if isinstance(fields, Enum):
+            fields = fields.value
 
-    #     self.streaming_api_client.data_requests['requests'].append(request)
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'LISTED_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
 
-    # def level_two_options(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
-    #     """
-    #         EXPERIMENTAL: USE WITH CAUTION!
+        self.streaming_api_client.data_requests['requests'].append(request)
 
-    #         Represents the LEVEL_TWO_QUOTES_OPTIONS endpoint for the streaming API. Documentation on this
-    #         service does not exist, but it appears that we can pass through 1 of 3 fields.
+    def level_two_options(self, symbols: List[str], fields: Union[Enum, List[str], List[int]]) -> None:
+        """Stream Level Two Options Quotes.
 
-    #         NAME: symbols
-    #         DESC: A List of symbols you wish to stream time level two quotes for.
-    #         TYPE: List<String>
+        ### Parameters
+        ---
+        symbols: List[str]
+            A List of symbols you wish to stream quotes for.
 
-    #         NAME: fields
-    #         DESC: The fields you want returned from the Endpoint, can either be the numeric representation
-    #               or the key value representation. For more info on fields, refer to the documentation.
-    #         TYPE: List<Integer> | List<Strings>
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
 
-    #     """
+        ### Usage
+        ----
+            >>> streaming_api_service = td_client.streaming_api_client()
+            >>> streaming_services = streaming_api_service.services()
+            >>> streaming_services.level_two_options(
+                symbols=['MSFT_043021C120'],
+                fields=LevelTwoOptions.All
+            )
+        """
 
-    #     # valdiate argument.
-    #     fields = self._validate_argument(
-    #         argument=fields,
-    #         endpoint='level_two_options'
-    #     )
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
 
-    #     # Build the request
-    #     request = self._new_request_template()
-    #     request['service'] = 'OPTIONS_BOOK'
-    #     request['command'] = 'SUBS'
-    #     request['parameters']['keys'] = ','.join(symbols)
-    #     request['parameters']['fields'] = ','.join(fields)
+        if isinstance(fields, Enum):
+            fields = fields.value
 
-    #     self.streaming_api_client.data_requests['requests'].append(request)
+        # Build the request
+        request = self._new_request_template()
+        request['service'] = 'OPTIONS_BOOK'
+        request['command'] = 'SUBS'
+        request['parameters']['keys'] = ','.join(symbols)
+        request['parameters']['fields'] = ','.join(fields)
+
+        self.streaming_api_client.data_requests['requests'].append(request)
 
     # def level_two_nasdaq(self, symbols: List[str], fields: Union[List[str], List[int]]) -> None:
     #     """

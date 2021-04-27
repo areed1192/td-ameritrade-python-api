@@ -1041,3 +1041,125 @@ class Timesale(Enum):
     LastPrice = 2
     LastSize = 3
     LastSequence = 4
+
+
+class ActivesServices(Enum):
+    """Represents the different streaming actives
+    services.
+
+    ### Usage
+    ----
+        >>> from td.enums import ActivesServices
+        >>> ActivesServices.ActivesNasdaq.Value
+    """
+
+    ActivesNasdaq = 'ACTIVES_NASDAQ'
+    ActivesNyse = 'ACTIVES_NYSE'
+    ActivesOptions = 'ACTIVES_OPTIONS'
+    ActivesOtcbb = 'ACTIVES_OTCBB'
+
+
+class ActivesVenues(Enum):
+    """Represents the different streaming actives
+    venues.
+
+    ### Usage
+    ----
+        >>> from td.enums import ActivesVenues
+        >>> ActivesVenues.Nasdaq.Value
+    """
+
+    NasdaqExchange = 'NASDAQ'
+    NewYorkStockExchange = 'NYSE'
+    OverTheCounterBulletinBoard = 'OTCBB'
+    Calls = 'CALLS'
+    Puts = 'PUTS'
+    Options = 'OPTS'
+    CallsDesc = 'CALLS-DESC'
+    PutsDesc = 'PUTS-DESC'
+    OptionsDec = 'OPTS-DESC'
+
+
+class ActivesDurations(Enum):
+    """Represents the different durations for the
+    Actives Service.
+
+    ### Usage
+    ----
+        >>> from td.enums import ActivesDurations
+        >>> ActivesDurations.All.Value
+    """
+
+    All = 'ALL'
+    SixtySeconds = '60'
+    ThreeHundredSeconds = '300'
+    SixHundredSeconds = '600'
+    EighteenHundredSeconds = '1800'
+    ThritySixHundredSeconds = '3600'
+
+
+class ChartFuturesFrequencies(Enum):
+    """Represents the different frequencies for the
+    Chart History Futures streaming service.
+
+    ### Usage
+    ----
+        >>> from td.enums import ChartFuturesFrequencies
+        >>> ChartFuturesFrequencies.OneMinute.Value
+    """
+
+    OneMinute = 'm1'
+    FiveMinute = 'm5'
+    TenMinute = 'm10'
+    ThirtyMinute = 'm30'
+    OneHour = 'h1'
+    OneDay = 'd1'
+    OneWeek = 'w1'
+    OneMonth = 'n1'
+
+
+class ChartFuturesPeriods(Enum):
+    """Represents the different periods for the
+    Chart History Futures streaming service.
+
+    ### Usage
+    ----
+        >>> from td.enums import ChartFuturesPeriods
+        >>> ChartFuturesPeriods.OneDay.Value
+    """
+
+    OneDay = 'd1'
+    FiveDay = 'd5'
+    FourWeeks = 'w4'
+    TenMonths = 'n10'
+    OneYear = 'y1'
+    TenYear = 'y10'
+
+
+class LevelTwoQuotes(Enum):
+    """Represents the Level Two Quotes Fields.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelTwoQuotes
+        >>> LevelTwoQuotes.All.Value
+    """
+
+    All = [str(item) for item in range(0, 3)]
+    Key = 0
+    Time = 1
+    Data = 2
+
+class LevelTwoOptions(Enum):
+    """Represents the Level Two Options Fields.
+
+    ### Usage
+    ----
+        >>> from td.enums import LevelTwoOptions
+        >>> LevelTwoOptions.All.Value
+    """
+
+    All = [str(item) for item in range(0, 3)]
+    Key = 0
+    Time = 1
+    Data = 2

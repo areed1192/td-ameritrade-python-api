@@ -12,6 +12,14 @@ from td.utils.enums import ChartServices
 from td.utils.enums import ChartEquity
 from td.utils.enums import TimesaleServices
 from td.utils.enums import Timesale
+from td.utils.enums import ActivesServices
+from td.utils.enums import ActivesVenues
+from td.utils.enums import ActivesDurations
+from td.utils.enums import ChartFuturesFrequencies
+from td.utils.enums import ChartFuturesPeriods
+from td.utils.enums import LevelTwoQuotes
+from td.utils.enums import LevelTwoOptions
+
 
 # Initialize the Parser.
 config = ConfigParser()
@@ -95,6 +103,32 @@ streaming_services.timesale(
     service=TimesaleServices.TimesaleEquity,
     symbols=['MSFT', 'GOOG', 'AAPL'],
     fields=Timesale.All
+)
+
+# Stream the Actives.
+streaming_services.actives(
+    service=ActivesServices.ActivesNasdaq,
+    venue=ActivesVenues.NasdaqExchange,
+    duration=ActivesDurations.All
+)
+
+# Stream Historical Futures Prices.
+streaming_services.chart_history_futures(
+    symbols=['/ES', '/CL'],
+    frequency=ChartFuturesFrequencies.OneMinute,
+    period=ChartFuturesPeriods.OneDay
+)
+
+# Stream Level Two Quotes.
+streaming_services.level_two_quotes(
+    symbols=['MSFT', 'PINS'],
+    fields=LevelTwoQuotes.All
+)
+
+# Stream Level Two Quotes.
+streaming_services.level_two_options(
+    symbols=['MSFT_043021C120'],
+    fields=LevelTwoOptions.All
 )
 
 # Start Streaming.
