@@ -221,6 +221,7 @@ class StreamingApiClient():
 
                 message = await self.connection.recv()
                 message_decoded = await self._parse_json_message(message=message)
+                print(message_decoded)
 
                 if return_value:
                     return message_decoded
@@ -330,3 +331,79 @@ class StreamingApiClient():
             self.loop.call_soon_threadsafe(self.loop.stop())
             print(message)
             await asyncio.sleep(3)
+
+    async def build_pipeline(self) -> websockets.WebSocketClientProtocol:
+        """Builds a data pipeine for processing data.
+
+        ### Overview
+        ----
+        Often we want to take the data we are streaming and
+        use it in other functions or store it in other platforms.
+        This method makes the process of building a pipeline easy
+        by handling all the connection setup and request setup.
+
+        ### Returns
+        ----
+        websockets.WebSocketClientProtocol
+            The websocket connection.
+        """
+
+        # In this case, we don't want things printing to the console.
+        self.print_to_console = True
+
+        # Connect to Websocket.
+        await self._connect()
+
+        # Build the Data Request.
+        await self._send_message(json.dumps(self.data_requests))
+
+        return self.connection
+
+    async def start_pipeline(self) -> dict:
+        """Recieves the data as it streams in.
+
+        ### Returns
+        ----
+        dict
+            The data coming from the websocket.
+        """
+
+        return await self._receive_message(return_value=True)
+
+    async def unsubscribe(self, service: str) -> dict:
+        """Unsubscribe from a service.
+
+        ### Parameters
+        ----
+        service: str
+            The name of the service, to unsubscribe from.
+            For example, "LEVELONE_FUTURES" or "QUOTES".
+
+        ### Returns
+        ----
+        dict:
+            A message from the websocket specifiying whether
+            the unsubscribe command was successful.
+        """
+
+        self.unsubscribe_count += 1
+
+        service_count = len(
+            self.data_requests['requests']
+        ) + self.unsubscribe_count
+
+        request = {
+            "requests": [
+                {
+                    "service": service.upper(),
+                    "requestid": service_count,
+                    "command": 'UNSUBS',
+                    "account": self.user_principal_data['accounts'][0]['accountId'],
+                    "source": self.user_principal_data['streamerInfo']['appId']
+                }
+            ]
+        }
+
+        await self._send_message(json.dumps(request))
+
+        return await self._receive_message(return_value=True)
