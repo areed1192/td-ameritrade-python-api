@@ -404,7 +404,7 @@ class TDClient():
 
         from selenium import webdriver
         with webdriver.Chrome(executable_path=self.webdriver_path) as driver:
-            auth_from_login_flow(driver)
+            self.auth_from_login_flow(driver)
 
     def _normalize_api_key(self, api_key):
         api_key_suffix = '@AMER.OAUTHAP'
@@ -419,11 +419,11 @@ class TDClient():
 
     def auth_from_login_flow(self, driver):
         print((f'Creating new token with redirect URL \'{self.redirect_uri}\' ' +
-                       f'and credentials path \'{self.credential_path}\''))
+                       f'and credentials path \'{self.credentials_path}\''))
 
-        api_key = _normalize_api_key(self.client_id)
+        self.client_id = self._normalize_api_key(self.client_id)
 
-        oauth = OAuth2Client(self.client_id, redirect_uri=redirect_uri)
+        oauth = OAuth2Client(self.client_id, redirect_uri=self.redirect_uri)
         authorization_url, state = oauth.create_authorization_url(
             'https://auth.tdameritrade.com/auth')
 
@@ -438,9 +438,10 @@ class TDClient():
         # Wait until the current URL starts with the callback URL
         current_url = ''
         num_waits = 0
-        redirect_wait_time_seconds=0.1
+        redirect_wait_time_seconds = 0.1
+        max_waits = 3000
         while not any(current_url.startswith(r_url) for r_url in redirect_urls):
-            current_url = webdriver.current_url
+            current_url = driver.current_url
 
             if num_waits > max_waits:
                 raise RedirectTimeoutError('timed out waiting for redirect')
@@ -453,6 +454,8 @@ class TDClient():
             access_type='offline',
             client_id=self.client_id,
             include_client_id=True)
+
+        print(token)
 
         # TODO: implement refresh token mode
         self._token_save(token_dict=token)
