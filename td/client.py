@@ -285,7 +285,7 @@ class TDClient():
         # new access token or refresh token next time they use the API
         self._state_manager('init')
 
-    def grab_access_token(self) -> dict:
+    def grab_access_token(self) -> bool:
         """Refreshes the current access token.
 
         This takes a valid refresh token and refreshes
@@ -305,7 +305,7 @@ class TDClient():
         }
 
         # Make the request.
-        response = requests.post(
+        response = self.request_session.post(
             url="https://api.tdameritrade.com/v1/oauth2/token",
             headers={'Content-Type': 'application/x-www-form-urlencoded'},
             data=data
@@ -317,6 +317,10 @@ class TDClient():
                 token_dict=response.json(),
                 includes_refresh=False
             )
+            return True
+        else:
+            raise RuntimeError("http response error, status:{}, msg:{}".format(response.status_code, response.text))
+
 
     def grab_refresh_token(self) -> bool:
         """Grabs a new refresh token if expired.
@@ -342,20 +346,21 @@ class TDClient():
         }
 
         # Make the request.
-        response = requests.post(
+        response = self.request_session.post(
             url="https://api.tdameritrade.com/v1/oauth2/token",
             headers={'Content-Type': 'application/x-www-form-urlencoded'},
             data=data
         )
 
         if response.ok:
-
             self._token_save(
                 token_dict=response.json(),
                 includes_refresh=True
             )
 
             return True
+        else:
+            raise RuntimeError("http response error, status:{}, msg:{}".format(response.status_code, response.text))
 
     def grab_url(self) -> dict:
         """Builds the URL that is used for oAuth."""
