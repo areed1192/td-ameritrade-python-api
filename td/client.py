@@ -266,9 +266,7 @@ class TDClient():
             self.oauth()
             self.authstate = True
             return True
-        
-        if self._flask_app and self.auth_flow == 'flask':
-            run(flask_client=self._flask_app, close_after=True)
+
 
     def logout(self) -> None:
         """Clears the current TD Ameritrade Connection state."""
