@@ -1,13 +1,14 @@
 import json
 import urllib
 import pathlib
-import requests
 import webbrowser
 
 from typing import Union
 from datetime import datetime
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
+
+import requests
 
 
 class TdCredentials():
@@ -21,7 +22,13 @@ class TdCredentials():
     the are properly authenticated.
     """
 
-    def __init__(self, client_id: str, redirect_uri: str, credential_dict: dict = None, credential_file: Union[str, pathlib.Path] = None) -> None:
+    def __init__(
+        self,
+        client_id: str,
+        redirect_uri: str,
+        credential_dict: dict = None,
+        credential_file: Union[str, pathlib.Path] = None
+    ) -> None:
         """Initializes the `TdCredential` object."""
 
         self._access_token = ''
@@ -354,6 +361,13 @@ class TdCredentials():
         self.from_token_dict(token_dict=token_dict)
 
     def from_credential_file(self, file_path: str) -> None:
+        """Loads the credentials for a JSON file that is formatted
+        in the correct fashion.
+
+        ### Parameters
+        file_path : str
+            The location of the credentials file.
+        """
 
         with open(file=file_path, mode='r') as token_file:
             token_dict = json.load(fp=token_file)
@@ -397,7 +411,7 @@ class TdCredentials():
         You don't necessairly need the `refresh_token_expiration_time` or the
         `access_token_expiration_time` because they can be calculated using the
         `access_token` key and `refresh_token`.
-        
+
             >>> td_credentials.from_credential_dict(
                     token_dict={
                         "access_token": "YOUR_ACCESS_TOKEN",
@@ -410,13 +424,13 @@ class TdCredentials():
                         "access_token_expiration_time": "2021-04-09T18:08:07.973982"
                     }
                 )
-        
+
         ### Example 2
         ----
         You don't necessairly need the `refresh_token_expiration_time` or the
         `access_token_expiration_time` because they can be calculated using the
         `access_token` key and `refresh_token`.
-        
+
             >>> # This just is another way of sending it through.
             >>> td_credentials.from_credential_dict(
                     token_dict={
@@ -501,8 +515,8 @@ class TdCredentials():
 
         if response.ok:
             return response.json()
-        else:
-            raise requests.HTTPError()
+
+        raise requests.HTTPError()
 
     def grab_access_token(self) -> dict:
         """Refreshes the current access token.

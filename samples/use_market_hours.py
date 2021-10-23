@@ -1,9 +1,9 @@
 from pprint import pprint
+from datetime import datetime
 from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
 from td.utils.enums import Markets
-from datetime import datetime
 
 # Initialize the Parser.
 config = ConfigParser()

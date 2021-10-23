@@ -1,13 +1,20 @@
-from typing import List
-from typing import Union
-from datetime import datetime
-from datetime import date
-from td.session import TdAmeritradeSession
 from enum import Enum
+from typing import Union
+from datetime import date
+from datetime import datetime
+
+from td.session import TdAmeritradeSession
 from td.utils.orders import Order
 
 
 class Orders():
+
+    """
+    ## Overview
+    ----
+    Allows the user to query, update, delete, and place
+    orders with the TD Ameritrade API.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Orders` services.
@@ -15,7 +22,7 @@ class Orders():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
@@ -32,12 +39,12 @@ class Orders():
         """Returns the orders for a specific account.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/orders-0
 
         ### Parameters
         ----
-        account_id: str 
+        account_id: str
             The account number that you want to
             query for orders.
 
@@ -45,13 +52,13 @@ class Orders():
             The maximum number of orders to retrieve.
 
         from_entered_time: Union[datetime, str] (optional, Default=None)
-            Specifies that no orders entered before this time should be 
+            Specifies that no orders entered before this time should be
             returned. Valid ISO-8601 format yyyy-MM-dd Date must be within
             60 days from today's date. If argument set then 'to_entered_time'
             must also be set.
 
         to_entered_time: Union[datetime, str] (optional, Default=None)
-            Specifies that no orders entered after this time should be 
+            Specifies that no orders entered after this time should be
             returned. Valid ISO-8601 format yyyy-MM-dd Date must be within
             60 days from today's date. If argument set then 'from_entered_time'
             must also be set.
@@ -111,12 +118,12 @@ class Orders():
         """Get a specific order for a specific account.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
         ### Parameters
         ----
-        account_id: str 
+        account_id: str
             The account number that you want to
             query for orders.
 
@@ -153,7 +160,7 @@ class Orders():
         """Returns the orders for a specific account.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/orders-0
 
         ### Parameters
@@ -166,13 +173,13 @@ class Orders():
             The maximum number of orders to retrieve.
 
         from_entered_time: Union[datetime, str] (optional, Default=None)
-            Specifies that no orders entered before this time should be 
+            Specifies that no orders entered before this time should be
             returned. Valid ISO-8601 format yyyy-MM-dd Date must be within
             60 days from today's date. If argument set then 'to_entered_time'
             must also be set.
 
         to_entered_time: Union[datetime, str] (optional, Default=None)
-            Specifies that no orders entered after this time should be 
+            Specifies that no orders entered after this time should be
             returned. Valid ISO-8601 format yyyy-MM-dd Date must be within
             60 days from today's date. If argument set then 'from_entered_time'
             must also be set.
@@ -212,7 +219,7 @@ class Orders():
         }
 
         # Define the endpoint.
-        endpoint = f'orders'
+        endpoint = 'orders'
 
         content = self.session.make_request(
             method='get',
@@ -232,7 +239,7 @@ class Orders():
         limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/post/accounts/%7BaccountId%7D/orders-0
 
         ### Parameters
@@ -262,7 +269,7 @@ class Orders():
         """
 
         if order_object:
-            order = order_object._saved_order_to_json()
+            order = order_object.save_order_to_json()
 
         if order_dict:
             order = order_dict
@@ -285,7 +292,7 @@ class Orders():
         order_object: Order = None,
         order_dict: dict = None
     ) -> dict:
-        """Replace an existing order for an account. 
+        """Replace an existing order for an account.
 
         ### Overview
         ----
@@ -294,7 +301,7 @@ class Orders():
         will be created. Order throttle limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/put/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
         ### Parameters
@@ -328,7 +335,7 @@ class Orders():
         """
 
         if order_object:
-            order = order_object._saved_order_to_json()
+            order = order_object.save_order_to_json()
 
         if order_dict:
             order = order_dict
@@ -353,7 +360,7 @@ class Orders():
         limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/orders/%7BorderId%7D-0
 
         ### Parameters

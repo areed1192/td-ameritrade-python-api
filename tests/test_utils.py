@@ -1,6 +1,5 @@
 import unittest
 from unittest import TestCase
-from configparser import ConfigParser
 
 from td.utils.orders import Order
 from td.utils.orders import OrderLeg
@@ -14,7 +13,6 @@ from td.utils.enums import DefaultOrderDuration
 
 
 class TestTdOrderUtils(TestCase):
-
 
     """Will perform a unit test for the different `Order` utility objects."""
 
@@ -33,7 +31,6 @@ class TestTdOrderUtils(TestCase):
 
         my_order_leg_instrument = OrderLegInstrument(**my_order_leg_instrument)
         my_order_leg_instrument = my_order_leg_instrument.to_dict()
-        my_order_leg_instrument
 
         self.assertIsNotNone(my_order_leg_instrument)
         self.assertDictEqual(d1=my_order_leg_instrument, d2=correct)

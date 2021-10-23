@@ -1,11 +1,19 @@
 from typing import List
 from typing import Union
 from td.session import TdAmeritradeSession
-from enum import Enum
 from td.utils.user_preferences import UserPreferences
 
 
 class UserInfo():
+
+    """
+    ## Overview
+    ----
+    Allows the user to query information about their profile,
+    modify settings that are related to the API and retrieve
+    streaming keys that can be used with the Streaming API
+    client.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `UserInfo` services.
@@ -13,7 +21,7 @@ class UserInfo():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
 
         ### Usage
@@ -76,7 +84,7 @@ class UserInfo():
 
         content = self.session.make_request(
             method='get',
-            endpoint=f'userprincipals/streamersubscriptionkeys',
+            endpoint='userprincipals/streamersubscriptionkeys',
             params=params
         )
 
@@ -101,13 +109,17 @@ class UserInfo():
 
         content = self.session.make_request(
             method='get',
-            endpoint=f'userprincipals',
+            endpoint='userprincipals',
             params=params
         )
 
         return content
 
-    def update_user_preferences(self, account_id: str, preferences: Union[dict, UserPreferences]) -> dict:
+    def update_user_preferences(
+        self,
+        account_id: str,
+        preferences: Union[dict, UserPreferences]
+    ) -> dict:
         """Update preferences for a specific account.
 
         ### Documentation

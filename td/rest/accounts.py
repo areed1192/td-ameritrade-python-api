@@ -1,11 +1,16 @@
-from typing import List
+from enum import Enum
 from typing import Union
 from datetime import datetime
 from td.session import TdAmeritradeSession
-from enum import Enum
 
 
 class Accounts():
+
+    """
+    ## Overview
+    ----
+    Allows the user to retrieve account information.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Accounts` services.
@@ -13,18 +18,23 @@ class Accounts():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
         self.session = session
 
-    def get_accounts(self, account_id: str = None, include_orders: bool = True, include_positions: bool = True) -> dict:
+    def get_accounts(
+        self,
+        account_id: str = None,
+        include_orders: bool = True,
+        include_positions: bool = True
+    ) -> dict:
         """Queries accounts for a user.
 
         ### Overview
         ----
-        Serves as the mechanism to make a request to the 
+        Serves as the mechanism to make a request to the
         "Get Accounts" and "Get Account" Endpoint. If one
         account is provided a "Get Account" request will
         be made and if more than one account is provided
@@ -64,7 +74,7 @@ class Accounts():
         fields = []
 
         if account_id is None:
-            endpoint = f'accounts'
+            endpoint = 'accounts'
         else:
             endpoint = f'accounts/{account_id}'
 

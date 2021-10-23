@@ -1,6 +1,6 @@
+from configparser import ConfigParser
 from td.credentials import TdCredentials
 from td.client import TdAmeritradeClient
-from configparser import ConfigParser
 
 # Initialize the Parser.
 config = ConfigParser()

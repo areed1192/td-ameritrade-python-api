@@ -1,12 +1,18 @@
-from typing import List
+from enum import Enum
 from typing import Union
 from datetime import datetime
 from datetime import date
 from td.session import TdAmeritradeSession
-from enum import Enum
 
 
 class MarketHours():
+
+    """
+    ## Overview
+    ----
+    Allows the user query the different market hours for
+    the different financial markets.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `MarketHours` services.
@@ -14,7 +20,7 @@ class MarketHours():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
@@ -35,8 +41,8 @@ class MarketHours():
             `BOND`, or `FOREX`.
 
         date: Union[str, datetime, date]
-            The date you wish to recieve market hours for. 
-            Valid ISO-8601 formats are: yyyy-MM-dd and 
+            The date you wish to recieve market hours for.
+            Valid ISO-8601 formats are: yyyy-MM-dd and
             yyyy-MM-dd'T'HH:mm:ssz
 
         ### Usage
@@ -84,8 +90,8 @@ class MarketHours():
             `BOND`, or `FOREX`.
 
         date: Union[str, datetime, date]
-            The date you wish to recieve market hours for. 
-            Valid ISO-8601 formats are: yyyy-MM-dd and 
+            The date you wish to recieve market hours for.
+            Valid ISO-8601 formats are: yyyy-MM-dd and
             yyyy-MM-dd'T'HH:mm:ssz
 
         ### Usage

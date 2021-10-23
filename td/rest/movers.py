@@ -1,10 +1,16 @@
-from typing import List
-from typing import Union
-from td.session import TdAmeritradeSession
 from enum import Enum
 
+from typing import Union
+from td.session import TdAmeritradeSession
 
 class Movers():
+
+    """
+    ## Overview
+    ----
+    Allows the user to query the top movers for the
+    different indexes based on the type of move.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Movers` services.
@@ -12,13 +18,18 @@ class Movers():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
         self.session = session
 
-    def get_movers(self, index=str, direction: Union[str, Enum] = None, change: Union[str, Enum] = None) -> dict:
+    def get_movers(
+        self,
+        index=str,
+        direction: Union[str, Enum] = None,
+        change: Union[str, Enum] = None
+    ) -> dict:
         """Gets Active movers for a specific Index.
 
         ### Overview
@@ -33,7 +44,7 @@ class Movers():
         ### Parameters
         ----
         market: str
-            The index symbol to get movers for, can be 
+            The index symbol to get movers for, can be
             `$DJI`, `$COMPX`, or `$SPX.X`.
 
         direction: Union[str, Enum] (optional, default=None)
@@ -41,9 +52,9 @@ class Movers():
             of up or down. Valid values are `up` or `down`
 
         change: Union[str, Enum] (optional, default=None)
-            To return movers with the specified change 
-            types of percent or value. Valid values are 
-            `percent` or `value`.   
+            To return movers with the specified change
+            types of percent or value. Valid values are
+            `percent` or `value`.
 
         ### Usage
         ----

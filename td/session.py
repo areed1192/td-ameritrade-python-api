@@ -1,9 +1,8 @@
 import json
-import requests
 import logging
 import pathlib
 
-from typing import Dict
+import requests
 
 
 class TdAmeritradeSession():
@@ -48,7 +47,7 @@ class TdAmeritradeSession():
             format=log_format
         )
 
-    def build_headers(self) -> Dict:
+    def build_headers(self) -> dict:
         """Used to build the headers needed to make the request.
 
         ### Parameters
@@ -64,7 +63,7 @@ class TdAmeritradeSession():
 
         # Fake the headers.
         headers = {
-            "Authorization": "Bearer {access_token}".format(access_token=self.client.td_credentials.access_token),
+            "Authorization": f"Bearer {self.client.td_credentials.access_token}",
             "Content-Type": "application/json"
         }
 
@@ -92,10 +91,10 @@ class TdAmeritradeSession():
         self,
         method: str,
         endpoint: str,
-        params: dict = {},
-        data: dict = {},
-        json_payload: dict = {}
-    ) -> Dict:
+        params: dict = None,
+        data: dict = None,
+        json_payload: dict = None
+    ) -> dict:
         """Handles all the requests in the library.
 
         ### Overview
@@ -107,8 +106,8 @@ class TdAmeritradeSession():
 
         ### Parameters
         ----
-        method : str 
-            The Request method, can be one of the following: 
+        method : str
+            The Request method, can be one of the following:
             ['get','post','put','delete','patch']
 
         endpoint : str
@@ -125,8 +124,8 @@ class TdAmeritradeSession():
 
         ### Returns
         ----
-        Dict: 
-            A Dictionary object containing the 
+        Dict:
+            A Dictionary object containing the
             JSON values.
         """
 
@@ -138,9 +137,7 @@ class TdAmeritradeSession():
         # Define the headers.
         headers = self.build_headers()
 
-        logging.info(
-            "URL: {url}".format(url=url)
-        )
+        logging.info("Request URL: %s", url)
 
         # Define a new session.
         request_session = requests.Session()
@@ -166,9 +163,7 @@ class TdAmeritradeSession():
 
         # If it's okay and no details.
         if response.ok and len(response.content) > 0:
-
             return response.json()
-
         elif len(response.content) > 0 and response.ok:
             return {
                 'message': 'response successful',

@@ -8,7 +8,6 @@ from td.utils.enums import ContractType
 from td.utils.enums import StrategyType
 from td.utils.enums import OptionaRange
 from td.utils.enums import OptionType
-from td.utils.enums import ContractType
 from td.utils.enums import ExpirationMonth
 
 
@@ -18,21 +17,21 @@ class OptionChainQuery():
     """
     ### Overview
     ----
-    A python dataclass which is used to represent a query to the 
+    A python dataclass which is used to represent a query to the
     Option Chain service on TD Ameritrade.
 
     ### Parameters
     ----
     symbol: str (optional, Default=None)
-        A single symbol to return option chains for, keep in 
+        A single symbol to return option chains for, keep in
         mind only one symbol may be passed through.
 
     contract_type: Union[str, Enum] (optional, Default='all')
-        Type of contracts to return in the chain. 
+        Type of contracts to return in the chain.
         Can be `call`, `put`, or `all`.
 
     strike_count: int (optional, Default=None)
-        The number of strikes to return above and 
+        The number of strikes to return above and
         below the at-the-money price.
 
     include_quotes: bool (optional, Default=False)
@@ -40,7 +39,7 @@ class OptionChainQuery():
         otherwise none will be included.
 
     strategy: Union[str, Enum] (optional, Default='single')
-        Passing a value returns a Strategy Chain. Possible values are 
+        Passing a value returns a Strategy Chain. Possible values are
         `single`, `analytical` (allows use of the volatility, underlyingPrice,
         interestRate, and daysToExpiration params to calculate theoretical
         values), `covered`, `vertical`, `calendar`, `strangle`, `straddle`,
@@ -54,40 +53,40 @@ class OptionChainQuery():
         strike price.
 
     opt_range: Union[str, Enum] (optional, Default='all')
-        Returns options for the given range. Possible values are: 
-        [(`itm`, In-the-money), (`ntm`: Near-the-money), (`otm`: Out-of-the-money), 
+        Returns options for the given range. Possible values are:
+        [(`itm`, In-the-money), (`ntm`: Near-the-money), (`otm`: Out-of-the-money),
         (`sak`: Strikes Above Market), (`sbk`: Strikes Below Market)
         (`snk`: Strikes Near Market), (`all`: All Strikes)]
 
     from_date: Union[str, datetime] (optional, Default=None)
-        Only return expirations after this date. For strategies, expiration 
+        Only return expirations after this date. For strategies, expiration
         refers to the nearest term expiration in the strategy. Valid ISO-8601
         formats are: yyyy-MM-dd and yyyy-MM-dd'T'HH:mm:ssz.
 
     to_date: Union[str, datetime] (optional, Default=None)
-        Only return expirations before this date. For strategies, expiration 
+        Only return expirations before this date. For strategies, expiration
         refers to the nearest term expiration in the strategy. Valid ISO-8601
         formats are: yyyy-MM-dd and yyyy-MM-dd'T'HH:mm:ssz.
 
     volatility: str (optional, Default=None)
-        Volatility to use in calculations. Applies only to `analytical` 
+        Volatility to use in calculations. Applies only to `analytical`
         strategy chains (see strategy param).
 
     underlying_price: str (optional, Default=None)
-        Underlying price to use in calculations. Applies only to 
+        Underlying price to use in calculations. Applies only to
         `analytical` strategy chains (see strategy param).
 
     interest_rate: str (optional, Default=None)
-        Interest rate to use in calculations. Applies only to 
+        Interest rate to use in calculations. Applies only to
         `analytical` strategy chains (see strategy param). Defaults to None.
 
     days_to_expiration: str (optional, Default=None)
-        Days to expiration to use in calculations. Applies 
+        Days to expiration to use in calculations. Applies
         only to `analytical` strategy chains (see strategy param).
 
-    exp_month: str (optional, Default='all') 
-        Return only options expiring in the specified month. Month 
-        is given in the three character format. 
+    exp_month: str (optional, Default='all')
+        Return only options expiring in the specified month. Month
+        is given in the three character format.
 
     option_type: Union[str, Enum] (optional, Default='all')
         Type of contracts to return. Possible values are: [(`s`: Standard contracts),
@@ -115,14 +114,20 @@ class OptionChainQuery():
         """Generates a dictionary containing all the field
         names and values.
 
+        ### Parameters
+        ----
+        raises_errors: bool
+            If set to `True` will raise errors when
+            validating the strategy. If `False` no validation
+            errors will be raised.
+
         ### Returns
         ----
         dict
             The Field Name and Values.
         """
 
-        self._raise_errors = raise_errors
-        self._validate()
+        self._validate(raise_errors=raise_errors)
 
         keys_to_replace = {
             'option_range': 'range',
@@ -158,10 +163,11 @@ class OptionChainQuery():
 
         return class_dict
 
-    def _validate(self) -> None:
+    def _validate(self, raise_errors: bool) -> None:
+        """Run the validation process."""
 
         self._validate_strike_price()
-        self._validate_strategy()
+        self._validate_strategy(raise_errors=raise_errors)
 
     def _validate_strike_price(self) -> None:
         """Validates the Strike Price of the option."""
@@ -172,7 +178,7 @@ class OptionChainQuery():
             strike_price = round(strike_price, 2)
             setattr(self, 'strike', strike_price)
 
-    def _validate_strategy(self) -> None:
+    def _validate_strategy(self, raise_errors: bool) -> None:
         """Validates the Strategy of the option."""
 
         strategy = getattr(self, 'strategy')
@@ -195,9 +201,9 @@ class OptionChainQuery():
 
             for value in values_to_exclude:
 
-                if self._raise_errors and getattr(self, value) is not None:
+                if raise_errors and getattr(self, value) is not None:
                     raise ValueError(
                         f"{value} cannot be set with strategy type SINGLE."
                     )
-                else:
-                    delattr(self, value)
+
+                delattr(self, value)

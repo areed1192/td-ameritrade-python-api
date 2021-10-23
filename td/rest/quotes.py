@@ -4,13 +4,21 @@ from td.session import TdAmeritradeSession
 
 class Quotes():
 
+    """
+    ## Overview
+    ----
+    Allows the user to query real-time quotes from the TD
+    API if they have an authorization token otherwise it
+    will be delayed by 5 minutes.
+    """
+
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Quotes` services.
 
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 

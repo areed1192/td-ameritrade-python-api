@@ -1,13 +1,15 @@
-from typing import List
-from typing import Union
-from datetime import datetime
-from datetime import date
 from td.session import TdAmeritradeSession
-from enum import Enum
 from td.utils.orders import Order
 
 
 class SavedOrders():
+
+    """
+    ## Overview
+    ----
+    Allows the user to create, delete, and update saved
+    orders associated with their account.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `SavedOrders` services.
@@ -15,7 +17,7 @@ class SavedOrders():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
@@ -28,12 +30,12 @@ class SavedOrders():
         """Returns the saved orders for a specific account.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/savedorders-0
 
         ### Parameters
         ----
-        account_id: str 
+        account_id: str
             The account number that you want to
             query for saved orders.
 
@@ -63,12 +65,12 @@ class SavedOrders():
         """Get a specific saved order for a specific account.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/get/accounts/%7BaccountId%7D/savedorders/%7BsavedOrderId%7D-0
 
         ### Parameters
         ----
-        account_id: str 
+        account_id: str
             The account number that you want to
             query for saved_orders.
 
@@ -104,7 +106,7 @@ class SavedOrders():
         limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/post/accounts/%7BaccountId%7D/savedorders-0
 
         ### Parameters
@@ -134,7 +136,7 @@ class SavedOrders():
         """
 
         if saved_order_object:
-            order = saved_order_object._saved_order_to_json()
+            order = saved_order_object.save_order_to_json()
 
         if saved_order_dict:
             order = saved_order_dict
@@ -157,7 +159,7 @@ class SavedOrders():
         saved_order_object: Order = None,
         saved_order_dict: dict = None
     ) -> dict:
-        """Replace an existing saved order for an account. 
+        """Replace an existing saved order for an account.
 
         ### Overview
         ----
@@ -166,7 +168,7 @@ class SavedOrders():
         will be created. Order throttle limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/put/accounts/%7BaccountId%7D/savedorders/%7BsavedOrderId%7D-0
 
         ### Parameters
@@ -200,7 +202,7 @@ class SavedOrders():
         """
 
         if saved_order_object:
-            order = saved_order_object._saved_order_to_json()
+            order = saved_order_object.save_order_to_json()
 
         if saved_order_dict:
             order = saved_order_dict
@@ -225,7 +227,7 @@ class SavedOrders():
         limits may apply.
 
         ### Documentation
-        ---- 
+        ----
         https://developer.tdameritrade.com/account-access/apis/delete/accounts/%7BaccountId%7D/savedorders/%7BsavedOrderId%7D-0
 
         ### Parameters

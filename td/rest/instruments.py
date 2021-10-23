@@ -1,12 +1,17 @@
-from typing import List
-from typing import Union
-from datetime import datetime
-from datetime import date
-from td.session import TdAmeritradeSession
 from enum import Enum
+from typing import Union
+from td.session import TdAmeritradeSession
 
 
 class Instruments():
+
+    """
+    ## Overview
+    ----
+    Allows the user to query and search for financial instruments
+    inside of the TD Ameritrade database. The endpoint allows multiple
+    methods for searching including regex.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Instruments` services.
@@ -14,7 +19,7 @@ class Instruments():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
@@ -30,7 +35,7 @@ class Instruments():
         ### Parameters
         ----
         symbol: str
-            The symbol of the financial instrument you would 
+            The symbol of the financial instrument you would
             like to search.
 
         projection: Union[str, Enum]

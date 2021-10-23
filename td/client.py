@@ -19,12 +19,18 @@ class TdAmeritradeClient():
     """
     ### Overview
     ----
-    Implements OAuth 2.0 Authorization Code Grant workflow, handles configuration
-    and state management, adds token for authenticated calls, and performs request 
-    to the TD Ameritrade API.
+    Handles initializing all the different API Services and ensures
+    that your session is authenticated.
     """
 
     def __init__(self, credentials: TdCredentials) -> None:
+        """Initializes the `TdClient` object.
+
+        ### Parameters
+        credentials : TdCredentials
+            Your TD Credentials stored in your credentials object
+            so that you can authenitcate with TD.
+        """
 
         self.td_credentials = credentials
         self.td_session = TdAmeritradeSession(td_client=self)
@@ -46,9 +52,7 @@ class TdAmeritradeClient():
             >>> quotes_service = td_client.quotes()
         """
 
-        object: Quotes = Quotes(session=self.td_session)
-
-        return object
+        return Quotes(session=self.td_session)
 
     def movers(self) -> Movers:
         """Used to access the `Movers` Services and metadata.
@@ -64,9 +68,7 @@ class TdAmeritradeClient():
             >>> movers_service = td_client.movers()
         """
 
-        object: Movers = Movers(session=self.td_session)
-
-        return object
+        return Movers(session=self.td_session)
 
     def accounts(self) -> Accounts:
         """Used to access the `Accounts` Services and metadata.
@@ -82,9 +84,7 @@ class TdAmeritradeClient():
             >>> accounts_service = td_client.accounts()
         """
 
-        object: Accounts = Accounts(session=self.td_session)
-
-        return object
+        return Accounts(session=self.td_session)
 
     def market_hours(self) -> MarketHours:
         """Used to access the `MarketHours` Services and metadata.
@@ -100,9 +100,7 @@ class TdAmeritradeClient():
             >>> market_hours_service = td_client.market_hours()
         """
 
-        object: MarketHours = MarketHours(session=self.td_session)
-
-        return object
+        return MarketHours(session=self.td_session)
 
     def instruments(self) -> Instruments:
         """Used to access the `Instruments` Services and metadata.
@@ -118,9 +116,7 @@ class TdAmeritradeClient():
             >>> instruments_service = td_client.instruments()
         """
 
-        object: Instruments = Instruments(session=self.td_session)
-
-        return object
+        return Instruments(session=self.td_session)
 
     def user_info(self) -> UserInfo:
         """Used to access the `UserInfo` Services and metadata.
@@ -136,9 +132,7 @@ class TdAmeritradeClient():
             >>> user_info_service = td_client.user_info()
         """
 
-        object: UserInfo = UserInfo(session=self.td_session)
-
-        return object
+        return UserInfo(session=self.td_session)
 
     def price_history(self) -> PriceHistory:
         """Used to access the `PriceHistory` Services and metadata.
@@ -154,9 +148,7 @@ class TdAmeritradeClient():
             >>> price_history_service = td_client.price_history()
         """
 
-        object: PriceHistory = PriceHistory(session=self.td_session)
-
-        return object
+        return PriceHistory(session=self.td_session)
 
     def options_chain(self) -> OptionsChain:
         """Used to access the `OptionsChain` Services and metadata.
@@ -172,9 +164,7 @@ class TdAmeritradeClient():
             >>> options_chain_service = td_client.options_chain()
         """
 
-        object: OptionsChain = OptionsChain(session=self.td_session)
-
-        return object
+        return OptionsChain(session=self.td_session)
 
     def watchlists(self) -> Watchlists:
         """Used to access the `Watchlists` Services and metadata.
@@ -190,9 +180,7 @@ class TdAmeritradeClient():
             >>> watchlists_service = td_client.watchlists()
         """
 
-        object: Watchlists = Watchlists(session=self.td_session)
-
-        return object
+        return Watchlists(session=self.td_session)
 
     def orders(self) -> Orders:
         """Used to access the `Orders` Services and metadata.
@@ -208,9 +196,7 @@ class TdAmeritradeClient():
             >>> orders_service = td_client.orders()
         """
 
-        object: Orders = Orders(session=self.td_session)
-
-        return object
+        return Orders(session=self.td_session)
 
     def saved_orders(self) -> SavedOrders:
         """Used to access the `SavedOrders` Services and metadata.
@@ -226,9 +212,7 @@ class TdAmeritradeClient():
             >>> saved_orders_service = td_client.saved_orders()
         """
 
-        object: SavedOrders = SavedOrders(session=self.td_session)
-
-        return object
+        return SavedOrders(session=self.td_session)
 
     def streaming_api_client(self) -> StreamingApiClient:
         """Used to access the `StreamingApiClient` Services and metadata.
@@ -244,8 +228,4 @@ class TdAmeritradeClient():
             >>> streaming_api_service = td_client.streaming_api_client()
         """
 
-        object: StreamingApiClient = StreamingApiClient(
-            session=self.td_session
-        )
-
-        return object
+        return StreamingApiClient(session=self.td_session)

@@ -1,10 +1,15 @@
-from typing import List
-from typing import Union
 from td.session import TdAmeritradeSession
-from enum import Enum
 
 
 class Watchlists():
+
+    """
+    ## Overview
+    ----
+    Allows the user to create, delete, update, and query
+    watchlists that are associated with their TD Ameritrade
+    accounts.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `Watchlists` services.
@@ -12,7 +17,7 @@ class Watchlists():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
@@ -33,7 +38,7 @@ class Watchlists():
 
         content = self.session.make_request(
             method='get',
-            endpoint=f'accounts/watchlists'
+            endpoint='accounts/watchlists'
         )
 
         return content
@@ -109,7 +114,7 @@ class Watchlists():
         https://developer.tdameritrade.com/watchlist/apis/post/accounts/%7BaccountId%7D/watchlists-0
 
         ### Parameters
-        ----        
+        ----
         account_id: str
             The account number the watchlist belongs to.
 
@@ -148,7 +153,13 @@ class Watchlists():
 
         return content
 
-    def update_watchlist(self, account_id: str, watchlist_id: str, name: str = None, watchlist_items: dict = None) -> dict:
+    def update_watchlist(
+        self,
+        account_id: str,
+        watchlist_id: str,
+        name: str = None,
+        watchlist_items: dict = None
+    ) -> dict:
         """Updates an existing watchlist.
 
         ### Overview
@@ -162,7 +173,7 @@ class Watchlists():
         https://developer.tdameritrade.com/watchlist/apis/patch/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
         ### Parameters
-        ----        
+        ----
         account_id: str
             The account number the watchlist belongs to.
 
@@ -212,7 +223,13 @@ class Watchlists():
 
         return content
 
-    def replace_watchlist(self, account_id: str, watchlist_id: str, name: str, watchlist_items: dict) -> dict:
+    def replace_watchlist(
+        self,
+        account_id: str,
+        watchlist_id: str,
+        name: str,
+        watchlist_items: dict
+    ) -> dict:
         """Replaces an existing watchlist.
 
         ### Overview
@@ -226,7 +243,7 @@ class Watchlists():
         https://developer.tdameritrade.com/watchlist/apis/patch/accounts/%7BaccountId%7D/watchlists/%7BwatchlistId%7D-0
 
         ### Parameters
-        ----        
+        ----
         account_id: str
             The account number the watchlist belongs to.
 

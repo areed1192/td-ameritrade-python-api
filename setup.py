@@ -35,7 +35,8 @@ setup(
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
         'requests==2.24.0',
-        'dataclasses'
+        'dataclasses',
+        'websockets==9.1'
     ],
 
     # some keywords for my library.

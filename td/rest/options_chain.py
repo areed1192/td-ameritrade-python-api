@@ -1,9 +1,16 @@
-from typing import List
 from td.session import TdAmeritradeSession
 from td.utils.option_chain import OptionChainQuery
 
 
 class OptionsChain():
+
+    """
+    ## Overview
+    ----
+    Allows the user to query options chain data from the
+    the TD Ameritrade API along with helping to formulate
+    queries.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `OptionsChain` services.
@@ -11,13 +18,18 @@ class OptionsChain():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
         """
 
         self.session = session
 
-    def get_option_chain(self, option_chain_query: OptionChainQuery = None, option_chain_dict: dict = None, raise_validation_errors: bool = True) -> dict:
+    def get_option_chain(
+        self,
+        option_chain_query: OptionChainQuery = None,
+        option_chain_dict: dict = None,
+        raise_validation_errors: bool = True
+    ) -> dict:
         """Get option chain for an optionable Symbol.
 
         ### Documentation

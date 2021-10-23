@@ -3,9 +3,11 @@ import urllib
 import pprint
 import asyncio
 import textwrap
-import websockets
 
 from datetime import datetime
+from websockets import client as ws_client
+from websockets import exceptions as ws_exceptions
+
 from td.rest.user_info import UserInfo
 from td.session import TdAmeritradeSession
 from td.streaming.services import StreamingServices
@@ -14,7 +16,9 @@ from td.streaming.services import StreamingServices
 class StreamingApiClient():
 
     """
-    Implements a Websocket object that connects to the TD 
+    ## Overview
+    ----
+    Implements a Websocket object that connects to the TD
     Streaming API, submits requests, handles messages, and
     streams data back to the user.
     """
@@ -34,7 +38,9 @@ class StreamingApiClient():
         self.user_principal_data = UserInfo(
             session=session
         ).get_user_principals()
-        self.websocket_url = f"wss://{self.user_principal_data['streamerInfo']['streamerSocketUrl']}/ws"
+
+        socket_url = self.user_principal_data['streamerInfo']['streamerSocketUrl']
+        self.websocket_url = f"wss://{socket_url}/ws"
 
         # Grab the token timestamp.
         token_timestamp = self.user_principal_data['streamerInfo']['tokenTimestamp']
@@ -58,14 +64,15 @@ class StreamingApiClient():
             "acl": self.user_principal_data['streamerInfo']['acl']
         }
 
-        self.connection: websockets.WebSocketClientProtocol = None
+
+        self.connection: ws_client.WebSocketClientProtocol = None
         self.data_requests = {
             "requests": []
         }
 
         try:
             self.loop = asyncio.get_event_loop()
-        except websockets.WebSocketException:
+        except ws_exceptions.WebSocketProtocolError:
             self.loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self.loop)
 
@@ -76,8 +83,8 @@ class StreamingApiClient():
 
         ### Overview
         ----
-        Builds the login request dictionary that will 
-        be used as the first service request with the 
+        Builds the login request dictionary that will
+        be used as the first service request with the
         streaming API.
 
         ### Returns
@@ -105,13 +112,13 @@ class StreamingApiClient():
 
         return json.dumps(login_request)
 
-    async def _connect(self) -> websockets.WebSocketClientProtocol:
+    async def _connect(self) -> ws_client.WebSocketClientProtocol:
         """Connects the Client to the TD Websocket.
 
         ### Overview
         ----
-        Connecting to webSocket server websockets.client.connect 
-        returns a WebSocketClientProtocol, which is used to send 
+        Connecting to webSocket server websockets.client.connect
+        returns a WebSocketClientProtocol, which is used to send
         and receive messages
 
         ### Returns
@@ -124,7 +131,7 @@ class StreamingApiClient():
         login_request = self._build_login_request()
 
         # Create a connection.
-        self.connection = await websockets.client.connect(self.websocket_url)
+        self.connection = await ws_client.connect(self.websocket_url)
 
         # See if we are connected.
         is_connected = await self._check_connection()
@@ -158,7 +165,7 @@ class StreamingApiClient():
 
         ### Overview
         ----
-        There are multiple times we will need to check the connection 
+        There are multiple times we will need to check the connection
         of the websocket, this function will help do that.
 
         ### Raises
@@ -232,7 +239,7 @@ class StreamingApiClient():
                 pprint.pprint(message_decoded)
                 print(textwrap.dedent('-'*80))
 
-            except websockets.exceptions.ConnectionClosed:
+            except ws_exceptions.ConnectionClosed:
                 await self.close_stream()
                 break
 
@@ -252,7 +259,7 @@ class StreamingApiClient():
 
         try:
             message_decoded = json.loads(message)
-        except:
+        except TypeError:
             message = message.encode(
                 'utf-8'
             ).replace(b'\xef\xbf\xbd', bytes('"None"', 'utf-8')).decode('utf-8')
@@ -267,7 +274,7 @@ class StreamingApiClient():
             try:
                 await self.connection.send('ping')
                 await asyncio.sleep(5)
-            except websockets.exceptions.ConnectionClosed:
+            except ws_exceptions.ConnectionClosed:
                 self.close_stream()
                 break
 
@@ -293,8 +300,8 @@ class StreamingApiClient():
 
         ### Overview
         ----
-        Initalizes the stream by building a login request, starting 
-        an event loop, creating a connection, passing through the 
+        Initalizes the stream by building a login request, starting
+        an event loop, creating a connection, passing through the
         requests, and keeping the loop running.
         """
 
@@ -332,7 +339,7 @@ class StreamingApiClient():
             print(message)
             await asyncio.sleep(3)
 
-    async def build_pipeline(self) -> websockets.WebSocketClientProtocol:
+    async def build_pipeline(self) -> ws_client.WebSocketClientProtocol:
         """Builds a data pipeine for processing data.
 
         ### Overview
@@ -347,9 +354,6 @@ class StreamingApiClient():
         websockets.WebSocketClientProtocol
             The websocket connection.
         """
-
-        # In this case, we don't want things printing to the console.
-        self.print_to_console = True
 
         # Connect to Websocket.
         await self._connect()

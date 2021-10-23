@@ -1,10 +1,17 @@
 from typing import Union
-from td.session import TdAmeritradeSession
 from enum import Enum
 from datetime import datetime
+from td.session import TdAmeritradeSession
 
 
 class PriceHistory():
+
+    """
+    ## Overview:
+    ----
+    Allows the user to query price history data for equity
+    instruments.
+    """
 
     def __init__(self, session: TdAmeritradeSession) -> None:
         """Initializes the `PriceHistory` services.
@@ -12,7 +19,7 @@ class PriceHistory():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession   
+            An authenticated `TDAmeritradeSession
             object.
 
         ### Usage
@@ -50,14 +57,14 @@ class PriceHistory():
         ### Parameters
         ----
         symbol: str
-            The ticker symbol to request data for. 
+            The ticker symbol to request data for.
 
         frequency_type:  Union[str, Enum]
             The type of frequency with  which a new candle
             is formed.
 
-        frequency: str 
-            The number of the frequency type 
+        frequency: str
+            The number of the frequency type
             to be included in each candle.
 
         period_type: Union[str, Enum] (optional, Default='day')
@@ -136,20 +143,22 @@ class PriceHistory():
                 raise KeyError(
                     "The frequency you provided is not a valid frequency."
                 )
-            else:
 
-                # Step 2: Validate the period type BASED ON the frequency type.
-                if period_type not in valid_chart_values[frequency_type]:
-                    raise KeyError(
-                        f"The period type you provided is not a valid for frequency: {frequency_type}"
-                    )
+            # Step 2: Validate the period type BASED ON the frequency type.
+            if period_type not in valid_chart_values[frequency_type]:
+                raise KeyError(
+                    f"The period type you provided is not a valid for frequency: {frequency_type}"
+                )
 
-                # Step 3: Finally validate the period, if a start date or end date was not provided.
-                # You shouldn't have a period to validate if the start date or end date was provided.
-                if period not in valid_chart_values[frequency_type][period_type] and (start_date is None or end_date is None):
-                    raise KeyError(
-                        f"The period you provided is not a valid for period type: {period_type}"
-                    )
+            condition_1 = period not in valid_chart_values[frequency_type][period_type]
+            condition_2 = (start_date is None or end_date is None)
+
+            # Step 3: Finally validate the period, if a start date or end date was not provided.
+            # You shouldn't have a period to validate if the start date or end date was provided.
+            if condition_1 and condition_2:
+                raise KeyError(
+                    f"The period you provided is not a valid for period type: {period_type}"
+                )
 
         params = {
             'period': period,

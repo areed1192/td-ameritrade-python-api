@@ -507,7 +507,7 @@ class RequestedDestination(Enum):
 
 
 class StopPriceLinkBasis(Enum):
-    """Represents the different stop price link basis 
+    """Represents the different stop price link basis
     when constructing and `Order` object.
 
     ### Usage
@@ -528,7 +528,7 @@ class StopPriceLinkBasis(Enum):
 
 
 class StopPriceLinkType(Enum):
-    """Represents the different stop price link type 
+    """Represents the different stop price link type
     when constructing and `Order` object.
 
     ### Usage
@@ -543,7 +543,7 @@ class StopPriceLinkType(Enum):
 
 
 class StopType(Enum):
-    """Represents the different stop type 
+    """Represents the different stop type
     when constructing and `Order` object.
 
     ### Usage
@@ -560,7 +560,7 @@ class StopType(Enum):
 
 
 class PriceLinkBasis(Enum):
-    """Represents the different price link basis 
+    """Represents the different price link basis
     when constructing and `Order` object.
 
     ### Usage
@@ -581,7 +581,7 @@ class PriceLinkBasis(Enum):
 
 
 class PriceLinkType(Enum):
-    """Represents the different price link type 
+    """Represents the different price link type
     when constructing and `Order` object.
 
     ### Usage
@@ -596,7 +596,7 @@ class PriceLinkType(Enum):
 
 
 class OrderType(Enum):
-    """Represents the different order type 
+    """Represents the different order type
     when constructing and `Order` object.
 
     ### Usage
@@ -619,7 +619,7 @@ class OrderType(Enum):
 
 
 class PositionEffect(Enum):
-    """Represents the different position effects 
+    """Represents the different position effects
     when constructing and `Order` object.
 
     ### Usage
@@ -634,7 +634,7 @@ class PositionEffect(Enum):
 
 
 class OrderTaxLotMethod(Enum):
-    """Represents the different order tax lot methods 
+    """Represents the different order tax lot methods
     when constructing and `Order` object.
 
     ### Usage
@@ -652,7 +652,7 @@ class OrderTaxLotMethod(Enum):
 
 
 class SpecialInstructions(Enum):
-    """Represents the different order special instructions 
+    """Represents the different order special instructions
     when constructing and `Order` object.
 
     ### Usage
@@ -1149,6 +1149,7 @@ class LevelTwoQuotes(Enum):
     Key = 0
     Time = 1
     Data = 2
+
 
 class LevelTwoOptions(Enum):
     """Represents the Level Two Options Fields.
