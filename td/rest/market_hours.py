@@ -59,7 +59,7 @@ class MarketHours():
             if isinstance(market, Enum):
                 markets[index] = market.value
 
-        if isinstance(date, datetime) or isinstance(date, date):
+        if isinstance(date, (date, datetime)):
             date = date.isoformat()
 
         params = {
@@ -104,7 +104,10 @@ class MarketHours():
             )
         """
 
-        if isinstance(date, datetime) or isinstance(date, date):
+        if isinstance(market, Enum):
+            market = market.value
+
+        if isinstance(date, (date, datetime)):
             date = date.isoformat()
 
         params = {
