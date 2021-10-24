@@ -132,3 +132,4 @@ dmypy.json
 vscode/
 config/
 .resources and notes/
+venv_test/

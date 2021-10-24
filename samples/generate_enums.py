@@ -307,12 +307,10 @@ STREAM_FIELD_IDS = {
     }
 }
 
-# for service in STREAM_FIELD_IDS:
-#     print(service['level_one_quotes'])
-
 for field in STREAM_FIELD_IDS['level_two_quotes']:
 
-    enum_name = STREAM_FIELD_IDS['level_two_quotes'][field].replace("-", " ").title().replace(" ", "")
+    enum_name = STREAM_FIELD_IDS['level_two_quotes'][field]
+    enum_name = enum_name.replace("-", " ").title().replace(" ", "")
     enum_value = field
 
     print(f"{enum_name} = {enum_value}")

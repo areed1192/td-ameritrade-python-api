@@ -7,7 +7,7 @@ with open(file="README.md", mode="r") as fh:
 
 setup(
     # this will be my Library name.
-    name='td-ameritrade-api',
+    name='py-tda-api',
 
     # Want to make sure people know who made it.
     author='Alex Reed',
@@ -16,7 +16,7 @@ setup(
     author_email='coding.sigma@gmail.com',
 
     # Set the version.
-    version='0.1.0',
+    version='0.1.1',
 
     # here is a simple description of the library, this will appear when
     # someone searches for the library on https://pypi.org/search
@@ -44,11 +44,10 @@ setup(
 
     # here are the packages I want "build."
     packages=find_namespace_packages(
-        include=['td']
+        include=['td.*'],
+        exclude=['config*']
     ),
 
-    # I also have some package data, like photos and JSON files, so I want to
-    # include those too.
     include_package_data=True,
 
     # additional classifiers that give some characteristics about the package.
@@ -61,6 +60,6 @@ setup(
         'Programming Language :: Python :: 3'
     ],
 
-    # you will need python 3.8 to use this libary.
+    # you will need python 3.8 or greater to use this libary.
     python_requires='>=3.8'
 )
