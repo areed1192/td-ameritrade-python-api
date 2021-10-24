@@ -29,4 +29,4 @@ jobs:
       - name: Test with Unittest.
         run: |
           # If we have a testing folder, then run with unittest.
-          if [ -f tests/test_clients.py ]; then python -m unittest discover -s tests -p "test_*.py" -v; fi
+          if [ -f tests/test_clients.py ]; then python -m unittest discover -v -s "./tests" -p "test_*.py"; fi
