@@ -1,5 +1,5 @@
 from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_namespace_packages
 
 # load the README file.
 with open(file="README.md", mode="r") as fh:
@@ -34,16 +34,16 @@ setup(
 
     # there are some dependencies to use the library, so let's list them out.
     install_requires=[
-        'requests==2.24.0',
-        'dataclasses',
-        'websockets==9.1'
+        'requests>=2.24.0',
+        'dataclasses>=0.6',
+        'websockets>=9.1'
     ],
 
     # some keywords for my library.
     keywords='finance, td ameritrade, api',
 
     # here are the packages I want "build."
-    packages=find_packages(
+    packages=find_namespace_packages(
         include=['td']
     ),
 
@@ -61,6 +61,6 @@ setup(
         'Programming Language :: Python :: 3'
     ],
 
-    # you will need python 3.7 to use this libary.
+    # you will need python 3.8 to use this libary.
     python_requires='>=3.8'
 )
