@@ -12,6 +12,8 @@ from typing import Union
 
 import websockets
 
+from websockets.extensions.permessage_deflate import ClientPerMessageDeflateFactory
+
 from td.enums import CSV_FIELD_KEYS
 from td.enums import CSV_FIELD_KEYS_LEVEL_2
 from td.enums import STREAM_FIELD_IDS
@@ -56,6 +58,7 @@ class TDStreamerClient():
         """
 
         self.websocket_url = "wss://{}/ws".format(websocket_url)
+        self.websocket_args = {"extensions": [ClientPerMessageDeflateFactory()]}
         self.credentials = credentials
         self.user_principal_data = user_principal_data
         self.connection: websockets.WebSocketClientProtocol = None
@@ -628,7 +631,7 @@ class TDStreamerClient():
         login_request = self._build_login_request()
 
         # Create a connection.
-        self.connection = await websockets.client.connect(self.websocket_url)
+        self.connection = await websockets.connect(self.websocket_url, **self.websocket_args)
 
         # See if we are connected.
         is_connected = await self._check_connection()
