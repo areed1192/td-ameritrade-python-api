@@ -97,6 +97,7 @@ class TdCredentials():
             >>> td_credential = TdCredentials()
             >>> td_credential.client_id
         """
+
         return self._client_id
 
     @property
@@ -130,6 +131,7 @@ class TdCredentials():
             >>> td_credential = TdCredentials()
             >>> td_credential.refresh_token
         """
+
         return self._refresh_token
 
     @property
@@ -147,6 +149,7 @@ class TdCredentials():
             >>> td_credential = TdCredentials()
             >>> td_credential.refresh_token_expiration_time
         """
+
         return self._refresh_token_expiration_time
 
     @property
@@ -166,10 +169,9 @@ class TdCredentials():
             >>> td_credential.is_refresh_token_expired
         """
 
-        if (self.refresh_token_expiration_time.timestamp() - 20) < datetime.now().timestamp():
-            return True
-        else:
-            return False
+        exp_time = self.refresh_token_expiration_time.timestamp() - 20
+        now = datetime.now().timestamp()
+        return bool(exp_time < now)
 
     def from_token_dict(self, token_dict: dict) -> None:
         """Converts a token dicitonary to a `TdCredential`
@@ -337,10 +339,9 @@ class TdCredentials():
             >>> td_credential.is_access_token_expired
         """
 
-        if (self.access_token_expiration_time.timestamp() - 20) < datetime.now().timestamp():
-            return True
-        else:
-            return False
+        exp_time = self.access_token_expiration_time.timestamp() - 20
+        now = datetime.now().timestamp()
+        return bool(exp_time < now)
 
     def from_workflow(self) -> None:
         """Grabs an Access toke and refresh token using
@@ -369,7 +370,7 @@ class TdCredentials():
             The location of the credentials file.
         """
 
-        with open(file=file_path, mode='r') as token_file:
+        with open(file=file_path, mode='r', encoding='utf-8') as token_file:
             token_dict = json.load(fp=token_file)
             self.from_token_dict(token_dict=token_dict)
 
@@ -391,7 +392,7 @@ class TdCredentials():
         if isinstance(file_path, pathlib.Path):
             file_path = file_path.resolve()
 
-        with open(file=file_path, mode='w+') as token_file:
+        with open(file=file_path, mode='w+', encoding='utf-8') as token_file:
             json.dump(obj=self.to_token_dict(), fp=token_file, indent=2)
 
     def from_credential_dict(self, token_dict: dict) -> None:
@@ -551,8 +552,8 @@ class TdCredentials():
 
         if response.ok:
             return response.json()
-        else:
-            raise requests.HTTPError()
+
+        raise requests.HTTPError()
 
     def validate_token(self) -> None:
         """Validates the access token and refresh token.
@@ -567,11 +568,11 @@ class TdCredentials():
         """
 
         if self.is_refresh_token_expired:
-            print("Refresh Token Expired, initiating oAuth workflow.")
+            print("Refresh Token Expired, initiating oAuth workflow...")
             self.from_workflow()
 
         if self.is_access_token_expired:
-            print("Access Token Expired, refreshing access token.")
+            print("Access Token Expired, refreshing access token...")
             token_dict = self.grab_access_token()
             self.from_token_dict(token_dict=token_dict)
 

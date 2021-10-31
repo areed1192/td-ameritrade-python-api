@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Union
+from datetime import date as date_type
 from datetime import datetime
-from datetime import date
 from td.session import TdAmeritradeSession
 
 
@@ -26,7 +26,11 @@ class MarketHours():
 
         self.session = session
 
-    def get_multiple_market_hours(self, markets: list, date: Union[str, datetime, date]) -> dict:
+    def get_multiple_market_hours(
+        self,
+        markets: list,
+        date: Union[str, datetime, date_type]
+    ) -> dict:
         """Returns the market hours for all the markets.
 
         ### Documentation
@@ -59,7 +63,7 @@ class MarketHours():
             if isinstance(market, Enum):
                 markets[index] = market.value
 
-        if isinstance(date, (date, datetime)):
+        if isinstance(date, (date_type, datetime)):
             date = date.isoformat()
 
         params = {
@@ -75,7 +79,11 @@ class MarketHours():
 
         return content
 
-    def get_market_hours(self, market: Union[str, Enum], date: Union[str, datetime, date]) -> dict:
+    def get_market_hours(
+        self,
+        market: Union[str, Enum],
+        date: Union[str, datetime, date_type]
+    ) -> dict:
         """Returns the market hours for the specified market.
 
         ### Documentation
@@ -107,7 +115,7 @@ class MarketHours():
         if isinstance(market, Enum):
             market = market.value
 
-        if isinstance(date, (date, datetime)):
+        if isinstance(date, (date_type, datetime)):
             date = date.isoformat()
 
         params = {

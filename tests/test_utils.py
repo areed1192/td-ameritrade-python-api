@@ -6,9 +6,9 @@ from td.utils.orders import OrderLeg
 from td.utils.orders import OrderLegInstrument
 
 from td.utils.enums import AssetType
+from td.utils.enums import OrderType
 from td.utils.enums import OrderInstructions
 from td.utils.enums import OrderStrategyType
-from td.utils.enums import OrderType
 from td.utils.enums import DefaultOrderDuration
 
 
