@@ -11,6 +11,7 @@ from typing import List
 from typing import Union
 
 import websockets
+import websockets.client
 
 from td.enums import CSV_FIELD_KEYS
 from td.enums import CSV_FIELD_KEYS_LEVEL_2
