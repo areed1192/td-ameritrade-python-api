@@ -65,6 +65,9 @@ class TDStreamerClient():
         # this will hold all of our requests
         self.data_requests = {"requests": []}
 
+        # keep track of service request ids
+        self.service_count = 0
+
         # this will house all of our field numebrs and keys so that way the user can use names to define the fields they want.
         self.fields_ids_dictionary = STREAM_FIELD_IDS
         self.fields_keys_write = CSV_FIELD_KEYS
@@ -413,15 +416,13 @@ class TDStreamerClient():
             was successful.
         """
 
-        self.unsubscribe_count += 1
-
-        service_count = len(self.data_requests['requests']) + self.unsubscribe_count
+        self.service_count += 1
         
         request = {
             "requests":[
                 {
                     "service": service.upper(), 
-                    "requestid": service_count, 
+                    "requestid": self.service_count, 
                     "command": 'UNSUBS',
                     "account": self.user_principal_data['accounts'][0]['accountId'],
                     "source": self.user_principal_data['streamerInfo']['appId']
@@ -432,6 +433,15 @@ class TDStreamerClient():
         await self._send_message(json.dumps(request))
 
         return await self._receive_message(return_value=True)
+
+    async def send_subscription_request(self):
+        """Sends a new subscription request. Will build
+        request with any new services specified sense
+        the pipeline was built or the last subscription
+        request was sent.
+        """
+        
+        await self._send_message(self._build_data_request())
 
     def _build_login_request(self) -> str:
         """Builds the Login request for the streamer.
@@ -478,7 +488,9 @@ class TDStreamerClient():
 
         """
 
-        return json.dumps(self.data_requests)
+        data_request = self.data_requests
+        self.data_requests = {"requests": []}
+        return json.dumps(data_request)
 
     async def build_pipeline(self) -> websockets.WebSocketClientProtocol:
         """Builds a data pipeine for processing data.
@@ -783,12 +795,11 @@ class TDStreamerClient():
         {dict} -- The service request with the standard fields filled out.
         """
 
-        # first get the current service request count
-        service_count = len(self.data_requests['requests']) + 1
+        self.service_count += 1
 
         request = {
             "service": None, 
-            "requestid": service_count, 
+            "requestid": self.service_count, 
             "command": None,
             "account": self.user_principal_data['accounts'][0]['accountId'],
             "source": self.user_principal_data['streamerInfo']['appId'],
