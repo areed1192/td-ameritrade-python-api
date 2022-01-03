@@ -1,0 +1,55 @@
+[
+  {
+    //REPRESENTS A MARKET ORDER FOR SELLING A POSITION I OWN.
+    "orderType": "MARKET",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 9.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    //REPRESENTS A MARKET ORDER FOR BUYING A POSITION I DON'T OWN.
+    "orderType": "MARKET",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 20.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    "orderType": "MARKET",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "instrument": {
+          "assetType": "EQUITY",
+          "symbol": "GIS"
+        },
+        "quantityType": "SHARES",
+        "quantity": 1
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+{
+  /* 
+        Define the Order Strategy Type to One Cancels Another, when one of the order executes, the other one is cancelled.
+
+        KEEP IN MIND, THE WAY THIS ORDER IS BUILT IT ASSUMES I ALREADY OWN THE SHARES. NO WHERE IN THIS ORDER DO I MAKE A
+        PURCHASE FOR THE SHARES.
+    */
+
+  "orderStrategyType": "OCO",
+  "childOrderStrategies": [
+    {
+      // Order 1, it's a LIMIT order that's good for the DAY, and SELLs 2 shares of MSFT. This acts as my `take profit`.
+      "orderType": "LIMIT",
+      "session": "NORMAL",
+      "price": 45.97,
+      "duration": "DAY",
+      "orderStrategyType": "SINGLE",
+      "orderLegCollection": [
+        {
+          "instruction": "SELL",
+          "quantity": 2,
+          "instrument": {
+            "symbol": "MSFT",
+            "assetType": "EQUITY"
+          }
+        }
+      ]
+    },
+    {
+      // Order 2, it's a STOP LIMIT which means it activates at $37.00 but won't sell below than $35.00, sells 2 shares of MSFT
+      // and is still only good for the day. This acts as my `stop loss`.
+      "orderType": "STOP_LIMIT",
+      "session": "NORMAL",
+      "price": 37.0,
+      "stopPrice": 35.0,
+      "duration": "DAY",
+      "orderStrategyType": "SINGLE",
+      "orderLegCollection": [
+        {
+          "instruction": "SELL",
+          "quantity": 2,
+          "instrument": {
+            "symbol": "MSFT",
+            "assetType": "EQUITY"
+          }
+        }
+      ]
+    }
+  ]
+}

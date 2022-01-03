@@ -1,0 +1,77 @@
+[
+  {
+    "orderType": "TRAILING_STOP_LIMIT",
+    "stopPriceOffset": 0.1,
+    "stopPriceLinkType": "VALUE",
+    "price": 0.1,
+    "priceLinkType": "VALUE",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ],
+    "childOrderStrategies": [
+      {
+        "orderType": "LIMIT",
+        "session": "NORMAL",
+        "duration": "DAY",
+        "activationPrice": 20.0,
+        "orderStrategyType": "SINGLE",
+        "orderLegCollection": [
+          {
+            "instruction": "BUY",
+            "quantity": 1,
+            "instrument": {
+              "symbol": "AA",
+              "assetType": "EQUITY"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "childOrderStrategies": [
+      {
+        "duration": "DAY",
+        "orderLegCollection": [
+          {
+            "instruction": "SELL",
+            "instrument": {
+              "assetType": "EQUITY",
+              "symbol": "MLPX"
+            },
+            "quantity": 1
+          }
+        ],
+        "orderStrategyType": "SINGLE",
+        "orderType": "STOP",
+        "session": "NORMAL",
+        "stopPrice": 20.0
+      }
+    ],
+    "duration": "DAY",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "instrument": {
+          "assetType": "EQUITY",
+          "symbol": "MLPX"
+        },
+        "quantity": 1
+      }
+    ],
+    "orderStrategyType": "TRIGGER",
+    "orderType": "MARKET",
+    "price": 10.0,
+    "session": "NORMAL"
+  }
+]

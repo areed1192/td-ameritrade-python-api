@@ -1,0 +1,41 @@
+[
+  {
+    // Represents a Limit Order for selling a postion I own. In this situation, I would sell 1 share
+    // of American Airlines (AA) at a price of $9.00 or higher. For example, if the price the order
+    // got filled at is $9.02 it would still go through because the price is higher than the desired
+    // sale price.
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 9.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "SELL",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  },
+  {
+    //REPRESENTS A MARKET ORDER FOR BUYING A POSITION I DON'T OWN. HIGHEST PRICE I'M WILLING TO BUY IT AT.
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 20.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AA",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+  }
+]

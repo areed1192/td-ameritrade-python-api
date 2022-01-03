@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run TD OAuth",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_quotes.py",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true
+      }
+    },
+    {
+      "name": "Python: Run TD Saved Orders",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_saved_orders.py",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true
+      }
+    },
+    {
+      "name": "Python: Run Streaming Session",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_streaming_client.py",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true
+      }
+    },
+    {
+      "name": "Python: Run Price History",
+      "type": "python",
+      "request": "launch",
+      "program": "${cwd}/samples/use_price_history.py",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true
+      }
+    }
+  ]
+}

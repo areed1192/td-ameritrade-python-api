@@ -3,19 +3,13 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [What's in the API](#whats-in-the-api)
-- [Requirements](#requirements)
-- [API Key & Credentials](#api-key-and-credentials)
-- [Installation](#installation)
+- [Setup](#setup)
 - [Usage](#usage)
-- [Features](#features)
-- [Documentation & Resources](#documentation-and-resources)
 - [Support These Projects](#support-these-projects)
-- [Authentication Workflow](#authentication-workflow)
 
 ## Overview
 
-Current Version: **0.3.5**
+Current Version: **0.1.1**
 
 The unofficial Python API client library for TD Ameritrade allows individuals with
 TD Ameritrade accounts to manage trades, pull historical and real-time data, manage
@@ -24,148 +18,119 @@ their accounts, create and modify orders all using the Python programming langua
 To learn more about the TD Ameritrade API, please refer to
 the [official documentation](https://developer.tdameritrade.com/apis).
 
-## What's in the API
+## Setup
 
-- Authentication - access tokens, refresh tokens, request authentication.
-- Accounts & Trading
-- Market Hours
-- Instruments
-- Movers
-- Option Chains
-- Price History
-- Quotes
-- Transaction History
-- User Info & Preferences
-- Watchlist
+**Setup - Requirements Install:***
 
-## Requirements
+For this particular project, you only need to install the dependencies, to use the project. The dependencies
+are listed in the `requirements.txt` file and can be installed by running the following command:
 
-The following requirements must be met to use this API:
-
-- A TD Ameritrade account, you'll need your account password and account number to use the API.
-- A TD Ameritrade Developer Account
-- A TD Ameritrade Developer API Key
-- A Consumer ID
-- A Redirect URI, sometimes called Redirect URL
-- Python 3.7 or later.
-
-## API Key and Credentials
-
-Each TD Ameritrade API request requires a TD Ameritrade Developer API Key, a consumer ID,
-an account password, an account number, and a redirect URI. API Keys, consumer IDs, and
-redirect URIs are generated from the TD Ameritrade developer portal. To set up and create
-your TD Ameritrade developer account, please refer to
-the [official documentation](https://developer.tdameritrade.com/content/phase-1-authentication-update-xml-based-api).
-
-Additionally, to authenticate yourself using this library, you will need to provide your
-account number and password for your main TD Ameritrade account.
-
-**Important:** Your account number, an account password, consumer ID, and API key should
-be kept secret.
-
-## Installation
-
-The project can be found at PyPI, if you'd like to view the project please use
-this [link](https://pypi.org/project/td-ameritrade-python-api/).
-
-```bash
-pip install td-ameritrade-python-api
+```console
+pip install -r requirements.txt
 ```
 
-To upgrade the library run the following command:
+After running that command, the dependencies should be installed.
 
-```bash
-pip install --upgrade td-ameritrade-python-api
+**Setup - Local Install:**
+
+If you are planning to make modifications to this project or you would like to access it
+before it has been indexed on `PyPi`. I would recommend you either install this project
+in `editable` mode or do a `local install`. For those of you, who want to make modifications
+to this project. I would recommend you install the library in `editable` mode.
+
+If you want to install the library in `editable` mode, make sure to run the `setup.py`
+file, so you can install any dependencies you may need. To run the `setup.py` file,
+run the following command in your terminal.
+
+```console
+pip install -e .
+```
+
+If you don't plan to make any modifications to the project but still want to use it across
+your different projects, then do a local install.
+
+```console
+pip install .
+```
+
+This will install all the dependencies listed in the `setup.py` file. Once done
+you can use the library wherever you want.
+
+**Setup - PyPi Install:**
+
+To **install** the library, run the following command from the terminal.
+
+```console
+pip install py-tda-api
+```
+
+**Setup - PyPi Upgrade:**
+
+To **upgrade** the library, run the following command from the terminal.
+
+```console
+pip install --upgrade py-tda-api
 ```
 
 ## Usage
 
-This example demonstrates how to login to the API and demonstrates sending a request
-using the `get_quotes` endpoint, using your API key.
-
-**Credentials:**
-Please note, that the `credentials_path` is a file path that will house the credentials
-like your refresh token and access token. You must specify the `credentials_path` argument
-yourself so that you are aware of where the tokens will be stored. For example, if you
-specify the `credentials_path` as `C:\Users\Public\Credentials\td_state.json` it would
-store your tokens in a JSON file located in a folder called Credentials located under
-the Users profile.
+Here is a simple example of using the `td` library.
 
 ```python
-# Import the client
-from td.client import TDClient
+from pprint import pprint
+from configparser import ConfigParser
+from td.credentials import TdCredentials
+from td.client import TdAmeritradeClient
 
-# Create a new session, credentials path is required.
-TDSession = TDClient(
-    client_id='<CLIENT_ID>',
-    redirect_uri='<REDIRECT_URI>',
-    credentials_path='<PATH_TO_CREDENTIALS_FILE>'
+
+# Initialize the Parser.
+config = ConfigParser()
+
+# Read the file.
+config.read('config/config.ini')
+
+# Get the specified credentials.
+client_id = config.get('main', 'client_id')
+redirect_uri = config.get('main', 'redirect_uri')
+
+# Intialize our `Credentials` object.
+td_credentials = TdCredentials(
+    client_id=client_id,
+    redirect_uri=redirect_uri,
+    credential_file='config/td_credentials.json'
 )
 
-# Login to the session
-TDSession.login()
+# Initalize the `TdAmeritradeClient`
+td_client = TdAmeritradeClient(
+    credentials=td_credentials
+)
 
-# Grab real-time quotes for 'MSFT' (Microsoft)
-msft_quotes = TDSession.get_quotes(instruments=['MSFT'])
+# Initialize the Quotes service.
+quote_service = td_client.quotes()
 
-# Grab real-time quotes for 'AMZN' (Amazon) and 'SQ' (Square)
-multiple_quotes = TDSession.get_quotes(instruments=['AMZN','SQ'])
+# Grab a single quote.
+pprint(
+    quote_service.get_quote(instrument='AAPL')
+)
+
+# Grab multiple quotes.
+pprint(
+    quote_service.get_quotes(instruments=['AAPL', 'SQ'])
+)
 ```
 
-## Features
-
-### Authentication Workflow Support
-
-Automatically will handle the authentication workflow for new users, returning users, and users
-with expired tokens (refresh token or access token).
-
-### Request Validation
-
-For certain requests, in a limited fashion, it will help validate your request when possible.
-For example, when using the `get_movers` endpoint, it will automatically validate that the
-market you're requesting data from is one of the valid options.
-
-### Customized Objects for Watchlists, Orders, and Option Chains
-
-Requests for saved orders, regular orders, watchlists, and option chains can be a challenging
-process that has multiple opportunities to make mistakes. This library has built-in objects
-that will allow you to quickly build your request and then validate certain portions of your
-request when possible.
-
-### Library Requirements
-
-The following requirements must be met before being able to use the TD Ameritrade Python API library.
-
-- You must have a TD Ameritrade Account.
-- You must have a TD Ameritrade Developer Account. Please go to following [folder](https://github.com/areed1192/td-ameritrade-python-api/tree/master/samples/resources)
-  for instructions on how to create a Developer account.
-
-## Documentation and Resources
-
-### Official API Documentation
-
-- [Getting Started](https://developer.tdameritrade.com/content/phase-1-authentication-update-xml-based-api)
-- [Endpoints](https://developer.tdameritrade.com/apis)
-- [Guides](https://developer.tdameritrade.com/guides)
-- [Samples - Price History](https://developer.tdameritrade.com/content/price-history-samples)
-- [Samples - Place Order](https://developer.tdameritrade.com/content/place-order-samples)
-
-### Unofficial Documentation
-
-- [TD Ameritrade API - YouTube](https://www.youtube.com/playlist?list=PLcFcktZ0wnNnKvxFkJ5B7pvGaGa81Ny-6)
-
-## Support these Projects
+## Support These Projects
 
 **Patreon:**
-Help support this project and future projects by donating to my [Patreon Page](https://www.patreon.com/sigmacoding).
-I'm always looking to add more content for individuals like yourself, unfortuantely some of the APIs I would require
-me to pay monthly fees.
+Help support this project and future projects by donating to my [Patreon Page](https://www.patreon.com/sigmacoding). I'm
+always looking to add more content for individuals like yourself, unfortuantely some of the APIs I would require me to
+pay monthly fees.
 
 **YouTube:**
 If you'd like to watch more of my content, feel free to visit my YouTube channel [Sigma Coding](https://www.youtube.com/c/SigmaCoding).
 
-**Hire Me:**
-If you have a project, you think I can help you with feel free to reach out at [coding.sigma@gmail.com](mailto:coding.sigma@gmail.com?subject=[GitHub]%20Project%20Proposal) or fill out the [contract request form](https://forms.office.com/Pages/ResponsePage.aspx?id=ZwOBErInsUGliXx0Yo2VfcCSWZSwW25Es3vPV2veU0pUMUs5MUc2STkzSzVQMFNDVlI5NjJVNjREUi4u)
+**Questions:**
+If you have questions please feel free to reach out to me at [coding.sigma@gmail.com](mailto:coding.sigma@gmail.com?subject=[GitHub]%20Fred%20Library)
 
 ## Authentication Workflow
 

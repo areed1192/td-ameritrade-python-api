@@ -1,0 +1,38 @@
+{
+  /*
+        Notes:
+        orderType: Needs to be either of the following:
+                   1. MARKET (Execute Immeditately, I don't care the price I get.)
+                   2. NET_DEBIT (Highest you're willing to pay)
+                   3. NET_CREDIT (Highest you're willing to sell)
+
+        price: If below $1.00 can only be 4 Decimal places (0.0000) 
+               if above $1.00 can only be 2 decimals (0.00).
+  */
+  "session": "NORMAL",
+  "duration": "DAY",
+  "orderType": "NET_DEBIT",
+  "orderStrategyType": "SINGLE",
+  "complexOrderStrategyType": "VERTICAL",
+  "price": 0.0637,
+  "orderLegCollection": [
+    {
+      "orderLegType": "OPTION",
+      "instrument": {
+        "symbol": "SPY_041520C300",
+        "assetType": "OPTION"
+      },
+      "instruction": "SELL_TO_OPEN",
+      "quantity": 1
+    },
+    {
+      "orderLegType": "OPTION",
+      "instrument": {
+        "symbol": "SPY_041520C292",
+        "assetType": "OPTION"
+      },
+      "instruction": "BUY_TO_OPEN",
+      "quantity": 1
+    }
+  ]
+}
