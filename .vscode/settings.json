@@ -2,9 +2,17 @@
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": true,
   // Ignore Module Doc Strings.
-  "python.linting.pylintArgs": ["--disable","C0114,C0103,C0415"],
-  "python.testing.unittestArgs": ["-v", "-s", "./tests", "-p", "test_*.py"],
+  "python.linting.pylintArgs": [
+    "--disable",
+    "C0114,C0103,C0415"
+  ],
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    "./tests",
+    "-p",
+    "test_*.py"
+  ],
   "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true,
-  "python.pythonPath": "C:\\Users\\Alex\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
+  "python.testing.unittestEnabled": true
 }
