@@ -10,17 +10,17 @@ from td.utils.enums import FrequencyType
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -33,7 +33,7 @@ price_history_service = td_client.price_history()
 
 # Grab the Price History, with enums.
 price_history = price_history_service.get_price_history(
-    symbol='MSFT',
+    symbol="MSFT",
     frequency_type=FrequencyType.Minute,
     frequency=1,
     period_type=PeriodType.Day,
@@ -44,10 +44,10 @@ price_history = price_history_service.get_price_history(
 
 # Grab the Price History, without enums.
 price_history = price_history_service.get_price_history(
-    symbol='MSFT',
-    frequency_type='minute',
+    symbol="MSFT",
+    frequency_type="minute",
     frequency=1,
-    period_type='day',
+    period_type="day",
     period=10,
     extended_hours_needed=False
 )
@@ -58,11 +58,11 @@ start_date = datetime.now() - timedelta(seconds=60)
 
 # Grab the Price History, custom time frame.
 price_history = price_history_service.get_price_history(
-    symbol='MSFT',
+    symbol="MSFT",
     frequency_type=FrequencyType.Minute,
     frequency=1,
     start_date=1628260200000,
     end_date=1628260220000,
     extended_hours_needed=False
 )
-print(price_history['candles'])
+print(price_history["candles"])

@@ -307,12 +307,12 @@ STREAM_FIELD_IDS = {
     }
 }
 
-for field in STREAM_FIELD_IDS['level_two_quotes']:
+for field in STREAM_FIELD_IDS["level_two_quotes"]:
 
-    enum_name = STREAM_FIELD_IDS['level_two_quotes'][field]
+    enum_name = STREAM_FIELD_IDS["level_two_quotes"][field]
     enum_name = enum_name.replace("-", " ").title().replace(" ", "")
     enum_value = field
 
     print(f"{enum_name} = {enum_value}")
 
-print(",".join(STREAM_FIELD_IDS['level_two_quotes'].keys()))
+print(",".join(STREAM_FIELD_IDS["level_two_quotes"].keys()))

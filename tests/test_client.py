@@ -28,17 +28,17 @@ class TestTdClient(TestCase):
         config = ConfigParser()
 
         # Read the file.
-        config.read('config/config.ini')
+        config.read("config/config.ini")
 
         # Get the specified credentials.
-        client_id = config.get('main', 'client_id')
-        redirect_uri = config.get('main', 'redirect_uri')
+        client_id = config.get("main", "client_id")
+        redirect_uri = config.get("main", "redirect_uri")
 
         # Intialize our `Crednetials` object.
         self.td_credentials = TdCredentials(
             client_id=client_id,
             redirect_uri=redirect_uri,
-            credential_file='config/td_credentials.json'
+            credential_file="config/td_credentials.json"
         )
 
         # Initalize the `TdAmeritradeClient`
@@ -63,7 +63,7 @@ class TestTdClient(TestCase):
         self.assertIsInstance(self.td_client.movers(), Movers)
 
     def test_creates_instance_of_accounts(self):
-        """Create an instance and make sure it's a `Accounts` object."""
+        """Create an instance and make sure it"s a `Accounts` object."""
 
         self.assertIsInstance(self.td_client.accounts(), Accounts)
 
@@ -114,5 +114,5 @@ class TestTdClient(TestCase):
         del self.td_credentials
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

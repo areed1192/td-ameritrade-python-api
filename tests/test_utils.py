@@ -17,16 +17,16 @@ class TestTdOrderUtils(TestCase):
     """Will perform a unit test for the different `Order` utility objects."""
 
     def test_order_leg_instrument(self):
-        """Create an instance and make sure it's a `OrderLegInstrument` object."""
+        """Create an instance and make sure it"s a `OrderLegInstrument` object."""
 
         correct = {
-            'assetType': 'EQUITY',
-            'symbol': 'SQ'
+            "assetType": "EQUITY",
+            "symbol": "SQ"
         }
 
         my_order_leg_instrument = {
-            'asset_type': 'EQUITY',
-            'symbol': 'SQ',
+            "asset_type": "EQUITY",
+            "symbol": "SQ",
         }
 
         my_order_leg_instrument = OrderLegInstrument(**my_order_leg_instrument)
@@ -36,8 +36,8 @@ class TestTdOrderUtils(TestCase):
         self.assertDictEqual(d1=my_order_leg_instrument, d2=correct)
 
         my_order_leg_instrument = {
-            'asset_type': AssetType.Equity,
-            'symbol': 'SQ',
+            "asset_type": AssetType.Equity,
+            "symbol": "SQ",
         }
 
         my_order_leg_instrument = OrderLegInstrument(**my_order_leg_instrument)
@@ -50,22 +50,22 @@ class TestTdOrderUtils(TestCase):
         """Create an instance and make sure it's a `OrderLeg` object."""
 
         correct = {
-            'instruction': 'BUY',
-            'legId': 0,
-            'instrument': {
-                'assetType': 'EQUITY',
-                'symbol': 'SQ'
+            "instruction": "BUY",
+            "legId": 0,
+            "instrument": {
+                "assetType": "EQUITY",
+                "symbol": "SQ"
             },
-            'quantity': 2
+            "quantity": 2
         }
 
         my_order_leg = {
-            'instruction': 'BUY',
-            'instrument': {
-                'asset_type': 'EQUITY',
-                'symbol': 'SQ'
+            "instruction": "BUY",
+            "instrument": {
+                "asset_type": "EQUITY",
+                "symbol": "SQ"
             },
-            'quantity': 2
+            "quantity": 2
         }
 
         my_order_leg = OrderLeg(**my_order_leg)
@@ -75,12 +75,12 @@ class TestTdOrderUtils(TestCase):
         self.assertDictEqual(d1=my_order_leg, d2=correct)
 
         my_order_leg = {
-            'instruction': OrderInstructions.Buy,
-            'instrument': {
-                'asset_type': AssetType.Equity,
-                'symbol': 'SQ'
+            "instruction": OrderInstructions.Buy,
+            "instrument": {
+                "asset_type": AssetType.Equity,
+                "symbol": "SQ"
             },
-            'quantity': 2
+            "quantity": 2
         }
 
         my_order_leg = OrderLeg(**my_order_leg)
@@ -216,5 +216,5 @@ class TestTdOrderUtils(TestCase):
         self.assertDictEqual(d1=my_order, d2=correct)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -20,17 +20,17 @@ class TestMarketHourService(TestCase):
         config = ConfigParser()
 
         # Read the file.
-        config.read('config/config.ini')
+        config.read("config/config.ini")
 
         # Get the specified credentials.
-        client_id = config.get('main', 'client_id')
-        redirect_uri = config.get('main', 'redirect_uri')
+        client_id = config.get("main", "client_id")
+        redirect_uri = config.get("main", "redirect_uri")
 
         # Intialize our `Crednetials` object.
         self.td_credentials = TdCredentials(
             client_id=client_id,
             redirect_uri=redirect_uri,
-            credential_file='config/td_credentials.json'
+            credential_file="config/td_credentials.json"
         )
 
         # Initalize the `TdAmeritradeClient`
@@ -56,11 +56,11 @@ class TestMarketHourService(TestCase):
 
         # Grab the market hours for the equity Markets.
         response = self.service.get_market_hours(
-            market='EQUITY',
+            market="EQUITY",
             date=datetime.now()
         )
 
-        self.assertEqual('equity', list(response.keys())[0])
+        self.assertEqual("equity", list(response.keys())[0])
 
         # Grab the market hours for the equity Markets, using Enums.
         response = self.service.get_market_hours(
@@ -68,18 +68,18 @@ class TestMarketHourService(TestCase):
             date=datetime.now()
         )
 
-        self.assertEqual('equity', list(response.keys())[0])
+        self.assertEqual("equity", list(response.keys())[0])
 
     def test_get_multiple_market_hours(self):
         """Test grabbing market hours for a multiple markets."""
 
         # Grab the market hours for the equity Markets.
         response = self.service.get_multiple_market_hours(
-            markets=['EQUITY', 'BOND'],
+            markets=["EQUITY", "BOND"],
             date=datetime.now()
         )
 
-        self.assertEqual('equity', list(response.keys())[0])
+        self.assertEqual("equity", list(response.keys())[0])
 
         # Grab the market hours for the equity Markets, using Enums.
         response = self.service.get_multiple_market_hours(
@@ -87,7 +87,7 @@ class TestMarketHourService(TestCase):
             date=datetime.now()
         )
 
-        self.assertEqual('equity', list(response.keys())[0])
+        self.assertEqual("equity", list(response.keys())[0])
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""
@@ -96,5 +96,5 @@ class TestMarketHourService(TestCase):
         del self.td_credentials
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

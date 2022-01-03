@@ -8,18 +8,18 @@ from td.utils.enums import TransactionTypes
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
-account_number = config.get('main', 'account_number')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
+account_number = config.get("main", "account_number")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -59,6 +59,6 @@ pprint(
 pprint(
     accounts_service.get_transaction(
         account_id=account_number,
-        transaction_id='27444883992'
+        transaction_id="27444883992"
     )
 )

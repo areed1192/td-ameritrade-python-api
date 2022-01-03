@@ -9,17 +9,17 @@ from td.utils.enums import Markets
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -33,7 +33,7 @@ market_hours_service = td_client.market_hours()
 # Grab the market hours
 pprint(
     market_hours_service.get_multiple_market_hours(
-        markets=['EQUITY', Markets.Bond],
+        markets=["EQUITY", Markets.Bond],
         date=datetime.now()
     )
 )
@@ -41,7 +41,7 @@ pprint(
 # Grab the hours for a specific market.
 pprint(
     market_hours_service.get_market_hours(
-        market='EQUITY',
+        market="EQUITY",
         date=datetime.now()
     )
 )

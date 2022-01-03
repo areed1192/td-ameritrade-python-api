@@ -18,17 +18,17 @@ class TestQuotesService(TestCase):
         config = ConfigParser()
 
         # Read the file.
-        config.read('config/config.ini')
+        config.read("config/config.ini")
 
         # Get the specified credentials.
-        client_id = config.get('main', 'client_id')
-        redirect_uri = config.get('main', 'redirect_uri')
+        client_id = config.get("main", "client_id")
+        redirect_uri = config.get("main", "redirect_uri")
 
         # Intialize our `Crednetials` object.
         self.td_credentials = TdCredentials(
             client_id=client_id,
             redirect_uri=redirect_uri,
-            credential_file='config/td_credentials.json'
+            credential_file="config/td_credentials.json"
         )
 
         # Initalize the `TdAmeritradeClient`
@@ -52,14 +52,14 @@ class TestQuotesService(TestCase):
     def test_get_quote(self):
         """Test grabbing a single quote."""
 
-        response = self.service.get_quote(instrument='AAPL')
-        self.assertEqual('AAPL', list(response.keys())[0])
+        response = self.service.get_quote(instrument="AAPL")
+        self.assertEqual("AAPL", list(response.keys())[0])
 
     def test_get_quotes(self):
         """Test grabbing multiple quotes."""
 
-        response = self.service.get_quotes(instruments=['AAPL', 'SQ'])
-        self.assertListEqual(['AAPL', 'SQ'], list(response.keys()))
+        response = self.service.get_quotes(instruments=["AAPL", "SQ"])
+        self.assertListEqual(["AAPL", "SQ"], list(response.keys()))
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""
@@ -68,5 +68,5 @@ class TestQuotesService(TestCase):
         del self.td_credentials
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

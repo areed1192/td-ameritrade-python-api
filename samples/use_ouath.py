@@ -6,11 +6,11 @@ from td.client import TdAmeritradeClient
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
@@ -19,7 +19,7 @@ td_credentials = TdCredentials(
 )
 
 td_credentials.to_credential_file(
-    file_path='config/td_credentials.json'
+    file_path="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`

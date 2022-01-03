@@ -7,17 +7,17 @@ from td.client import TdAmeritradeClient
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -31,8 +31,8 @@ movers_service = td_client.movers()
 # Grab the top 10 percentage up movers.
 pprint(
     movers_service.get_movers(
-        index='$DJI',
-        direction='up',
-        change='percent'
+        index="$DJI",
+        direction="up",
+        change="percent"
     )
 )

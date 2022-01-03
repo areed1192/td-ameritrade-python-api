@@ -7,17 +7,17 @@ from td.client import TdAmeritradeClient
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -30,10 +30,10 @@ quote_service = td_client.quotes()
 
 # Grab a single quote.
 pprint(
-    quote_service.get_quote(instrument='AAPL')
+    quote_service.get_quote(instrument="AAPL")
 )
 
 # Grab multiple quotes.
 pprint(
-    quote_service.get_quotes(instruments=['AAPL', 'SQ'])
+    quote_service.get_quotes(instruments=["AAPL", "SQ"])
 )

@@ -24,17 +24,17 @@ class TestOptionsChainService(TestCase):
         config = ConfigParser()
 
         # Read the file.
-        config.read('config/config.ini')
+        config.read("config/config.ini")
 
         # Get the specified credentials.
-        client_id = config.get('main', 'client_id')
-        redirect_uri = config.get('main', 'redirect_uri')
+        client_id = config.get("main", "client_id")
+        redirect_uri = config.get("main", "redirect_uri")
 
         # Intialize our `Crednetials` object.
         self.td_credentials = TdCredentials(
             client_id=client_id,
             redirect_uri=redirect_uri,
-            credential_file='config/td_credentials.json'
+            credential_file="config/td_credentials.json"
         )
 
         # Initalize the `TdAmeritradeClient`
@@ -60,7 +60,7 @@ class TestOptionsChainService(TestCase):
 
         # Build a Query.
         option_chain_query = OptionChainQuery(
-            symbol='MSFT',
+            symbol="MSFT",
             contract_type=ContractType.Call,
             expiration_month=ExpirationMonth.June,
             option_type=OptionType.StandardContracts,
@@ -75,7 +75,7 @@ class TestOptionsChainService(TestCase):
 
         # Build a Query.
         option_chain_query = OptionChainQuery(
-            symbol='MSFT',
+            symbol="MSFT",
             contract_type=ContractType.Call,
             expiration_month=ExpirationMonth.June,
             option_type=OptionType.StandardContracts,
@@ -88,19 +88,19 @@ class TestOptionsChainService(TestCase):
             option_chain_query=option_chain_query
         )
 
-        self.assertIn('numberOfContracts', list(options_data.keys()))
+        self.assertIn("numberOfContracts", list(options_data.keys()))
 
     def test_get_option_chains(self):
         """Test grabbing option chains data using a dictionary object."""
 
         # Build a Query.
         option_chain_dict = {
-            'symbol': 'MSFT',
-            'contractType': 'CALL',
-            'expirationMonth': 'JUN',
-            'optionType': 'SC',
-            'range': 'ITM',
-            'includeQuotes': True
+            "symbol": "MSFT",
+            "contractType": "CALL",
+            "expirationMonth": "JUN",
+            "optionType": "SC",
+            "range": "ITM",
+            "includeQuotes": True
         }
 
         # Query the Options Data.
@@ -108,7 +108,7 @@ class TestOptionsChainService(TestCase):
             option_chain_dict=option_chain_dict
         )
 
-        self.assertIn('numberOfContracts', list(options_data.keys()))
+        self.assertIn("numberOfContracts", list(options_data.keys()))
 
     def tearDown(self) -> None:
         """Teardown the `TdAmeritradeClient` Client."""
@@ -117,5 +117,5 @@ class TestOptionsChainService(TestCase):
         del self.td_credentials
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

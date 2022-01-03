@@ -16,18 +16,18 @@ from td.utils.user_preferences import UserPreferences
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
-account_number = config.get('main', 'account_number')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
+account_number = config.get("main", "account_number")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -61,33 +61,33 @@ pprint(
 user_info_service.update_user_preferences(
     account_id=account_number,
     preferences={
-        'authTokenTimeout': 'EIGHT_HOURS',
-        'defaultAdvancedToolLaunch': 'NONE',
-        'defaultEquityOrderDuration': 'DAY',
-        'defaultEquityOrderLegInstruction': 'NONE',
-        'defaultEquityOrderMarketSession': 'NORMAL',
-        'defaultEquityOrderPriceLinkType': 'NONE',
-        'defaultEquityOrderType': 'LIMIT',
-        'defaultEquityQuantity': 0,
-        'equityTaxLotMethod': 'FIFO',
-        'expressTrading': True,
-        'mutualFundTaxLotMethod': 'FIFO',
-        'optionTaxLotMethod': 'FIFO'
+        "authTokenTimeout": "EIGHT_HOURS",
+        "defaultAdvancedToolLaunch": "NONE",
+        "defaultEquityOrderDuration": "DAY",
+        "defaultEquityOrderLegInstruction": "NONE",
+        "defaultEquityOrderMarketSession": "NORMAL",
+        "defaultEquityOrderPriceLinkType": "NONE",
+        "defaultEquityOrderType": "LIMIT",
+        "defaultEquityQuantity": 0,
+        "equityTaxLotMethod": "FIFO",
+        "expressTrading": True,
+        "mutualFundTaxLotMethod": "FIFO",
+        "optionTaxLotMethod": "FIFO"
     }
 )
 
 # Method 2, Update the User Preferences.
 my_preferences = {
-    'default_equity_order_leg_instruction': DefaultOrderLegInstruction.Buy,
-    'default_equity_order_type': DefaultOrderType.Market,
-    'default_equity_order_price_link_type': DefaultOrderPriceLinkType.Percent,
-    'default_equity_order_duration': DefaultOrderDuration.NoneSpecified,
-    'default_equity_order_market_session': DefaultOrderMarketSession.Normal,
-    'mutual_fund_tax_lot_method': TaxLotMethod.Fifo,
-    'option_tax_lot_method': TaxLotMethod.Fifo,
-    'equity_tax_lot_method': TaxLotMethod.Fifo,
-    'default_advanced_tool_launch': DefaultAdvancedToolLaunch.Ta,
-    'auth_token_timeout': AuthTokenTimeout.EightHours
+    "default_equity_order_leg_instruction": DefaultOrderLegInstruction.Buy,
+    "default_equity_order_type": DefaultOrderType.Market,
+    "default_equity_order_price_link_type": DefaultOrderPriceLinkType.Percent,
+    "default_equity_order_duration": DefaultOrderDuration.NoneSpecified,
+    "default_equity_order_market_session": DefaultOrderMarketSession.Normal,
+    "mutual_fund_tax_lot_method": TaxLotMethod.Fifo,
+    "option_tax_lot_method": TaxLotMethod.Fifo,
+    "equity_tax_lot_method": TaxLotMethod.Fifo,
+    "default_advanced_tool_launch": DefaultAdvancedToolLaunch.Ta,
+    "auth_token_timeout": AuthTokenTimeout.EightHours
 }
 
 # Define a new data class that will store our preferences.

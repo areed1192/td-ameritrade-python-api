@@ -7,18 +7,18 @@ from td.client import TdAmeritradeClient
 config = ConfigParser()
 
 # Read the file.
-config.read('config/config.ini')
+config.read("config/config.ini")
 
 # Get the specified credentials.
-client_id = config.get('main', 'client_id')
-redirect_uri = config.get('main', 'redirect_uri')
-account_number = config.get('main', 'account_number')
+client_id = config.get("main", "client_id")
+redirect_uri = config.get("main", "redirect_uri")
+account_number = config.get("main", "account_number")
 
 # Intialize our `Crednetials` object.
 td_credentials = TdCredentials(
     client_id=client_id,
     redirect_uri=redirect_uri,
-    credential_file='config/td_credentials.json'
+    credential_file="config/td_credentials.json"
 )
 
 # Initalize the `TdAmeritradeClient`
@@ -38,7 +38,7 @@ pprint(
 pprint(
     watchlists_service.get_watchlist(
         account_id=account_number,
-        watchlist_id='1003491055'
+        watchlist_id="1003491055"
     )
 )
 
@@ -52,21 +52,21 @@ pprint(
 # Define some items for our watchlist.
 watchlist_items = [
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'SPCE',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "SPCE",
+            "assetType": "EQUITY"
         }
     },
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'UFO',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "UFO",
+            "assetType": "EQUITY"
         }
     }
 ]
@@ -75,7 +75,7 @@ watchlist_items = [
 pprint(
     watchlists_service.create_watchlist(
         account_id=account_number,
-        name='space companies',
+        name="space companies",
         watchlist_items=watchlist_items
     )
 )
@@ -85,18 +85,18 @@ pprint(
 pprint(
     watchlists_service.update_watchlist(
         account_id=account_number,
-        watchlist_id='1637006076',
-        name='Space_Companies_Current',
+        watchlist_id="1637006076",
+        name="Space_Companies_Current",
         watchlist_items=[
             {
-                'quantity': 0.0,
-                'averagePrice': 0.0,
-                'commission': 0.0,
-                'instrument': {
-                    'symbol': 'TSLA',
-                    'assetType': 'EQUITY'
+                "quantity": 0.0,
+                "averagePrice": 0.0,
+                "commission": 0.0,
+                "instrument": {
+                    "symbol": "TSLA",
+                    "assetType": "EQUITY"
                 },
-                'sequenceId': 3
+                "sequenceId": 3
             }
         ]
     )
@@ -106,39 +106,39 @@ pprint(
 # Define some items for our watchlist.
 watchlist_items = [
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'SPCE',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "SPCE",
+            "assetType": "EQUITY"
         }
     },
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'UFO',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "UFO",
+            "assetType": "EQUITY"
         }
     },
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'TSLA',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "TSLA",
+            "assetType": "EQUITY"
         }
     },
     {
-        'quantity': 0.0,
-        'averagePrice': 0.0,
-        'commission': 0.0,
-        'instrument': {
-            'symbol': 'NIO',
-            'assetType': 'EQUITY'
+        "quantity": 0.0,
+        "averagePrice": 0.0,
+        "commission": 0.0,
+        "instrument": {
+            "symbol": "NIO",
+            "assetType": "EQUITY"
         }
     }
 ]
@@ -147,8 +147,8 @@ watchlist_items = [
 pprint(
     watchlists_service.update_watchlist(
         account_id=account_number,
-        watchlist_id='1637006076',
-        name='Space_Companies_And_Electric_Vehicles',
+        watchlist_id="1637006076",
+        name="Space_Companies_And_Electric_Vehicles",
         watchlist_items=watchlist_items
     )
 )
@@ -157,6 +157,6 @@ pprint(
 pprint(
     watchlists_service.delete_watchlist(
         account_id=account_number,
-        watchlist_id='1637006076'
+        watchlist_id="1637006076"
     )
 )
