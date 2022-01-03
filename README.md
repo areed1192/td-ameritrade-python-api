@@ -1,4 +1,11 @@
-# Unofficial TD Ameritrade Python API Library
+# UPDATE
+
+This repo will soon be updated to include the new <https://github.com/areed1192/td-ameritrade-api>
+library. The master branch will be overwritten and the old code will need to be updated
+to reflect the new changes. If you would like to start rewriting your old code, please
+refer to the new branch merge-new-repo or go the link above.
+
+## Unofficial TD Ameritrade Python API Library
 
 ## Table of Contents
 
