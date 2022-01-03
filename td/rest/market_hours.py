@@ -28,7 +28,7 @@ class MarketHours():
 
     def get_multiple_market_hours(
         self,
-        markets: list,
+        markets: Union[list[Enum], list[str]],
         date: Union[str, datetime, date_type]
     ) -> dict:
         """Returns the market hours for all the markets.
@@ -39,7 +39,7 @@ class MarketHours():
 
         ### Parameters
         ----
-        markets: list
+        markets: Union[list[Enum], list[str]]
             A list of market IDs you want to return hours for.
             Possible values are: `EQUITY`, `OPTION`, `FUTURE`,
             `BOND`, or `FOREX`.

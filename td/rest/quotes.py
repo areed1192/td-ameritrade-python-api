@@ -1,4 +1,3 @@
-from typing import List
 from td.session import TdAmeritradeSession
 
 
@@ -61,7 +60,7 @@ class Quotes():
 
         return content
 
-    def get_quotes(self, instruments=List[str]) -> dict:
+    def get_quotes(self, instruments=list[str]) -> dict:
         """Grabs real-time quotes for multiple instruments.
 
         ### Overview

@@ -1,4 +1,3 @@
-from typing import List
 from typing import Union
 from td.session import TdAmeritradeSession
 from td.utils.user_preferences import UserPreferences
@@ -58,7 +57,7 @@ class UserInfo():
 
         return content
 
-    def get_streamer_subscription_keys(self, account_ids: List[str]) -> dict:
+    def get_streamer_subscription_keys(self, account_ids: list[str]) -> dict:
         """SubscriptionKey for provided accounts or default accounts.
 
         ### Documentation
@@ -67,7 +66,7 @@ class UserInfo():
 
         ### Parameters
         ----
-        account_ids: List[str]
+        account_ids: list[str]
             A list of account IDs.
 
         ### Usage

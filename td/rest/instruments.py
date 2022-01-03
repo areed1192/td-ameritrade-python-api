@@ -19,7 +19,7 @@ class Instruments():
         ### Parameters
         ----
         session : TdAmeritradeSession
-            An authenticated `TDAmeritradeSession
+            An authenticated `TDAmeritradeSession`
             object.
         """
 

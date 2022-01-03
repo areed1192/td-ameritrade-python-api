@@ -187,9 +187,8 @@ class Accounts():
             for.
 
         transaction_id: str
-            If set to `True` then account orders will be returned
-            from the API. If set to `False` no orders will be
-            returned.
+            The transaction ID that you want to query from
+            the specified account.
 
         ### Usage
         ----

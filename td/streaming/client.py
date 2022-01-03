@@ -39,11 +39,11 @@ class StreamingApiClient():
             session=session
         ).get_user_principals()
 
-        socket_url = self.user_principal_data['streamerInfo']['streamerSocketUrl']
+        socket_url = self.user_principal_data["streamerInfo"]["streamerSocketUrl"]
         self.websocket_url = f"wss://{socket_url}/ws"
 
         # Grab the token timestamp.
-        token_timestamp = self.user_principal_data['streamerInfo']['tokenTimestamp']
+        token_timestamp = self.user_principal_data["streamerInfo"]["tokenTimestamp"]
         token_timestamp = datetime.strptime(
             token_timestamp, "%Y-%m-%dT%H:%M:%S%z"
         )
@@ -51,17 +51,17 @@ class StreamingApiClient():
 
         # Define our Credentials Dictionary used for authentication.
         self.credentials = {
-            "userid": self.user_principal_data['accounts'][0]['accountId'],
-            "token": self.user_principal_data['streamerInfo']['token'],
-            "company": self.user_principal_data['accounts'][0]['company'],
-            "segment": self.user_principal_data['accounts'][0]['segment'],
-            "cddomain": self.user_principal_data['accounts'][0]['accountCdDomainId'],
-            "usergroup": self.user_principal_data['streamerInfo']['userGroup'],
-            "accesslevel": self.user_principal_data['streamerInfo']['accessLevel'],
+            "userid": self.user_principal_data["accounts"][0]["accountId"],
+            "token": self.user_principal_data["streamerInfo"]["token"],
+            "company": self.user_principal_data["accounts"][0]["company"],
+            "segment": self.user_principal_data["accounts"][0]["segment"],
+            "cddomain": self.user_principal_data["accounts"][0]["accountCdDomainId"],
+            "usergroup": self.user_principal_data["streamerInfo"]["userGroup"],
+            "accesslevel": self.user_principal_data["streamerInfo"]["accessLevel"],
             "authorized": "Y",
             "timestamp": token_timestamp,
-            "appid": self.user_principal_data['streamerInfo']['appId'],
-            "acl": self.user_principal_data['streamerInfo']['acl']
+            "appid": self.user_principal_data["streamerInfo"]["appId"],
+            "acl": self.user_principal_data["streamerInfo"]["acl"]
         }
 
 
@@ -99,11 +99,11 @@ class StreamingApiClient():
                     "service": "ADMIN",
                     "requestid": "0",
                     "command": "LOGIN",
-                    "account": self.user_principal_data['accounts'][0]['accountId'],
-                    "source": self.user_principal_data['streamerInfo']['appId'],
+                    "account": self.user_principal_data["accounts"][0]["accountId"],
+                    "source": self.user_principal_data["streamerInfo"]["appId"],
                     "parameters": {
                         "credential": urllib.parse.urlencode(self.credentials),
-                        "token": self.user_principal_data['streamerInfo']['token'],
+                        "token": self.user_principal_data["streamerInfo"]["token"],
                         "version": "1.0"
                     }
                 }
@@ -144,17 +144,17 @@ class StreamingApiClient():
 
                 # Grab the Response.
                 response = await self._receive_message(return_value=True)
-                responses = response.get('response')
+                responses = response.get("response")
 
                 # If we get a code 3, we had a login error.
-                if responses[0]['content']['code'] == 3:
+                if responses[0]["content"]["code"] == 3:
                     raise ValueError(
                         f"LOGIN ERROR: {responses[0]['content']['msg']}"
                     )
 
                 # see if we had a login response.
                 for r in responses:
-                    if r.get('service') == 'ADMIN' and r.get('command') == 'LOGIN':
+                    if r.get("service") == "ADMIN" and r.get("command") == "LOGIN":
                         print(
                             "Message: User Login successful, streaming will being shortly."
                         )
@@ -171,7 +171,7 @@ class StreamingApiClient():
         ### Raises
         ----
         ConnectionError:
-            An error is raised if we can't connect to the
+            An error is raised if we can"t connect to the
             websocket.
 
         ### Returns
@@ -180,19 +180,20 @@ class StreamingApiClient():
             `True` if the connection healthy, `False` otherwise.
         """
 
-        # if it's open we can stream.
+        # if its open we can stream.
         if self.connection.open:
             print("="*80)
-            print('Message: Connection established. Streaming will begin shortly.')
+            print("Message: Connection established. Streaming will begin shortly.")
             print("-"*80)
             return True
-        elif self.connection.close:
+
+        if self.connection.close:
             print("="*80)
-            print('Message: Connection was never opened and was closed.')
+            print("Message: Connection was never opened and was closed.")
             print("-"*80)
             return False
-        else:
-            raise ConnectionError
+
+        raise ConnectionError
 
     async def _send_message(self, message: str) -> None:
         """Sends a message to webSocket server
@@ -233,11 +234,11 @@ class StreamingApiClient():
                 if return_value:
                     return message_decoded
 
-                print(textwrap.dedent('='*80))
+                print(textwrap.dedent("="*80))
                 print(textwrap.dedent("Message Received:"))
-                print(textwrap.dedent('-'*80))
+                print(textwrap.dedent("-"*80))
                 pprint.pprint(message_decoded)
-                print(textwrap.dedent('-'*80))
+                print(textwrap.dedent("-"*80))
 
             except ws_exceptions.ConnectionClosed:
                 await self.close_stream()
@@ -261,8 +262,8 @@ class StreamingApiClient():
             message_decoded = json.loads(message)
         except TypeError:
             message = message.encode(
-                'utf-8'
-            ).replace(b'\xef\xbf\xbd', bytes('"None"', 'utf-8')).decode('utf-8')
+                "utf-8"
+            ).replace(b"\xef\xbf\xbd", bytes('"None"', "utf-8")).decode("utf-8")
             message_decoded = json.loads(message)
 
         return message_decoded
@@ -272,7 +273,7 @@ class StreamingApiClient():
 
         while True:
             try:
-                await self.connection.send('ping')
+                await self.connection.send("ping")
                 await asyncio.sleep(5)
             except ws_exceptions.ConnectionClosed:
                 self.close_stream()
@@ -393,7 +394,7 @@ class StreamingApiClient():
         self.unsubscribe_count += 1
 
         service_count = len(
-            self.data_requests['requests']
+            self.data_requests["requests"]
         ) + self.unsubscribe_count
 
         request = {
@@ -401,9 +402,9 @@ class StreamingApiClient():
                 {
                     "service": service.upper(),
                     "requestid": service_count,
-                    "command": 'UNSUBS',
-                    "account": self.user_principal_data['accounts'][0]['accountId'],
-                    "source": self.user_principal_data['streamerInfo']['appId']
+                    "command": "UNSUBS",
+                    "account": self.user_principal_data["accounts"][0]["accountId"],
+                    "source": self.user_principal_data["streamerInfo"]["appId"]
                 }
             ]
         }

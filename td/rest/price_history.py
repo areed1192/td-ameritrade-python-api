@@ -44,8 +44,8 @@ class PriceHistory():
         frequency: str,
         period_type: Union[str, Enum] = 'day',
         period: int = None,
-        start_date: Union[datetime] = None,
-        end_date: Union[datetime] = None,
+        start_date: Union[datetime, str] = None,
+        end_date: Union[datetime, str] = None,
         extended_hours_needed: bool = True
     ) -> dict:
         """Gets historical candle data for a financial instrument.

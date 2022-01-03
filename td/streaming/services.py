@@ -633,7 +633,7 @@ class StreamingServices():
         # validate the frequency input.
         if frequency not in valid_frequencies:
             raise ValueError(
-                "FREQUENCY is incorrect choose a valid option:['m1','m5','m10','m30','h1','d1','w1','n1']"
+                f"FREQUENCY is incorrect choose a valid option:{valid_frequencies}"
             )
 
         # validate the period input.
