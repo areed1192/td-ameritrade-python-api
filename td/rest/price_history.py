@@ -1,5 +1,5 @@
-from typing import Union
 from enum import Enum
+from typing import Union
 from datetime import datetime
 from td.session import TdAmeritradeSession
 

@@ -1,6 +1,6 @@
 from enum import Enum
-from typing import Union
 from typing import List
+from typing import Union
 from datetime import datetime
 
 
@@ -425,6 +425,7 @@ class StreamingServices():
         request['command'] = 'SUBS'
         request['parameters']['keys'] = ','.join(symbols)
         request['parameters']['fields'] = ','.join(fields)
+
         self.streaming_api_client.data_requests['requests'].append(request)
 
     def timesale(
@@ -520,6 +521,7 @@ class StreamingServices():
         request['command'] = 'SUBS'
         request['parameters']['keys'] = venue + '-' + duration
         request['parameters']['fields'] = '1'
+
         self.streaming_api_client.data_requests['requests'].append(request)
 
     def chart_history_futures(

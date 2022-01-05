@@ -47,12 +47,9 @@ class SavedOrders():
             )
         """
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/savedorders'
-
         content = self.session.make_request(
             method='get',
-            endpoint=endpoint
+            endpoint=f'accounts/{account_id}/savedorders'
         )
 
         return content
@@ -86,12 +83,9 @@ class SavedOrders():
             )
         """
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/savedorders/{saved_order_id}'
-
         content = self.session.make_request(
             method='get',
-            endpoint=endpoint
+            endpoint=f'accounts/{account_id}/savedorders/{saved_order_id}'
         )
 
         return content
@@ -141,12 +135,9 @@ class SavedOrders():
         if saved_order_dict:
             order = saved_order_dict
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/savedorders'
-
         content = self.session.make_request(
             method='post',
-            endpoint=endpoint,
+            endpoint=f'accounts/{account_id}/savedorders',
             json_payload=order
         )
 
@@ -207,12 +198,9 @@ class SavedOrders():
         if saved_order_dict:
             order = saved_order_dict
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/savedorders/{saved_order_id}'
-
         content = self.session.make_request(
             method='put',
-            endpoint=endpoint,
+            endpoint=f'accounts/{account_id}/savedorders/{saved_order_id}',
             json_payload=order
         )
 
@@ -248,12 +236,9 @@ class SavedOrders():
             )
         """
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/savedorders/{saved_order_id}'
-
         content = self.session.make_request(
             method='delete',
-            endpoint=endpoint
+            endpoint=f'accounts/{account_id}/savedorders/{saved_order_id}'
         )
 
         return content

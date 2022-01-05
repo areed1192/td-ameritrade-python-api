@@ -99,12 +99,9 @@ class Orders():
             "status": order_status
         }
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/orders'
-
         content = self.session.make_request(
             method='get',
-            endpoint=endpoint,
+            endpoint=f'accounts/{account_id}/orders',
             params=params
         )
 
@@ -139,12 +136,9 @@ class Orders():
             )
         """
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/orders/{order_id}'
-
         content = self.session.make_request(
             method='get',
-            endpoint=endpoint
+            endpoint=f'accounts/{account_id}/orders/{order_id}'
         )
 
         return content
@@ -218,12 +212,9 @@ class Orders():
             "status": order_status
         }
 
-        # Define the endpoint.
-        endpoint = 'orders'
-
         content = self.session.make_request(
             method='get',
-            endpoint=endpoint,
+            endpoint='orders',
             params=params
         )
 
@@ -274,12 +265,9 @@ class Orders():
         if order_dict:
             order = order_dict
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/orders'
-
         content = self.session.make_request(
             method='post',
-            endpoint=endpoint,
+            endpoint=f'accounts/{account_id}/orders',
             json_payload=order
         )
 
@@ -340,12 +328,9 @@ class Orders():
         if order_dict:
             order = order_dict
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/orders/{order_id}'
-
         content = self.session.make_request(
             method='put',
-            endpoint=endpoint,
+            endpoint=f'accounts/{account_id}/orders/{order_id}',
             json_payload=order
         )
 
@@ -381,12 +366,9 @@ class Orders():
             )
         """
 
-        # Define the endpoint.
-        endpoint = f'accounts/{account_id}/orders/{order_id}'
-
         content = self.session.make_request(
             method='delete',
-            endpoint=endpoint
+            endpoint=f'accounts/{account_id}/orders/{order_id}'
         )
 
         return content
