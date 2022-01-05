@@ -146,7 +146,7 @@ class OptionChainQuery():
             if isinstance(value, Enum):
                 value = value.value
 
-            if isinstance(value, datetime) or isinstance(value, date):
+            if isinstance(value, (datetime,date)):
                 value = value.isoformat()
 
             # Generate the API Key.

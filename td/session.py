@@ -22,7 +22,7 @@ class TdAmeritradeSession():
         client : object
             The `TdAmeritradeClient` Python Client.
 
-        ### Usage:
+        ### Usage
         ----
             >>> td_session = TdAmeritradeSession()
         """
@@ -57,7 +57,7 @@ class TdAmeritradeSession():
 
         ### Returns
         ----
-        Dict:
+        dict:
             A dictionary containing all the components.
         """
 
@@ -124,7 +124,7 @@ class TdAmeritradeSession():
 
         ### Returns
         ----
-        Dict:
+        dict:
             A Dictionary object containing the
             JSON values.
         """
@@ -164,12 +164,12 @@ class TdAmeritradeSession():
         # If it's okay and no details.
         if response.ok and len(response.content) > 0:
             return response.json()
-        elif len(response.content) > 0 and response.ok:
+        if len(response.content) > 0 and response.ok:
             return {
                 'message': 'response successful',
                 'status_code': response.status_code
             }
-        elif not response.ok:
+        if not response.ok:
 
             if len(response.content) == 0:
                 response_data = ''

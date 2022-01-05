@@ -26,6 +26,41 @@ class StreamingServices():
 
         self.streaming_api_client: StreamingApiClient = streaming_api_client
 
+    def _validate_fields(
+        self,
+        fields: Union[List[Enum], List[str], List[int]]
+    ) -> str:
+        """Handles converting the different field types to
+        a consistent string value for the API services.
+
+        ### Parameters
+        ----
+        fields: Union[List[Enum], List[str], List[int]]
+            The fields you want returned from the Endpoint, can either
+            be the numeric representation or the key value representation.
+            For more info on fields, refer to the documentation.
+
+        ### Returns
+        ----
+        str :
+            The fields as a comma delimited str
+            or a single string.
+        """
+
+        if isinstance(fields, list):
+            new_fields = []
+            for field in fields:
+                if isinstance(field, int):
+                    field = str(int)
+                elif isinstance(field, Enum):
+                    field = field.value
+                new_fields.append(field)
+
+        if isinstance(fields, Enum):
+            fields = fields.value
+
+        return fields
+
     def _new_request_template(self) -> dict:
         """Serves as a template to build new service requests.
 
@@ -118,17 +153,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -166,17 +191,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -214,17 +229,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -263,17 +268,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -311,17 +306,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -383,17 +368,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -442,20 +417,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(service, Enum):
-            service = service.value
-
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = request = self._new_request_template()
@@ -498,20 +460,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(service, Enum):
-            service = service.value
-
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -639,7 +588,7 @@ class StreamingServices():
         # validate the period input.
         if period not in valid_periods and start_time is None and end_time is None:
             raise ValueError(
-                "PERIOD is incorrect choose a valid option:['d5','w4','n10','y1','y10']"
+                f"PERIOD is incorrect choose a valid option: {valid_periods}"
             )
 
         # Build the request
@@ -689,17 +638,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()
@@ -737,17 +676,7 @@ class StreamingServices():
             )
         """
 
-        if isinstance(fields, list):
-            new_fields = []
-            for field in fields:
-                if isinstance(field, int):
-                    field = str(int)
-                elif isinstance(field, Enum):
-                    field = field.value
-                new_fields.append(field)
-
-        if isinstance(fields, Enum):
-            fields = fields.value
+        fields = self._validate_fields(fields=fields)
 
         # Build the request
         request = self._new_request_template()

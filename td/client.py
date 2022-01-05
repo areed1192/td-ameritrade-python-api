@@ -27,6 +27,7 @@ class TdAmeritradeClient():
         """Initializes the `TdClient` object.
 
         ### Parameters
+        ----
         credentials : TdCredentials
             Your TD Credentials stored in your credentials object
             so that you can authenitcate with TD.

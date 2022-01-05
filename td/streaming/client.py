@@ -28,8 +28,10 @@ class StreamingApiClient():
 
         ### Overview
         ----
-        Initalizes the Client Object and defines different components that will be needed to
-        make a connection with the TD Streaming API.
+        Initalizes the Client Object and defines
+        different components that will be needed
+        to make a connection with the TD Streaming
+        API.
 
         ### Usage
         ----

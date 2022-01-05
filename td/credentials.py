@@ -16,10 +16,10 @@ class TdCredentials():
     """
     ### Overview
     ----
-    TD Ameritrade uses an oAuth protocol
-    to authenticate it's users. The `TdCredential`
-    object helps the user manage the credentials to ensure
-    the are properly authenticated.
+    TD Ameritrade uses an oAuth protocol to
+    authenticate it's users. The `TdCredential`
+    object helps the user manage the credentials
+    to ensure the are properly authenticated.
     """
 
     def __init__(
