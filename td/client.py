@@ -5,6 +5,7 @@ import pprint
 import datetime
 import pathlib
 import requests
+from requests.adapters import HTTPAdapter, Retry
 import urllib.parse
 
 from typing import Any
@@ -606,6 +607,11 @@ class TDClient():
 
         # Define a new session.
         request_session = requests.Session()
+        retries = Retry(total=5, backoff_factor=0.1)
+        adapter = HTTPAdapter(max_retries=retries)
+        request_session.mount('http://', adapter)
+        request_session.mount('https://', adapter)
+
         request_session.verify = True
 
         # Define a new request.
