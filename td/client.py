@@ -238,7 +238,15 @@ class TDClient():
                     self._cached_state.update(self.state)
 
         # if they want to save it and have allowed for caching then load the file.
-        elif action == 'save':     
+        elif action == 'save':
+            # Create parent directory if it doesn't exist
+            if not credentials_file_exists:
+                try:
+                    os.makedirs(os.path.dirname(self.credentials_path))
+                except OSError as exc: # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
+            # Save file
             with open(file=self.credentials_path, mode='w+') as json_file:
                 if self._multiprocessing_safe:
                     json.dump(obj=dict(self._cached_state), fp=json_file, indent=4)
