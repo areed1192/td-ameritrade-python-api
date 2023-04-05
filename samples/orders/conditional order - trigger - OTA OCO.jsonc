@@ -2,8 +2,7 @@
   // This is my buy order, this will trigger the other one.
   "orderStrategyType": "TRIGGER",
   "session": "NORMAL",
-  "duration": "DAY",
-  "cancelTime": "2020-04-15",
+  "duration": "DAY", 
   "orderType": "LIMIT",
   "price": 50.0,
   "orderLegCollection": [
@@ -42,10 +41,10 @@
         },
         {
           // The is my order that stops my loss, note the price is here is lower than my original buy order.
-          "orderStrategyType": "STOP",
+          "orderStrategyType": "SINGLE",
           "session": "NORMAL",
           "duration": "DAY",
-          "orderType": "LIMIT",
+          "orderType": "STOP",
           "stopPrice": 40.0,
           "orderLegCollection": [
             {
